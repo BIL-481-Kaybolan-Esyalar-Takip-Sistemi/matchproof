@@ -7,6 +7,7 @@ Version: 1.0
 Date: 2026-02-03
 
 | Team Members |
+|---|
 | Zehra Atalay |
 | Yiğit Yıldız |
 | Elif Beyza Turan |
