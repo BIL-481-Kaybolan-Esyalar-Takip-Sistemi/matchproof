@@ -125,24 +125,7 @@ Baseline schedule below is aligned with the documented effort estimates (total 1
 | Testing + Deploy + Closure | 2026-02-26 | 2026-03-01 | Test cases executed, bug fixes, performance checks. Final documentations |
 
 ## 5.2 Simple Gantt (Weeks)
-gantt
-    title Project Timeline
-    dateFormat  YYYY-MM-DD
-    axisFormat  %b %d
-
-    section Planning
-    Scope & requirements           :a1, 2026-02-10, 7d
-    Project organization (roles)   :a2, after a1, 3d
-
-    section Execution
-    Design                         :b1, after a2, 10d
-    Development                    :b2, after b1, 20d
-    Testing                        :b3, after b2, 10d
-
-    section Delivery
-    Deployment                     :c1, after b3, 5d
-    Closure & evaluation           :c2, after c1, 3d
-
+![Gantt Chart](gantt.png)
 
 # 6. Resource Planning
 
