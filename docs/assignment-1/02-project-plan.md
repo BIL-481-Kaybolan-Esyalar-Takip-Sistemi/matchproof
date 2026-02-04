@@ -24,6 +24,7 @@ Document-Specific Task Matrix:
 | Resource Plan | Yigit Yildiz | Completed |
 | Change Management Plan | Yigit Yildiz | Completed |
 | Timeline and GANTT Chart(ToC) | Yigit Yildiz | Completed |
+| Effort & task tables (aligned with 04-task-effort-estimation) | Mehmet Gür | Completed |
 
 # Revision History
 
@@ -45,7 +46,7 @@ MatchProof is a web-based campus lost and found platform that provides a central
 - Keyword-based search and filtering (category, date, status)
 - AI-powered image analysis to extract basic visual features (color, object type)
 - AI-enhanced matching for improved search relevance
-- User communication (in-app messaging or contact information display)
+- User communication (contact information display)
 - Item status management (claimed/resolved), post edit/delete by owner
 - Administrative moderation (remove inappropriate/duplicate posts)
 - Desktop browser support
@@ -53,10 +54,11 @@ MatchProof is a web-based campus lost and found platform that provides a central
 ## 2.2 Out of Scope
 
 - Native mobile applications (iOS/Android)
-- Real-time push notifications
+- Notifications (in-app or push)
 - Payments or reward systems
+- In-app messaging/chat between users
 - Integration with campus security/physical lost & found offices
-- Multi-campus / multi-institution support (initial
+- Multi-campus / multi-institution support (initial version)
 - Advanced analytics/reporting dashboards
 - Social media integration
 
@@ -77,7 +79,7 @@ Constraints:
 ## 3.1 Execution Objectives
 
 - Deliver a functional web application accessible via desktop browsers.
-- Implement FR1–FR12 (authentication, posting, search/filtering, claim flow, moderation, and AI-enhanced matching).
+- Implement FR1–FR14 (authentication, posting, search/filtering, claim flow, moderation, and AI-enhanced matching).
 - Meet non-functional requirements: response time under 2 seconds and 99% availability during the testing period.
 
 ## 3.2 Management Objectives
@@ -93,7 +95,7 @@ Constraints:
 | Team Member | Role | Key Responsibilities |
 | --- | --- | --- |
 | Zehra Atalay | Project Manager & Coordinator | Planning, coordination, risk tracking, stakeholder communication, QA support, release readiness. |
-| Yiğit Yıldız | Requirements Analyst & Documentation | Baseline requirements, acceptance checks, documentation, closure deliverables. |
+| Yiğit Yıldız | Requirements Analyst & Documentation | Baseline requirements, acceptance checks, traceability (FR→tasks), documentation, closure deliverables. |
 | Elif Beyza Turan | UI/UX & Frontend | UI design, frontend implementation, testing support, admin UI. |
 | Alp Eren Köksal | Backend & Database | Backend APIs, authentication, database schema, media pipeline, search backend. |
 | Mehmet Gür | AI/ML Matching | Multi-modal similarity ranking, explainable matching, AI feature integration. |
@@ -102,17 +104,19 @@ Constraints:
 
 | Phase | Responsible | Support |
 | --- | --- | --- |
-| Requirements & planning | Yiğit Yıldız | Alp Eren Köksal |
-| Design | Elif Beyza Turan | Mehmet Gür, Alp Eren Köksal |
-| Development | Mehmet Gür | Elif Beyza Turan |
-| AI matching & explainability | Mehmet Gür | Zehra Atalay |
-| Testing & QA | Elif Beyza Turan | Yiğit Yıldız |
-| Deployment | Mehmet Gür | Zehra Atalay |
+| Requirements & planning | Yiğit Yıldız | Zehra Atalay, Alp Eren Köksal |
+| Design | Elif Beyza Turan | Alp Eren Köksal, Mehmet Gür |
+| Development | Alp Eren Köksal | Elif Beyza Turan |
+| AI matching & explainability | Mehmet Gür | Alp Eren Köksal |
+| Testing & QA | Zehra Atalay | Yiğit Yıldız, Elif Beyza Turan |
+| Deployment | Zehra Atalay | Alp Eren Köksal |
 | Documentation & closure | Yiğit Yıldız | Zehra Atalay |
 
 # 5. Key Phases, Timeline, and Deliverables
 
 Baseline schedule below is aligned with the documented effort estimates (total 160 person-hours). Dates can be adjusted if the course calendar requires different milestones.
+
+AI matching is treated as an enhancement; the MVP remains usable with standard search/filtering even if the AI module is incomplete.
 
 ## 5.1 Timeline (Weekly Baseline)
 
@@ -201,10 +205,10 @@ Effort estimates are based on expert judgment and analogy-based estimation. Tota
 
 | Team Member | Role | Estimate (person-hours) |
 | --- | --- | --- |
-| Zehra Atalay | Project Manager & Coordinator | 25 |
-| Yiğit Yıldız | Requirements Analyst & Documentation | 25 |
-| Elif Beyza Turan | UI/UX & Frontend | 35 |
-| Alp Eren Köksal | Backend & Database | 45 |
+| Zehra Atalay | Project Manager & Coordinator | 32 |
+| Yiğit Yıldız | Requirements Analyst & Documentation | 26 |
+| Elif Beyza Turan | UI/UX & Frontend | 34 |
+| Alp Eren Köksal | Backend & Database | 38 |
 | Mehmet Gür | AI/ML Matching | 30 |
 
 ## 10.3 Monetary Budget (Estimated)

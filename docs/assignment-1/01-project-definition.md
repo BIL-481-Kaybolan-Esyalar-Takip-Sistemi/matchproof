@@ -1,5 +1,4 @@
 # Project Definition Document (Assignment 1)
-[Project_Definition_Document.md](https://github.com/user-attachments/files/25066799/Project_Definition_Document.md)
 # Project Definition Document
 
 ## Document Authorship
@@ -87,7 +86,6 @@ MatchProof solves this problem by providing a centralized digital bulletin board
 - Implement explainable matching system that provides match reasons and score breakdowns to users
 - Develop intelligent search functionality with filtering by category, location, date, and status
 - Enable claim workflow with request, verification, and resolution capabilities
-- Provide in-app notifications to keep users informed about their items and claims
 - Implement administrative moderation tools for content management and policy enforcement
 - Achieve system response time under 2 seconds and 99% uptime availability
 
@@ -108,7 +106,6 @@ MatchProof solves this problem by providing a centralized digital bulletin board
 - Explainable matching with match reasons and score breakdown visualization
 - Match suggestions UI displaying ranked list with explanations
 - Claim workflow with request submission, verification prompts, and approve/reject/resolve states
-- In-app notification system
 - Post editing and deletion by original poster
 - Report and moderation policy with defined workflow
 - Administrative moderation UI with queue management (hide/remove/restore posts)
@@ -119,9 +116,9 @@ MatchProof solves this problem by providing a centralized digital bulletin board
 ### Excluded from Scope
 
 - Mobile native applications (iOS/Android apps)
-- Real-time push notifications via email or SMS
+- Notifications (in-app or push notifications via email/SMS)
 - Payment or reward systems
-- Direct messaging chat system between users
+- In-app direct messaging/chat between users
 - Integration with campus security systems or physical lost and found offices
 - Multi-campus or multi-institution support in initial version
 - Advanced analytics dashboards or reporting features
@@ -162,9 +159,6 @@ Comprehensive search interface with filters for category, campus location, date 
 ### Claim Workflow System
 Structured process for claiming items with verification prompts and state management (request, approve, reject, resolve)
 
-### In-App Notifications
-Real-time notification system to keep users informed about new matches, claim requests, and item status updates
-
 ### Post Management
 Users can edit and delete their own posts, with metadata tracking and status management
 
@@ -199,10 +193,10 @@ The team consists of 5 members with clearly defined roles:
 
 | Team Member | Role | Estimated Effort (hours) |
 |-------------|------|--------------------------|
-| Zehra Atalay | Project Manager & Coordinator | 25 |
-| Yiğit Yıldız | Requirements Analyst & Documentation | 25 |
-| Elif Beyza Turan | UI/UX & Frontend | 35 |
-| Alp Eren Köksal | Backend & Database | 45 |
+| Zehra Atalay | Project Manager & Coordinator | 32 |
+| Yiğit Yıldız | Requirements Analyst & Documentation | 26 |
+| Elif Beyza Turan | UI/UX & Frontend | 34 |
+| Alp Eren Köksal | Backend & Database | 38 |
 | Mehmet Gür | AI/ML Matching | 30 |
 | **Total** | | **160** |
 
@@ -268,7 +262,7 @@ The team consists of 5 members with clearly defined roles:
 
 ## Project Success Criteria
 
-- **Functional Completeness:** All 12 functional requirements (FR1-FR12 from Requirements Document) are successfully implemented and operational
+- **Functional Completeness:** All 14 functional requirements (FR1-FR14 from Requirements Document) are successfully implemented and operational
 - **Performance Standards:** System achieves sub-2-second response time for 95% of user operations and maintains 99% uptime during 2-week testing period
 - **Usability Achievement:** At least 80% of test users (minimum 10 users) successfully complete key tasks (post item, search, view matches, claim) without assistance on first attempt
 - **AI Matching Effectiveness:** Multi-modal similarity ranking returns at least one correct match in top 5 results for 75% of test cases with known ground truth
