@@ -125,7 +125,7 @@ Baseline schedule below is aligned with the documented effort estimates (total 1
 | Testing + Deploy + Closure | 2026-02-26 | 2026-03-01 | Test cases executed, bug fixes, performance checks. Final documentations |
 
 ## 5.2 Simple Gantt (Weeks)
-![Gantt Chart](gantt.png)
+![Gantt Chart](Online Gantt 20260203.png)
 
 # 6. Resource Planning
 
