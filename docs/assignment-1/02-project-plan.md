@@ -6,12 +6,12 @@ Course: BIL 481
 Version: 1.0
 Date: 2026-02-03
 
-Team Members:
-Zehra Atalay
-Yiğit Yıldız
-Elif Beyza Turan
-Alp Eren Köksal
-Mehmet Gür
+|Team Members|
+|Zehra Atalay|
+|Yiğit Yıldız|
+|Elif Beyza Turan|
+|Alp Eren Köksal|
+|Mehmet Gür|
 
 Document-Specific Task Matrix:
 
