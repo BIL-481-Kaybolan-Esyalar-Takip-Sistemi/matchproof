@@ -4,12 +4,42 @@
 **Course:** BIL 481  
 **Last Updated (YYYY-MM-DD):** 2026-02-02  
 
+## Document Authorship
+
+**Document Title:** Task Assignments & Effort Estimations  
+**Project Name:** MatchProof  
+**Date:** 2026-02-02
+
+### Team Members
+- Mehmet Gür
+- Zehra Atalay
+- Elif Beyza Turan
+- Yiğit Yıldız
+- Alp Eren Köksal
+
+### Contributors to this document
+- Mehmet Gür
+
 ## Table of Contents
 
+0. Document-Specific Task Matrix  
 1. Team Members and Roles  
 2. Task Assignments  
 3. Effort Estimations  
 4. Rationale for Task Assignment  
+
+## 0) Document-Specific Task Matrix
+
+| Task | Responsible | Support | Status |
+|---|---|---|---|
+| Roles definition (team members & roles) | Mehmet Gür | - | Completed |
+| Phase ownership mapping | Mehmet Gür | - | Completed |
+| Feature/Work Task Matrix creation | Mehmet Gür | - | Completed |
+| Estimation method text | Mehmet Gür | - | Completed |
+| Phase effort estimation table | Mehmet Gür | - | Completed |
+| Per-person effort mapping | Mehmet Gür | - | Completed |
+| Rationale for task assignment | Mehmet Gür | - | Completed |
+| Formatting & ToC | Mehmet Gür | - | Completed |
 
 ## 1) Team Members and Roles
 

@@ -7,6 +7,7 @@
 - Document-Specific Task Matrix
 - Functional Requirements
 - Non-Functional Requirements
+- Product Backlog
 - Effort Estimation
 - Task Assignment
 - Conclusion
@@ -94,6 +95,10 @@ NFR4 – The system must ensure basic data privacy by restricting access to user
 NFR5 – The system must be designed to allow future extension of AI models without major architectural changes.
 
 NFR6 - The system must be available 99% of the time.
+
+**Product Backlog :**
+
+The initial Product Backlog for MatchProof is maintained as a separate document in `docs/assignment-1/05-product-backlog.md`. Backlog items are linked to FR1–FR14 and NFR1–NFR6 and prioritize an MVP-first delivery (no in-app messaging/chat, no notifications).
 
 **Effort Estimation :**
 
