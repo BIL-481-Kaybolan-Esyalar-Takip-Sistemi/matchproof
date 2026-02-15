@@ -35,7 +35,7 @@ The project includes AI-assisted matching as a practical enhancement, not as a h
 
 ### 1.2 System Architecture
 
-MatchProof is designed as a layered modular monolith to keep implementation simple and maintainable for a course project:
+MatchProof is designed as a simple layered monolith to keep implementation simple and maintainable for a course project:
 
 - Presentation Layer: Web UI (desktop browser support)
 - API Layer: REST endpoints for auth, items, search, moderation
@@ -45,8 +45,8 @@ MatchProof is designed as a layered modular monolith to keep implementation simp
 High-level request flow:
 
 ```text
-Browser UI -> API Controller -> Service Layer -> Repository -> Database
-                               -> Matching Module -> Ranked Results + Explanation
+Browser UI -> API Controller -> Service Layer -> Model Layer -> Database
+                               -> Matching Service -> Ranked Results + Explanation
 ```
 
 ### 1.3 Technology Stack
@@ -89,27 +89,21 @@ matchproof/
       components/
       services/
     server/
-      modules/
-        auth/
-        items/
-        search/
-        matching/
-        moderation/
       routes/
-      repositories/
-      middleware/
+      services/
+      models/
 ```
 
 ### 3.2 Key Implementations
 
-- Authentication module: register/login/session handling (FR1)
-- Item management module: create/edit/delete lost/found posts and media upload (FR2, FR3, FR4, FR10)
-- Search module: keyword search + filter by category/date/status (FR5, FR6)
-- Matching module: text+image similarity scoring and ranked candidate generation (FR11, FR12, FR13)
-- Explainability module: short explanation generation from top similarity factors (FR14)
-- Moderation module: admin removal of duplicate/inappropriate posts (FR9)
-- Status module: claimed/resolved lifecycle management (FR7)
-- Contact display module: show owner contact information on item detail page (FR8)
+- Authentication service: register/login/session handling (FR1)
+- Item service: create/edit/delete lost/found posts and media upload (FR2, FR3, FR4, FR10)
+- Search service: keyword search + filter by category/date/status (FR5, FR6)
+- Matching service: text+image similarity scoring and ranked candidate generation (FR11, FR12, FR13)
+- Explainability service: short explanation generation from top similarity factors (FR14)
+- Moderation service: admin removal of duplicate/inappropriate posts (FR9)
+- Status service: claimed/resolved lifecycle management (FR7)
+- Contact display flow: show owner contact information on item detail page (FR8)
 
 ### 3.3 Core Business Logic
 
@@ -234,7 +228,7 @@ ModerationService.removePost(adminUserId, itemId, reason) -> ModerationAction
 ### 4.3 Use Case Design Details
 
 #### UC1: Register and Login
-- Interaction flow: UI -> Auth API -> AuthService -> UserRepository
+- Interaction flow: UI -> Auth API -> AuthService -> UserModel
 - Data flow: new user record creation and credential verification
 - State change: `Guest -> Authenticated`
 - Output: valid session token for subsequent authorized actions
