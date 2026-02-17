@@ -2,5 +2,5 @@
 
 ## Repo yapısı
 
-- `docs/assignment-1/` (Assignment 1-2 dokümanları)
+- `docs/assignment-*/` (Assignment dokümanları)
 - `src/` (uygulama kaynak kodu)
