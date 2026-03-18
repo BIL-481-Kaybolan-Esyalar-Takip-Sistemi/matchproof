@@ -139,7 +139,7 @@ AI matching is treated as an enhancement; the MVP remains usable with standard s
 | --- | --- |
 | Frontend | React.js, HTML5, CSS3, JavaScript |
 | Backend | Node.js, Express.js |
-| Database | PostgreSQL or MongoDB |
+| Database | PostgreSQL |
 | AI/ML | TensorFlow.js or pre-trained models via API (free tier) |
 | Version Control | GitHub |
 | IDE/Dev Tools | VS Code |

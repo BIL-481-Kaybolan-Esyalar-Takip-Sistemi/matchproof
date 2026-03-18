@@ -61,7 +61,7 @@ This document defines the initial Product Backlog for **MatchProof**, a campus l
 | PB1 | Core | As a user, I can register and log in. | FR1 | Must | 5 | Alp Eren Köksal |
 | PB2 | Core | As a user, I can create a lost item post (title/desc/category/location). | FR2 | Must | 3 | Elif Beyza Turan |
 | PB3 | Core | As a user, I can create a found item post (details/location). | FR3 | Must | 3 | Elif Beyza Turan |
-| PB4 | Core | As a user, I can upload item photos (validate/store/resize). | FR4 | Must | 5 | Alp Eren Köksal |
+| PB4 | Core | As a user, I can upload item photos with validation and storage. | FR4 | Must | 5 | Alp Eren Köksal |
 | PB5 | Core | As a user, I can search listings using keywords. | FR5 | Must | 3 | Alp Eren Köksal |
 | PB6 | Core | As a user, I can filter by category and date. | FR6 | Must | 2 | Alp Eren Köksal |
 | PB7 | Core | As a user, I can mark an item as claimed/resolved. | FR7 | Must | 2 | Alp Eren Köksal |

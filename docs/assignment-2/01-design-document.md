@@ -57,7 +57,7 @@ Browser UI -> API Controller -> Service Layer -> Model Layer -> Database
 | Backend | Node.js + Express.js | REST API and business logic |
 | Database | PostgreSQL | Users, posts, statuses, moderation metadata |
 | AI Matching | Pre-trained embedding model integration + cosine similarity | Multi-modal ranking and explainable matching |
-| Media | Image upload + validation + resizing pipeline | Item photo handling |
+| Media | Image upload + validation + storage pipeline | Item photo handling |
 | Version Control | GitHub | Source control and contribution tracking |
 
 ## 2. Document-Specific Task Matrix
@@ -124,9 +124,12 @@ Core service interfaces (language-neutral signatures):
 
 ```text
 AuthService.register(name, email, password) -> User
-AuthService.login(email, password) -> SessionToken
+AuthService.login(email, password) -> Session
+AuthService.logout(session) -> void
+AuthService.getCurrentUser(session) -> User
 
 ItemService.createItem(userId, itemType, payload, imageFile) -> Item
+ItemService.getItemById(requestUserId, itemId) -> ItemDetail
 ItemService.updateItem(userId, itemId, payload) -> Item
 ItemService.deleteItem(userId, itemId) -> void
 ItemService.updateStatus(userId, itemId, status) -> Item
@@ -144,7 +147,10 @@ ModerationService.removePost(adminUserId, itemId, reason) -> ModerationAction
 |---|---|---|
 | POST | `/api/auth/register` | User registration |
 | POST | `/api/auth/login` | User login |
+| POST | `/api/auth/logout` | User logout |
+| GET | `/api/auth/me` | Return the authenticated user |
 | POST | `/api/items` | Create lost/found item post |
+| GET | `/api/items/{itemId}` | Get item detail and contact display data |
 | PATCH | `/api/items/{itemId}` | Edit own item post |
 | DELETE | `/api/items/{itemId}` | Delete own item post |
 | GET | `/api/items/search` | Keyword + filter based search |
@@ -199,7 +205,7 @@ ModerationService.removePost(adminUserId, itemId, reason) -> ModerationAction
 +--------------------------------------------------+
 | Item Title                                       |
 | Status: OPEN                                     |
-| Owner Contact: email/phone                       |
+| Owner Contact: name/email                        |
 | (Mark Claimed) (Mark Resolved)                   |
 | Admin: (Remove Post)                             |
 +--------------------------------------------------+
@@ -231,12 +237,12 @@ ModerationService.removePost(adminUserId, itemId, reason) -> ModerationAction
 - Interaction flow: UI -> Auth API -> AuthService -> UserModel
 - Data flow: new user record creation and credential verification
 - State change: `Guest -> Authenticated`
-- Output: valid session token for subsequent authorized actions
+- Output: authenticated session established for subsequent authorized actions
 
 #### UC2: Create Lost/Found Post with Photo
 - Interaction flow: UI form submit -> Item API -> ItemService + Media pipeline
 - Data flow: post metadata to database, photo to storage, URL linked to item
-- State change: `Draft -> Open`
+- State change: new item is created with `Open` status
 - Output: searchable post visible in listing feed
 
 #### UC3: Search and AI-Assisted Match

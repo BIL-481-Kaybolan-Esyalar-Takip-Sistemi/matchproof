@@ -85,7 +85,7 @@ MatchProof solves this problem by providing a centralized digital bulletin board
 - Integrate multi-modal AI similarity ranking combining text and image analysis for improved matching accuracy
 - Implement explainable matching system that provides match reasons and score breakdowns to users
 - Develop intelligent search functionality with filtering by category, location, date, and status
-- Enable claim workflow with request, verification, and resolution capabilities
+- Enable a simple item status workflow with contact information display and resolution capabilities
 - Implement administrative moderation tools for content management and policy enforcement
 - Achieve system response time under 2 seconds and 99% uptime availability
 
@@ -99,16 +99,16 @@ MatchProof solves this problem by providing a centralized digital bulletin board
 - Lost item posting with title, description, category, campus location, and photo upload
 - Found item posting with item details, discovery location, and photo upload
 - Campus taxonomy including item categories and campus location mapping
-- Media pipeline with image validation, storage, and resizing
+- Media pipeline with image validation and storage
 - Search interface with filters for category, location, date, and status
 - Search backend with filtering and pagination capabilities
 - Multi-modal AI similarity ranking using text and image embeddings
 - Explainable matching with match reasons and score breakdown visualization
 - Match suggestions UI displaying ranked list with explanations
-- Claim workflow with request submission, verification prompts, and approve/reject/resolve states
+- Item status workflow with contact information display and `open/claimed/resolved` states
 - Post editing and deletion by original poster
 - Report and moderation policy with defined workflow
-- Administrative moderation UI with queue management (hide/remove/restore posts)
+- Administrative moderation capability for removing inappropriate or duplicate posts
 - Desktop browser support
 - Comprehensive test cases and acceptance checks
 - Release and deployment checklist
@@ -156,8 +156,8 @@ Transparent AI system that provides users with match reasons, similarity score b
 ### Intelligent Search & Filtering
 Comprehensive search interface with filters for category, campus location, date range, and item status, backed by efficient pagination
 
-### Claim Workflow System
-Structured process for claiming items with verification prompts and state management (request, approve, reject, resolve)
+### Item Status & Contact Flow
+Simple status management that lets users view owner contact information and mark items as claimed or resolved
 
 ### Post Management
 Users can edit and delete their own posts, with metadata tracking and status management
@@ -217,7 +217,7 @@ The team consists of 5 members with clearly defined roles:
 
 - **Frontend:** React.js, HTML5, CSS3, JavaScript (free, open-source)
 - **Backend:** Node.js, Express.js (free, open-source)
-- **Database:** PostgreSQL or MongoDB (free, open-source)
+- **Database:** PostgreSQL (free, open-source)
 - **AI/ML:** Pre-trained embeddings (CLIP for images, Sentence-BERT for text) via API or local inference (free tier available)
 - **Version Control:** GitHub (free for students)
 - **Development Environment:** VS Code (free)
@@ -228,7 +228,7 @@ The team consists of 5 members with clearly defined roles:
 
 - **Hosting:** Vercel or Netlify free tier for frontend, Heroku or Railway for backend
 - **Cloud storage:** Cloudinary free tier or AWS S3 free tier for image storage
-- **Database hosting:** MongoDB Atlas free tier or ElephantSQL for PostgreSQL
+- **Database hosting:** local PostgreSQL during development and a PostgreSQL hosting service for deployment
 - **Domain (optional):** Estimated $10-15 per year if custom domain required
 
 ### Learning Resources

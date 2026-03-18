@@ -223,6 +223,8 @@ Modeller UI'a özel mantık içermemelidir.
 ```text
 POST   /api/auth/register
 POST   /api/auth/login
+POST   /api/auth/logout
+GET    /api/auth/me
 
 POST   /api/items
 PATCH  /api/items/:itemId

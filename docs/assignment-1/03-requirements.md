@@ -125,11 +125,11 @@ The initial Product Backlog for MatchProof is maintained as a separate document 
 | Project coordination (milestones, risks, change requests) | Zehra Atalay | Yiğit Yıldız |
 | QA plan + test execution + bug triage | Zehra Atalay | Elif Beyza Turan |
 | Release/deploy checklist | Zehra Atalay | Alp Eren Köksal |
-| UI/UX + core screens (post, browse/search, details, claim form) | Elif Beyza Turan | Yiğit Yıldız |
+| UI/UX + core screens (post, browse/search, details, status actions) | Elif Beyza Turan | Yiğit Yıldız |
 | Moderation/admin UI + content policy workflow | Elif Beyza Turan | Zehra Atalay |
 | Responsive/accessibility polish (basic) | Elif Beyza Turan | Mehmet Gür |
-| Backend core (auth, listings, claim workflow) | Alp Eren Köksal | Elif Beyza Turan |
-| Media pipeline (image validation, storage, resizing) | Alp Eren Köksal | Mehmet Gür |
+| Backend core (auth, listings, status flow) | Alp Eren Köksal | Elif Beyza Turan |
+| Media pipeline (image validation, storage) | Alp Eren Köksal | Mehmet Gür |
 | Search + data access (filters, pagination) | Alp Eren Köksal | Yiğit Yıldız |
 | AI similarity scoring + ranking (text+image) | Mehmet Gür | Alp Eren Köksal |
 | Explainable matching (brief reasons) | Mehmet Gür | Alp Eren Köksal |
