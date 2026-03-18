@@ -94,7 +94,7 @@ The effort estimation for this project was performed using a combination of **ex
 
 Expert judgment was applied by considering the team members’ prior experience with similar academic software projects (web-based CRUD systems, authentication, search/filtering) and the planned AI component (using pre-trained embeddings for multi-modal similarity ranking and explainable matching).
 
-Analogy-based estimation was used by comparing the scope, complexity, and deliverables of MatchProof with previously completed student projects of similar size. The comparison considered factors such as the number of core user flows (post → search → claim → resolve), integration overhead for the AI matching module, and the required documentation workload.
+Analogy-based estimation was used by comparing the scope, complexity, and deliverables of MatchProof with previously completed student projects of similar size. The comparison considered factors such as the number of core user flows (post → search → status update → resolve), integration overhead for the AI matching module, and the required documentation workload.
 
 Based on these considerations, the estimated effort values were determined collaboratively by the team and reviewed to ensure feasibility within the course timeline.  
 Conversion used: **1 person-day = 8 person-hours**.
@@ -138,7 +138,7 @@ Conversion used: **1 person-day = 8 person-hours**.
 
 - Roles were assigned based on team members’ interests and prior experience; tasks were then mapped to those roles to create clear ownership and accountability.
 - Work was split by system boundaries (frontend, backend/database, AI, requirements/documentation, coordination/QA) to reduce coupling and allow parallel progress with fewer integration conflicts.
-- The MVP prioritizes the core flow (post → search → claim → resolve); the AI component is implemented as a non-blocking enhancement (ranked suggestions + brief explanation).
+- The MVP prioritizes the core flow (post → search → status update → resolve); the AI component is implemented as a non-blocking enhancement (ranked suggestions + brief explanation).
 - Each major work area has at least one supporting contributor, reducing single‑point‑of‑failure risk and enabling cross‑review and knowledge transfer.
 - Requirements ownership is paired with acceptance checks so each implemented feature has a verifiable “done” definition and the scope stays controlled.
 - The distribution reflects expected workload: backend workflows and data handling require steady effort, AI matching needs focused iteration, and PM/QA ensures coordination and timely delivery.

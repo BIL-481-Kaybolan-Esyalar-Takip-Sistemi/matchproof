@@ -163,7 +163,7 @@ Simple status management that lets users view owner contact information and mark
 Users can edit and delete their own posts, with metadata tracking and status management
 
 ### Administrative Moderation
-Comprehensive admin tools with moderation queue for hiding, removing, and restoring posts based on established policies
+Administrative moderation tools for removing inappropriate or duplicate posts based on established policies
 
 ---
 

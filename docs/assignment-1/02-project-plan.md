@@ -79,7 +79,7 @@ Constraints:
 ## 3.1 Execution Objectives
 
 - Deliver a functional web application accessible via desktop browsers.
-- Implement FR1–FR14 (authentication, posting, search/filtering, claim flow, moderation, and AI-enhanced matching).
+- Implement FR1–FR14 (authentication, posting, search/filtering, status flow, moderation, and AI-enhanced matching).
 - Meet non-functional requirements: response time under 2 seconds and 99% availability during the testing period.
 
 ## 3.2 Management Objectives
@@ -125,7 +125,7 @@ AI matching is treated as an enhancement; the MVP remains usable with standard s
 | Kickoff + Planning + Requirements Baseline | 2026-01-28 | 2026-02-04 | Project plan v1, requirements baseline (FR/NFR), acceptance checklist |
 | Design | 2026-02-05 | 2026-02-11 | Architecture draft, DB schema draft, UI mockups |
 | Development + AI Integration (Sprint 1) | 2026-02-12 | 2026-02-18 | MVP: auth + posting + basic search; initial AI feature extraction |
-| Development + AI Matching (Sprint 2) | 2026-02-19 | 2026-02-25 | Feature complete: moderation, claim flow, AI-enhanced ranking + explanations |
+| Development + AI Matching (Sprint 2) | 2026-02-19 | 2026-02-25 | Feature complete: moderation, status flow, AI-enhanced ranking + explanations |
 | Testing + Deploy + Closure | 2026-02-26 | 2026-03-01 | Test cases executed, bug fixes, performance checks. Final documentations |
 
 ## 5.2 Simple Gantt (Weeks)
