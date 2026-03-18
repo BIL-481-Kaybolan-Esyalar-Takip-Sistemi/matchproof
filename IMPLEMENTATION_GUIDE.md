@@ -112,6 +112,8 @@ query
 category
 itemType
 status
+dateFrom
+dateTo
 page
 pageSize
 ```
@@ -244,6 +246,7 @@ Kurallar:
 - frontend yalnızca dönen veriyi kullanır
 - gelişmiş ranking hazır olmasa bile uygulama çalışmaya devam etmeli, AI matching için fallback olmalıdır
 - owner iletişim bilgisi item içinde saklanmaz; detail response'ta `ownerContact` olarak user bilgisinden üretilir
+- normal arama sonuçlarında `removed` durumundaki ilanlar dönmez
 
 ## Ekip Çalışma Kuralları
 

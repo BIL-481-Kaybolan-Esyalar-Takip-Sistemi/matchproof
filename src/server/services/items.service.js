@@ -2,12 +2,17 @@ const {
   createItem: insertItem,
   deleteItemById,
   findItemById,
+  searchItems: searchItemsInStore,
   updateItemById,
 } = require('../models/item.model');
 const { AppError } = require('./app-error');
 const { deleteStoredImage, toPublicImageUrl } = require('./upload.service');
 
 const VALID_ITEM_TYPES = new Set(['lost', 'found']);
+const VALID_SEARCH_STATUSES = new Set(['open', 'claimed', 'resolved']);
+const DEFAULT_PAGE = 1;
+const DEFAULT_PAGE_SIZE = 10;
+const MAX_PAGE_SIZE = 50;
 
 function parseItemId(value) {
   const itemId = Number(value);
@@ -46,6 +51,22 @@ function toPublicItem(item) {
   };
 }
 
+function toPublicItemSummary(item) {
+  return {
+    id: item.id,
+    ownerId: item.ownerId,
+    itemType: item.itemType,
+    title: item.title,
+    description: item.description,
+    category: item.category,
+    location: item.location,
+    status: item.status,
+    imageUrl: item.imagePath ? toPublicImageUrl(item.imagePath) : null,
+    createdAt: item.createdAt,
+    updatedAt: item.updatedAt,
+  };
+}
+
 function validateItemType(itemType) {
   const normalizedItemType = normalizeText(itemType).toLowerCase();
 
@@ -64,6 +85,87 @@ function validateRequiredField(fieldName, value) {
 
   if (!normalizedValue) {
     throw new AppError(`${fieldName} is required.`, {
+      statusCode: 400,
+      code: `INVALID_${fieldName.toUpperCase()}`,
+    });
+  }
+
+  return normalizedValue;
+}
+
+function normalizeOptionalField(value) {
+  const normalizedValue = normalizeText(value);
+  return normalizedValue || null;
+}
+
+function parsePositiveInteger(value, fallback, fieldName) {
+  if (value === undefined || value === null || value === '') {
+    return fallback;
+  }
+
+  const parsedValue = Number(value);
+
+  if (!Number.isInteger(parsedValue) || parsedValue < 1) {
+    throw new AppError(`${fieldName} must be a positive integer.`, {
+      statusCode: 400,
+      code: `INVALID_${fieldName.toUpperCase()}`,
+    });
+  }
+
+  return parsedValue;
+}
+
+function parsePageSize(value) {
+  const pageSize = parsePositiveInteger(value, DEFAULT_PAGE_SIZE, 'pageSize');
+
+  if (pageSize > MAX_PAGE_SIZE) {
+    throw new AppError(`pageSize must be ${MAX_PAGE_SIZE} or less.`, {
+      statusCode: 400,
+      code: 'INVALID_PAGESIZE',
+    });
+  }
+
+  return pageSize;
+}
+
+function parseSearchStatus(value) {
+  if (value === undefined || value === null || value === '') {
+    return null;
+  }
+
+  const normalizedStatus = normalizeText(value).toLowerCase();
+
+  if (!VALID_SEARCH_STATUSES.has(normalizedStatus)) {
+    throw new AppError('status must be one of "open", "claimed", or "resolved".', {
+      statusCode: 400,
+      code: 'INVALID_STATUS',
+    });
+  }
+
+  return normalizedStatus;
+}
+
+function parseOptionalDate(value, fieldName) {
+  if (value === undefined || value === null || value === '') {
+    return null;
+  }
+
+  const normalizedValue = normalizeText(value);
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(normalizedValue)) {
+    throw new AppError(`${fieldName} must be in YYYY-MM-DD format.`, {
+      statusCode: 400,
+      code: `INVALID_${fieldName.toUpperCase()}`,
+    });
+  }
+
+  const parsedDate = new Date(`${normalizedValue}T00:00:00.000Z`);
+
+  if (
+    Number.isNaN(parsedDate.getTime()) ||
+    parsedDate.toISOString().slice(0, 10) !== normalizedValue
+  ) {
+    throw new AppError(`${fieldName} must be a valid date.`, {
       statusCode: 400,
       code: `INVALID_${fieldName.toUpperCase()}`,
     });
@@ -92,6 +194,34 @@ function getUpdatedFieldValue(fieldName, nextValue, currentValue) {
   }
 
   return validateRequiredField(fieldName, nextValue);
+}
+
+function getSearchFilters(queryParams) {
+  const page = parsePositiveInteger(queryParams.page, DEFAULT_PAGE, 'page');
+  const pageSize = parsePageSize(queryParams.pageSize);
+  const dateFrom = parseOptionalDate(queryParams.dateFrom, 'dateFrom');
+  const dateTo = parseOptionalDate(queryParams.dateTo, 'dateTo');
+
+  if (dateFrom && dateTo && dateFrom > dateTo) {
+    throw new AppError('dateFrom cannot be later than dateTo.', {
+      statusCode: 400,
+      code: 'INVALID_DATE_RANGE',
+    });
+  }
+
+  return {
+    queryText: normalizeOptionalField(queryParams.query),
+    category: normalizeOptionalField(queryParams.category),
+    itemType:
+      queryParams.itemType === undefined || queryParams.itemType === null || queryParams.itemType === ''
+        ? null
+        : validateItemType(queryParams.itemType),
+    status: parseSearchStatus(queryParams.status),
+    dateFrom,
+    dateTo,
+    page,
+    pageSize,
+  };
 }
 
 async function assertItemOwner(itemId, userId) {
@@ -142,6 +272,30 @@ async function getItemById(itemIdValue) {
   return toPublicItem(item);
 }
 
+async function searchItems(queryParams) {
+  const filters = getSearchFilters(queryParams);
+  const { items, total } = await searchItemsInStore(filters);
+  const totalPages = total === 0 ? 0 : Math.ceil(total / filters.pageSize);
+
+  return {
+    items: items.map(toPublicItemSummary),
+    pagination: {
+      page: filters.page,
+      pageSize: filters.pageSize,
+      total,
+      totalPages,
+    },
+    filters: {
+      query: filters.queryText,
+      category: filters.category,
+      itemType: filters.itemType,
+      status: filters.status,
+      dateFrom: filters.dateFrom,
+      dateTo: filters.dateTo,
+    },
+  };
+}
+
 async function updateItem({ itemId: itemIdValue, userId, payload, file }) {
   const itemId = parseItemId(itemIdValue);
   const existingItem = await assertItemOwner(itemId, userId);
@@ -189,5 +343,6 @@ module.exports = {
   createItem,
   deleteItem,
   getItemById,
+  searchItems,
   updateItem,
 };
