@@ -4,6 +4,7 @@ const {
   createItem,
   deleteItem,
   getItemById,
+  searchItems,
   updateItem,
 } = require('../services/items.service');
 const { requireAuth } = require('../services/require-auth');
@@ -40,6 +41,16 @@ router.post('/', singleImageUpload, async (req, res, next) => {
   } catch (error) {
     await cleanupUploadedFile(req.file);
 
+    next(error);
+  }
+});
+
+router.get('/search', async (req, res, next) => {
+  try {
+    const result = await searchItems(req.query);
+
+    res.status(200).json(result);
+  } catch (error) {
     next(error);
   }
 });
