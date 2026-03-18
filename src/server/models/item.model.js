@@ -152,6 +152,22 @@ async function searchItems({
   };
 }
 
+async function updateItemStatusById(itemId, status) {
+  const result = await query(
+    `
+      UPDATE items
+      SET
+        status = $2,
+        updated_at = NOW()
+      WHERE id = $1
+      RETURNING id
+    `,
+    [itemId, status]
+  );
+
+  return result.rows[0] || null;
+}
+
 async function updateItemById(itemId, fields) {
   const result = await query(
     `
@@ -199,6 +215,7 @@ module.exports = {
   deleteItemById,
   findItemById,
   searchItems,
+  updateItemStatusById,
   updateItemById,
 };
 

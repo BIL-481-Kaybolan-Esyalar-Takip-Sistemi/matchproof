@@ -3,6 +3,7 @@ const {
   deleteItemById,
   findItemById,
   searchItems: searchItemsInStore,
+  updateItemStatusById,
   updateItemById,
 } = require('../models/item.model');
 const { AppError } = require('./app-error');
@@ -10,9 +11,16 @@ const { deleteStoredImage, toPublicImageUrl } = require('./upload.service');
 
 const VALID_ITEM_TYPES = new Set(['lost', 'found']);
 const VALID_SEARCH_STATUSES = new Set(['open', 'claimed', 'resolved']);
+const VALID_MUTABLE_STATUSES = new Set(['claimed', 'resolved']);
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 50;
+const VALID_STATUS_TRANSITIONS = {
+  open: new Set(['claimed']),
+  claimed: new Set(['resolved']),
+  resolved: new Set(),
+  removed: new Set(),
+};
 
 function parseItemId(value) {
   const itemId = Number(value);
@@ -137,6 +145,26 @@ function parseSearchStatus(value) {
 
   if (!VALID_SEARCH_STATUSES.has(normalizedStatus)) {
     throw new AppError('status must be one of "open", "claimed", or "resolved".', {
+      statusCode: 400,
+      code: 'INVALID_STATUS',
+    });
+  }
+
+  return normalizedStatus;
+}
+
+function parseNextStatus(value) {
+  if (value === undefined || value === null || value === '') {
+    throw new AppError('status is required.', {
+      statusCode: 400,
+      code: 'INVALID_STATUS',
+    });
+  }
+
+  const normalizedStatus = normalizeText(value).toLowerCase();
+
+  if (!VALID_MUTABLE_STATUSES.has(normalizedStatus)) {
+    throw new AppError('status must be either "claimed" or "resolved".', {
       statusCode: 400,
       code: 'INVALID_STATUS',
     });
@@ -296,6 +324,29 @@ async function searchItems(queryParams) {
   };
 }
 
+async function updateItemStatus({ itemId: itemIdValue, userId, status }) {
+  const itemId = parseItemId(itemIdValue);
+  const existingItem = await assertItemOwner(itemId, userId);
+  const nextStatus = parseNextStatus(status);
+  const allowedNextStatuses = VALID_STATUS_TRANSITIONS[existingItem.status] || new Set();
+
+  if (!allowedNextStatuses.has(nextStatus)) {
+    throw new AppError(
+      `Status transition from "${existingItem.status}" to "${nextStatus}" is not allowed.`,
+      {
+        statusCode: 400,
+        code: 'INVALID_STATUS_TRANSITION',
+      }
+    );
+  }
+
+  await updateItemStatusById(itemId, nextStatus);
+
+  const updatedItem = await findItemById(itemId);
+
+  return toPublicItem(updatedItem);
+}
+
 async function updateItem({ itemId: itemIdValue, userId, payload, file }) {
   const itemId = parseItemId(itemIdValue);
   const existingItem = await assertItemOwner(itemId, userId);
@@ -344,5 +395,6 @@ module.exports = {
   deleteItem,
   getItemById,
   searchItems,
+  updateItemStatus,
   updateItem,
 };

@@ -247,6 +247,7 @@ Kurallar:
 - gelişmiş ranking hazır olmasa bile uygulama çalışmaya devam etmeli, AI matching için fallback olmalıdır
 - owner iletişim bilgisi item içinde saklanmaz; detail response'ta `ownerContact` olarak user bilgisinden üretilir
 - normal arama sonuçlarında `removed` durumundaki ilanlar dönmez
+- status geçişleri backend tarafından sınırlandırılır: `open -> claimed -> resolved`
 
 ## Ekip Çalışma Kuralları
 
