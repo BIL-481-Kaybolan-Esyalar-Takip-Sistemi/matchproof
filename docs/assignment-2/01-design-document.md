@@ -98,7 +98,7 @@ matchproof/
 
 - Authentication service: register/login/session handling (FR1)
 - Item service: create/edit/delete lost/found posts and media upload (FR2, FR3, FR4, FR10)
-- Search service: keyword search + filter by category/date/status (FR5, FR6)
+- Search service: keyword search + filter by category/date/status/item type with pagination (FR5, FR6)
 - Matching service: text+image similarity scoring and ranked candidate generation (FR11, FR12, FR13)
 - Explainability service: short explanation generation from top similarity factors (FR14)
 - Moderation service: admin removal of duplicate/inappropriate posts (FR9)
@@ -129,12 +129,12 @@ AuthService.logout(session) -> void
 AuthService.getCurrentUser(session) -> User
 
 ItemService.createItem(userId, itemType, payload, imageFile) -> Item
-ItemService.getItemById(requestUserId, itemId) -> ItemDetail
+ItemService.getItemById(itemId) -> ItemDetail
 ItemService.updateItem(userId, itemId, payload) -> Item
 ItemService.deleteItem(userId, itemId) -> void
 ItemService.updateStatus(userId, itemId, status) -> Item
 
-SearchService.search(query, filters, page, pageSize) -> Paged<Item>
+SearchService.search(filters) -> Paged<ItemSummary>
 MatchingService.rankCandidates(itemId, limit) -> List<MatchCandidate>
 MatchingService.explainMatch(sourceItemId, candidateItemId) -> MatchExplanation
 

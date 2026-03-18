@@ -118,6 +118,8 @@ page
 pageSize
 ```
 
+Not: `dateFrom` ve `dateTo`, ilk aşamada ilanın sisteme eklenme tarihini filtreler.
+
 ### 4. MatchCandidate
 
 Kullanım alanları:
