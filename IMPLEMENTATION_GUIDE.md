@@ -94,7 +94,6 @@ category
 location
 status          // open | claimed | resolved | removed
 imageUrl
-contactInfo
 ownerId
 createdAt
 updatedAt
@@ -242,6 +241,7 @@ Kurallar:
 - filtering, ranking ve explanation için tek doğru kaynak backend'dir
 - frontend yalnızca dönen veriyi kullanır
 - gelişmiş ranking hazır olmasa bile uygulama çalışmaya devam etmeli, AI matching için fallback olmalıdır
+- owner iletişim bilgisi item içinde saklanmaz; detail response'ta `ownerContact` olarak user bilgisinden üretilir
 
 ## Ekip Çalışma Kuralları
 
