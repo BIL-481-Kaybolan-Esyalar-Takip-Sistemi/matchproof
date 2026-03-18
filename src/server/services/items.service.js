@@ -286,7 +286,23 @@ async function createItem({ userId, payload, file }) {
   return toPublicItem(item);
 }
 
-async function getItemById(itemIdValue) {
+function assertCanViewItem(item, userId, userRole) {
+  if (item.status !== 'removed') {
+    return;
+  }
+
+  const isOwner = String(item.ownerId) === String(userId);
+  const isAdmin = userRole === 'admin';
+
+  if (!isOwner && !isAdmin) {
+    throw new AppError('Item could not be found.', {
+      statusCode: 404,
+      code: 'ITEM_NOT_FOUND',
+    });
+  }
+}
+
+async function getItemById(itemIdValue, { userId, userRole } = {}) {
   const itemId = parseItemId(itemIdValue);
   const item = await findItemById(itemId);
 
@@ -296,6 +312,8 @@ async function getItemById(itemIdValue) {
       code: 'ITEM_NOT_FOUND',
     });
   }
+
+  assertCanViewItem(item, userId, userRole);
 
   return toPublicItem(item);
 }
@@ -350,6 +368,14 @@ async function updateItemStatus({ itemId: itemIdValue, userId, status }) {
 async function updateItem({ itemId: itemIdValue, userId, payload, file }) {
   const itemId = parseItemId(itemIdValue);
   const existingItem = await assertItemOwner(itemId, userId);
+
+  if (existingItem.status === 'removed') {
+    throw new AppError('Removed items cannot be updated.', {
+      statusCode: 400,
+      code: 'ITEM_REMOVED',
+    });
+  }
+
   const hasBodyChanges = ['itemType', 'title', 'description', 'category', 'location'].some(
     (fieldName) => payload[fieldName] !== undefined
   );

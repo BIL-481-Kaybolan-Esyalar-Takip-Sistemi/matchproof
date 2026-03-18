@@ -129,7 +129,7 @@ AuthService.logout(session) -> void
 AuthService.getCurrentUser(session) -> User
 
 ItemService.createItem(userId, itemType, payload, imageFile) -> Item
-ItemService.getItemById(itemId) -> ItemDetail
+ItemService.getItemById(requestUserId, requestUserRole, itemId) -> ItemDetail
 ItemService.updateItem(userId, itemId, payload) -> Item
 ItemService.deleteItem(userId, itemId) -> void
 ItemService.updateStatus(userId, itemId, status) -> Item

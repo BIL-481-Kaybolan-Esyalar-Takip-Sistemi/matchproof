@@ -168,6 +168,23 @@ async function updateItemStatusById(itemId, status) {
   return result.rows[0] || null;
 }
 
+async function markItemAsRemovedById(itemId) {
+  const result = await query(
+    `
+      UPDATE items
+      SET
+        status = 'removed',
+        image_path = NULL,
+        updated_at = NOW()
+      WHERE id = $1
+      RETURNING id
+    `,
+    [itemId]
+  );
+
+  return result.rows[0] || null;
+}
+
 async function updateItemById(itemId, fields) {
   const result = await query(
     `
@@ -214,6 +231,7 @@ module.exports = {
   createItem,
   deleteItemById,
   findItemById,
+  markItemAsRemovedById,
   searchItems,
   updateItemStatusById,
   updateItemById,

@@ -58,7 +58,10 @@ router.get('/search', async (req, res, next) => {
 
 router.get('/:itemId', async (req, res, next) => {
   try {
-    const item = await getItemById(req.params.itemId);
+    const item = await getItemById(req.params.itemId, {
+      userId: req.session.userId,
+      userRole: req.session.userRole,
+    });
 
     res.status(200).json({ item });
   } catch (error) {
