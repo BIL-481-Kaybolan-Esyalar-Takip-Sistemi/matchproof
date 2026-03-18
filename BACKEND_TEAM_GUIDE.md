@@ -25,10 +25,10 @@ Tamamlanan temel backend kapsamı:
 - Local image upload
 - Item search + filtering + pagination
 - Item status update flow
+- Admin moderation remove flow
 
 Henüz tamamlanmayan backend kapsamı:
 
-- moderation endpoint'leri
 - AI matching endpoint'leri
 - otomatik testler
 - deploy / production hardening
@@ -132,6 +132,15 @@ Not: Bunun gizlilik açısından final karar olup olmadığı ekip içinde ayrı
 - normal arama sonuçlarında `removed` ilanlar dönmez
 - `dateFrom` / `dateTo` şu an **ilanın sisteme eklenme tarihini** filtreler
 
+### 7. Moderation davranışı
+
+- moderation endpoint'i sadece `admin` kullanıcılar için açıktır
+- remove işlemi item status'unu `removed` yapar
+- remove işlemi için `reason` zorunludur
+- remove işlemi moderation log tablosuna da kaydedilir
+- `removed` ilanlar normal kullanıcı için search sonuçlarında görünmez
+- `removed` ilanlar detail endpoint'te sadece owner veya admin tarafından görülebilir
+
 ---
 
 ## Environment ve Çalıştırma
@@ -161,8 +170,20 @@ npm start
 ## Mevcut Endpoint'ler
 
 Tüm `/api/items/*` endpoint'leri authentication gerektirir.
+`/api/moderation/*` endpoint'leri authentication + admin yetkisi gerektirir.
 
 ### Auth
+
+Admin rolü notu:
+
+- moderation endpoint'ini test etmek için ilgili kullanıcının `role` alanı veritabanında `admin` olmalıdır
+- şu an en basit yöntem kullanıcı oluşturduktan sonra DB'de manuel güncelleme yapmaktır:
+
+```sql
+UPDATE users
+SET role = 'admin'
+WHERE email = 'admin@example.com';
+```
 
 #### `POST /api/auth/register`
 
@@ -385,6 +406,56 @@ GET /api/items/search?query=wallet&itemType=lost&status=open&page=1&pageSize=10
 
 ---
 
+### Moderation
+
+#### `POST /api/moderation/items/:itemId/remove`
+
+Body:
+
+```json
+{
+  "reason": "Duplicate post"
+}
+```
+
+Örnek response:
+
+```json
+{
+  "item": {
+    "id": 10,
+    "ownerId": 1,
+    "itemType": "lost",
+    "title": "Black Wallet",
+    "description": "Small black leather wallet",
+    "category": "Wallet",
+    "location": "Library",
+    "status": "removed",
+    "imageUrl": null,
+    "createdAt": "2026-03-18T10:00:00.000Z",
+    "updatedAt": "2026-03-18T10:15:00.000Z"
+  },
+  "moderationAction": {
+    "id": 3,
+    "itemId": 10,
+    "adminUserId": 2,
+    "reason": "Duplicate post",
+    "actionType": "remove",
+    "createdAt": "2026-03-18T10:15:00.000Z"
+  }
+}
+```
+
+Bu endpoint:
+
+- sadece admin tarafından çağrılabilir
+- `reason` ister
+- item'i `removed` durumuna alır
+- moderation log kaydı oluşturur
+- item görselini sistemden kaldırır
+
+---
+
 ## Frontend Ekibi İçin Notlar
 
 Frontend tarafı şu an şu backend akışlarına güvenebilir:
@@ -407,6 +478,8 @@ Frontend'in dikkat etmesi gerekenler:
   - `open` ise `Mark as Claimed`
   - `claimed` ise `Mark as Resolved`
   - `resolved` ise buton göstermemek daha doğru
+- admin paneli varsa moderation remove çağrısı için ayrı akış kullanmalı
+- normal kullanıcı `removed` ilanı detail ekranında göremeyebilir
 
 ---
 
@@ -494,7 +567,6 @@ AI ekibi için önemli mevcut alanlar:
 
 Kalan backend geliştirmeler:
 
-- moderation route ve service
 - AI matching route ve service
 - privacy/contact modelinin netleştirilmesi
 - test altyapısı ve otomatik testler
@@ -508,5 +580,6 @@ Kalan backend geliştirmeler:
 2. İletişim için ayrıca paylaşılabilir `contactMethod/contactValue` alanı eklenecek mi?
 3. `dateFrom` / `dateTo` ilan oluşturulma tarihini mi, yoksa eşyanın kaybolduğu/bulunduğu tarihi mi temsil etmeli?
 4. Moderation sadece `remove` mu olacak, yoksa ileride `restore` da eklenecek mi?
+5. Test ve frontend ekipleri için admin kullanıcı nasıl üretilecek? (şu an en basit yol: DB'de kullanıcının `role` alanını `admin` yapmak)
 
 Bu kararlar netleşmeden frontend ve AI ekipleri varsayım yapmamalı.

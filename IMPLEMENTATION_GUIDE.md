@@ -249,7 +249,10 @@ Kurallar:
 - gelişmiş ranking hazır olmasa bile uygulama çalışmaya devam etmeli, AI matching için fallback olmalıdır
 - owner iletişim bilgisi item içinde saklanmaz; detail response'ta `ownerContact` olarak user bilgisinden üretilir
 - normal arama sonuçlarında `removed` durumundaki ilanlar dönmez
+- `removed` ilanlar detail endpoint'te yalnızca admin veya ilan sahibi tarafından görülebilir
 - status geçişleri backend tarafından sınırlandırılır: `open -> claimed -> resolved`
+- moderation endpoint'i yalnızca `admin` role sahip kullanıcılar tarafından çağrılabilir
+- moderation remove işlemi için `reason` zorunludur
 
 ## Ekip Çalışma Kuralları
 
