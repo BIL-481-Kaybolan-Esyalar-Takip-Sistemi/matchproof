@@ -5,6 +5,7 @@ const {
   deleteItem,
   getItemById,
   searchItems,
+  updateItemStatus,
   updateItem,
 } = require('../services/items.service');
 const { requireAuth } = require('../services/require-auth');
@@ -58,6 +59,20 @@ router.get('/search', async (req, res, next) => {
 router.get('/:itemId', async (req, res, next) => {
   try {
     const item = await getItemById(req.params.itemId);
+
+    res.status(200).json({ item });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.patch('/:itemId/status', async (req, res, next) => {
+  try {
+    const item = await updateItemStatus({
+      itemId: req.params.itemId,
+      userId: req.session.userId,
+      status: req.body.status,
+    });
 
     res.status(200).json({ item });
   } catch (error) {
