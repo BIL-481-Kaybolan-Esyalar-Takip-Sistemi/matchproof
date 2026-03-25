@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg: #f5f4f0;
+  --surface: #ffffff;
+  --surface-2: #f0efe9;
+  --border: #d0cfc7;
+  --border-dark: #a0a098;
+  --text: #1a1a18;
+  --text-2: #5a5a52;
+  --text-3: #8a8a80;
+  --accent: #1a1a18;
+  --accent-inv: #f5f4f0;
+  --red: #c0392b;
+  --green: #1e7e45;
+  --amber: #c07a00;
+  --blue: #1a4e8c;
+  --radius: 2px;
+  --font-body: 'IBM Plex Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 0 0 1px var(--border);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.10), 0 0 0 1px var(--border);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-body); background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.5; font-size: 15px; }
+#root { min-height: 100vh; }
+h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+h2 { font-size: 18px; font-weight: 600; }
+h3 { font-size: 15px; font-weight: 600; }
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: var(--font-body); }
+input, select, textarea { font-family: var(--font-body); }
