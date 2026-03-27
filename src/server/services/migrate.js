@@ -71,7 +71,17 @@ async function runMigrations() {
   }
 }
 
-runMigrations().catch((error) => {
-  console.error('Migration failed:', error);
-  process.exit(1);
-});
+if (require.main === module) {
+  runMigrations().catch((error) => {
+    console.error('Migration failed:', error);
+    process.exit(1);
+  });
+}
+
+module.exports = {
+  ensureMigrationsTable,
+  getMigrationFiles,
+  getAppliedMigrations,
+  runMigrations,
+  migrationsDirectory,
+};
