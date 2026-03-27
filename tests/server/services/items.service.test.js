@@ -65,6 +65,7 @@ describe('items.service', () => {
       description: 'Black wallet',
       category: 'Accessories',
       location: 'Library',
+      isPrivate: false,
       imagePath: 'wallet.jpg',
     });
     expect(result.imageUrl).toBe('/uploads/wallet.jpg');
