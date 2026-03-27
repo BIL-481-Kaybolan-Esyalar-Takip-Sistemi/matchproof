@@ -163,7 +163,39 @@ Mevcut scriptler:
 npm run db:migrate
 npm run dev
 npm start
+npm test
+npm run test:watch
 ```
+
+## Otomatik Test Katmanı
+
+Backend için Jest tabanlı bir unit test katmanı eklendi.
+
+Test altyapısı:
+
+- `jest.config.cjs` ile test environment ve setup tanımlı
+- `tests/setup-env.js` ile test sırasında gerekli env değişkenlerine fallback veriliyor
+
+Mevcut test kapsamı:
+
+- `tests/server/middleware/require-auth.test.js`
+  - auth zorunluluğu kontrolleri
+- `tests/server/middleware/require-admin.test.js`
+  - admin yetkisi kontrolleri
+- `tests/server/services/auth.service.test.js`
+  - register/login/current-user iş kuralları
+- `tests/server/services/items.service.test.js`
+  - item create/search/detail/status/update/delete iş kuralları
+- `tests/server/services/moderation.service.test.js`
+  - admin remove akışı ve moderation action üretimi
+- `tests/server/routes/api.routes.integration.test.js`
+  - app + route + middleware seviyesinde integration testleri (supertest)
+  - auth/session, yetkilendirme ve error response contract doğrulaması
+
+Notlar:
+
+- Testler unit seviyede çalışır, dış bağımlılıklar mock edilir.
+- Bu yaklaşım CI ortamında gerçek DB gerektirmeden hızlı doğrulama sağlar.
 
 ---
 

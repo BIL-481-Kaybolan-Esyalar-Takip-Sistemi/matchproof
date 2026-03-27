@@ -7,7 +7,10 @@
   "scripts": {
     "start": "node src/server/index.js",
     "dev": "nodemon src/server/index.js",
-    "db:migrate": "node src/server/services/migrate.js"
+    "db:migrate": "node src/server/services/migrate.js",
+    "test": "jest --runInBand",
+    "test:coverage": "jest --runInBand --coverage",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -20,7 +23,9 @@
     "pg": "^8.13.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9"
+    "jest": "^30.0.5",
+    "nodemon": "^3.1.9",
+    "supertest": "^7.1.1"
   }
 }
 
