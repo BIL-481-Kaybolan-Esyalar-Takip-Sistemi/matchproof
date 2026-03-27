@@ -133,6 +133,32 @@ describe('item.model', () => {
     expect(rowsQueryParams).toEqual([20, 0]); // Just limit and offset
   });
 
+  test('searchItems computes limit/offset indexes correctly for later pages', async () => {
+    query.mockResolvedValueOnce({ rows: [] });
+    query.mockResolvedValueOnce({ rows: [{ total: 0 }] });
+
+    await itemModel.searchItems({
+      queryText: null,
+      category: null,
+      itemType: null,
+      status: null,
+      dateFrom: null,
+      dateTo: null,
+      page: 3,
+      pageSize: 15,
+    });
+
+    const rowsQueryStr = query.mock.calls[0][0];
+    const rowsQueryParams = query.mock.calls[0][1];
+    const countQueryParams = query.mock.calls[1][1];
+
+    expect(rowsQueryStr).toContain('WHERE items.status <> \'removed\'');
+    expect(rowsQueryStr).toContain('LIMIT $1');
+    expect(rowsQueryStr).toContain('OFFSET $2');
+    expect(rowsQueryParams).toEqual([15, 30]);
+    expect(countQueryParams).toEqual([]);
+  });
+
   test('updateItemStatusById calls UPDATE with correct fields', async () => {
     query.mockResolvedValue({ rows: [{ id: 3 }] });
 

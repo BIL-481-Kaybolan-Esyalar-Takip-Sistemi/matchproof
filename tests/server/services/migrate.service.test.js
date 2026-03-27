@@ -11,6 +11,8 @@ jest.mock('../../../src/server/services/db', () => ({
 }));
 
 const fs = require('fs/promises');
+const path = require('path');
+const { spawnSync } = require('child_process');
 const { pool } = require('../../../src/server/services/db');
 const migrateService = require('../../../src/server/services/migrate');
 
@@ -98,5 +100,22 @@ describe('migrate service', () => {
     expect(client.query).toHaveBeenCalledWith('ROLLBACK');
     expect(client.release).toHaveBeenCalled();
     expect(pool.end).toHaveBeenCalled();
+  });
+
+  test('CLI mode exits with code 1 and logs when migration run fails', () => {
+    const scriptPath = path.resolve(__dirname, '../../../src/server/services/migrate.js');
+    const result = spawnSync(process.execPath, [scriptPath], {
+      env: {
+        ...process.env,
+        DATABASE_URL: 'postgresql://invalid:invalid@127.0.0.1:1/matchproof',
+        SESSION_SECRET: 'test-secret',
+        NODE_ENV: 'test',
+      },
+      encoding: 'utf8',
+      timeout: 5000,
+    });
+
+    expect(result.status).toBe(1);
+    expect(`${result.stdout}\n${result.stderr}`).toContain('Migration failed:');
   });
 });

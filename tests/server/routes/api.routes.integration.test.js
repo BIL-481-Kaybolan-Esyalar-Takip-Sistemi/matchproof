@@ -176,12 +176,31 @@ describe('API routes integration', () => {
     expect(response.body.user.id).toBe(5);
   });
 
+  test('POST /api/auth/login forwards service errors', async () => {
+    authService.loginUser.mockRejectedValue({
+      statusCode: 401,
+      code: 'INVALID_CREDENTIALS',
+      message: 'Invalid email or password.',
+    });
+
+    const response = await request(app).post('/api/auth/login').send({
+      email: 'bob@example.com',
+      password: 'badpass',
+    });
+
+    expect(response.status).toBe(401);
+    expect(response.body.error.code).toBe('INVALID_CREDENTIALS');
+  });
+
   test('POST /api/auth/logout returns 204 without session', async () => {
     const response = await request(app)
       .post('/api/auth/logout')
       .set('x-test-no-session', '1');
 
     expect(response.status).toBe(204);
+    expect(response.headers['set-cookie']).toEqual(
+      expect.arrayContaining([expect.stringContaining('matchproof.sid=')])
+    );
   });
 
   test('POST /api/auth/logout returns 500 when session destroy fails', async () => {

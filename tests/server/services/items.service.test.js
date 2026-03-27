@@ -128,6 +128,42 @@ describe('items.service', () => {
     expect(result.imageUrl).toBeNull();
   });
 
+  test('createItem parses isPrivate truthy variants to true', async () => {
+    itemModel.createItem.mockResolvedValue({ id: 20 });
+    itemModel.findItemById.mockResolvedValue({
+      id: 20,
+      ownerId: 1,
+      itemType: 'lost',
+      title: 'Wallet',
+      description: 'Black wallet',
+      category: 'Accessories',
+      location: 'Library',
+      status: 'open',
+      isPrivate: true,
+      imagePath: null,
+      ownerName: 'Ada',
+      ownerEmail: 'ada@example.com',
+      createdAt: '2026-03-01T00:00:00.000Z',
+      updatedAt: '2026-03-01T00:00:00.000Z',
+    });
+
+    await createItem({
+      userId: 1,
+      payload: {
+        itemType: 'lost',
+        title: 'Wallet',
+        description: 'Black wallet',
+        category: 'Accessories',
+        location: 'Library',
+        isPrivate: '1',
+      },
+    });
+
+    expect(itemModel.createItem).toHaveBeenCalledWith(
+      expect.objectContaining({ isPrivate: true })
+    );
+  });
+
   test('getItemById hides removed item from non-owner/non-admin', async () => {
     itemModel.findItemById.mockResolvedValue({
       id: 5,
@@ -202,6 +238,30 @@ describe('items.service', () => {
 
     const item = await getItemById(5, { userId: 1, userRole: 'admin' });
     expect(item.id).toBe(5);
+  });
+
+  test('getItemById returns non-removed items regardless of requester role', async () => {
+    itemModel.findItemById.mockResolvedValue({
+      id: 8,
+      ownerId: 42,
+      itemType: 'found',
+      title: 'Card',
+      description: 'Campus card',
+      category: 'Cards',
+      location: 'Lab',
+      status: 'open',
+      isPrivate: false,
+      imagePath: null,
+      ownerName: 'Owner',
+      ownerEmail: 'owner@example.com',
+      createdAt: '2026-03-01T00:00:00.000Z',
+      updatedAt: '2026-03-01T00:00:00.000Z',
+    });
+
+    const item = await getItemById(8, { userId: 7, userRole: 'user' });
+
+    expect(item.id).toBe(8);
+    expect(item.status).toBe('open');
   });
 
   test('searchItems validates and returns pagination envelope', async () => {
@@ -513,6 +573,50 @@ describe('items.service', () => {
       expect.objectContaining({ imagePath: 'old.jpg' })
     );
     expect(uploadService.deleteStoredImage).not.toHaveBeenCalled();
+  });
+
+  test('updateItem parses false-y isPrivate variants to false', async () => {
+    itemModel.findItemById
+      .mockResolvedValueOnce({
+        id: 3,
+        ownerId: 1,
+        itemType: 'lost',
+        title: 'Wallet',
+        description: 'Black wallet',
+        category: 'Accessories',
+        location: 'Library',
+        status: 'open',
+        isPrivate: true,
+        imagePath: null,
+      })
+      .mockResolvedValueOnce({
+        id: 3,
+        ownerId: 1,
+        itemType: 'lost',
+        title: 'Wallet',
+        description: 'Black wallet',
+        category: 'Accessories',
+        location: 'Library',
+        status: 'open',
+        isPrivate: false,
+        imagePath: null,
+        ownerName: 'Ada',
+        ownerEmail: 'ada@example.com',
+        createdAt: '2026-03-01T00:00:00.000Z',
+        updatedAt: '2026-03-01T00:00:00.000Z',
+      });
+
+    await updateItem({
+      itemId: 3,
+      userId: 1,
+      payload: { isPrivate: '0' },
+      file: null,
+    });
+
+    expect(itemModel.updateItemById).toHaveBeenCalledWith(
+      3,
+      expect.objectContaining({ isPrivate: false })
+    );
   });
 
   test('deleteItem enforces ownership', async () => {
