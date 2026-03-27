@@ -193,6 +193,12 @@ describe('API routes integration', () => {
     expect(response.body.error.code).toBe('INTERNAL_SERVER_ERROR');
   });
 
+  test('POST /api/auth/logout destroys session successfully', async () => {
+    const response = await request(app).post('/api/auth/logout');
+
+    expect(response.status).toBe(204);
+  });
+
   test('GET /api/auth/me rejects unauthenticated requests', async () => {
     const response = await request(app).get('/api/auth/me');
 
@@ -335,6 +341,22 @@ describe('API routes integration', () => {
     expect(response.body.item.id).toBe(7);
   });
 
+  test('GET /api/items/:itemId forwards service errors', async () => {
+    itemsService.getItemById.mockRejectedValue({
+      statusCode: 404,
+      code: 'ITEM_NOT_FOUND',
+      message: 'Item not found.',
+    });
+
+    const response = await request(app)
+      .get('/api/items/999')
+      .set('x-test-user-id', '3')
+      .set('x-test-user-role', 'user');
+
+    expect(response.status).toBe(404);
+    expect(response.body.error.code).toBe('ITEM_NOT_FOUND');
+  });
+
   test('PATCH /api/items/:itemId/status updates status', async () => {
     itemsService.updateItemStatus.mockResolvedValue({ id: 7, status: 'claimed' });
 
@@ -350,6 +372,22 @@ describe('API routes integration', () => {
       status: 'claimed',
     });
     expect(response.body.item.status).toBe('claimed');
+  });
+
+  test('PATCH /api/items/:itemId/status forwards service errors', async () => {
+    itemsService.updateItemStatus.mockRejectedValue({
+      statusCode: 400,
+      code: 'INVALID_STATUS_TRANSITION',
+      message: 'Invalid status transition.',
+    });
+
+    const response = await request(app)
+      .patch('/api/items/7/status')
+      .set('x-test-user-id', '3')
+      .send({ status: 'resolved' });
+
+    expect(response.status).toBe(400);
+    expect(response.body.error.code).toBe('INVALID_STATUS_TRANSITION');
   });
 
   test('PATCH /api/items/:itemId updates item', async () => {
@@ -416,6 +454,21 @@ describe('API routes integration', () => {
     });
   });
 
+  test('DELETE /api/items/:itemId forwards service errors', async () => {
+    itemsService.deleteItem.mockRejectedValue({
+      statusCode: 403,
+      code: 'NOT_ITEM_OWNER',
+      message: 'You can only delete your own posts.',
+    });
+
+    const response = await request(app)
+      .delete('/api/items/7')
+      .set('x-test-user-id', '3');
+
+    expect(response.status).toBe(403);
+    expect(response.body.error.code).toBe('NOT_ITEM_OWNER');
+  });
+
   test('GET /api/items/search preserves error contract from app error handler', async () => {
     itemsService.searchItems.mockRejectedValue({
       statusCode: 400,
@@ -466,6 +519,23 @@ describe('API routes integration', () => {
       reason: 'inappropriate content',
     });
     expect(response.body.item.status).toBe('removed');
+  });
+
+  test('POST /api/moderation/items/:itemId/remove forwards service errors', async () => {
+    moderationService.removeItemPost.mockRejectedValue({
+      statusCode: 400,
+      code: 'MODERATION_REASON_REQUIRED',
+      message: 'Removal reason is required.',
+    });
+
+    const response = await request(app)
+      .post('/api/moderation/items/7/remove')
+      .set('x-test-user-id', '1')
+      .set('x-test-user-role', 'admin')
+      .send({ reason: '' });
+
+    expect(response.status).toBe(400);
+    expect(response.body.error.code).toBe('MODERATION_REASON_REQUIRED');
   });
 
   test('returns 404 route contract for unknown API endpoint', async () => {
