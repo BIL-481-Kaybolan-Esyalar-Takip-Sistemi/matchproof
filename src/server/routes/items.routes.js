@@ -4,6 +4,7 @@ const {
   createItem,
   deleteItem,
   getItemById,
+  getItemMatches, //added by zehra
   searchItems,
   updateItemStatus,
   updateItem,
@@ -49,6 +50,21 @@ router.post('/', singleImageUpload, async (req, res, next) => {
 router.get('/search', async (req, res, next) => {
   try {
     const result = await searchItems(req.query);
+
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+//added by zehra
+router.get('/:itemId/matches', async (req, res, next) => {
+  try {
+    const result = await getItemMatches({
+      itemId: req.params.itemId,
+      userId: req.session.userId,
+      userRole: req.session.userRole,
+    });
 
     res.status(200).json(result);
   } catch (error) {

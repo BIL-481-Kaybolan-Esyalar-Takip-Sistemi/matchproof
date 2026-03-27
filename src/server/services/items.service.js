@@ -7,6 +7,7 @@ const {
   updateItemById,
 } = require('../models/item.model');
 const { AppError } = require('./app-error');
+const { getMatchesForItem } = require('./matchingService'); //added by zehra
 const { deleteStoredImage, toPublicImageUrl } = require('./upload.service');
 
 const VALID_ITEM_TYPES = new Set(['lost', 'found']);
@@ -72,6 +73,29 @@ function toPublicItemSummary(item) {
     imageUrl: item.imagePath ? toPublicImageUrl(item.imagePath) : null,
     createdAt: item.createdAt,
     updatedAt: item.updatedAt,
+  };
+}
+
+//added by zehra
+function toPublicMatch(match) {
+  return {
+    itemId: match.itemId,
+    score: match.score,
+    reasons: match.reasons,
+    matchedFields: match.matchedFields,
+    item: {
+      id: match.item.id,
+      ownerId: match.item.ownerId,
+      itemType: match.item.itemType,
+      title: match.item.title,
+      description: match.item.description,
+      category: match.item.category,
+      location: match.item.location,
+      status: match.item.status,
+      imageUrl: match.item.imagePath ? toPublicImageUrl(match.item.imagePath) : null,
+      createdAt: match.item.createdAt,
+      updatedAt: match.item.updatedAt,
+    },
   };
 }
 
@@ -317,6 +341,39 @@ async function getItemById(itemIdValue, { userId, userRole } = {}) {
 
   return toPublicItem(item);
 }
+//added by zehra
+async function getItemMatches({ itemId: itemIdValue, userId, userRole }) {
+  const itemId = parseItemId(itemIdValue);
+  const item = await findItemById(itemId);
+
+  if (!item) {
+    throw new AppError('Item could not be found.', {
+      statusCode: 404,
+      code: 'ITEM_NOT_FOUND',
+    });
+  }
+
+  assertCanViewItem(item, userId, userRole);
+
+  if (item.status === 'removed') {
+    throw new AppError('Removed items cannot be matched.', {
+      statusCode: 400,
+      code: 'ITEM_REMOVED',
+    });
+  }
+
+  const result = await getMatchesForItem({
+    itemId,
+    itemModel: require('../models/item.model'),
+    limit: 3,
+  });
+
+  return {
+    sourceItemId: result.sourceItemId,
+    sourceItemType: result.sourceItemType,
+    matches: result.matches.map(toPublicMatch),
+  };
+}
 
 async function searchItems(queryParams) {
   const filters = getSearchFilters(queryParams);
@@ -420,6 +477,7 @@ module.exports = {
   createItem,
   deleteItem,
   getItemById,
+  getItemMatches, //added by zehra
   searchItems,
   updateItemStatus,
   updateItem,
