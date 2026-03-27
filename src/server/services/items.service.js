@@ -49,6 +49,7 @@ function toPublicItem(item) {
     category: item.category,
     location: item.location,
     status: item.status,
+    isPrivate: Boolean(item.isPrivate),
     imageUrl: item.imagePath ? toPublicImageUrl(item.imagePath) : null,
     ownerContact: {
       name: item.ownerName,
@@ -69,6 +70,7 @@ function toPublicItemSummary(item) {
     category: item.category,
     location: item.location,
     status: item.status,
+    isPrivate: Boolean(item.isPrivate),
     imageUrl: item.imagePath ? toPublicImageUrl(item.imagePath) : null,
     createdAt: item.createdAt,
     updatedAt: item.updatedAt,
@@ -104,6 +106,13 @@ function validateRequiredField(fieldName, value) {
 function normalizeOptionalField(value) {
   const normalizedValue = normalizeText(value);
   return normalizedValue || null;
+}
+
+function parseOptionalBoolean(value) {
+  if (value === undefined || value === null || value === '') {
+    return false;
+  }
+  return value === 'true' || value === true || value === 1 || value === '1';
 }
 
 function parsePositiveInteger(value, fallback, fieldName) {
@@ -209,6 +218,7 @@ function getCreatePayload(payload) {
     description: validateRequiredField('description', payload.description),
     category: validateRequiredField('category', payload.category),
     location: validateRequiredField('location', payload.location),
+    isPrivate: parseOptionalBoolean(payload.isPrivate),
   };
 }
 
@@ -219,6 +229,10 @@ function getUpdatedFieldValue(fieldName, nextValue, currentValue) {
 
   if (fieldName === 'itemType') {
     return validateItemType(nextValue);
+  }
+  
+  if (fieldName === 'isPrivate') {
+    return parseOptionalBoolean(nextValue);
   }
 
   return validateRequiredField(fieldName, nextValue);
@@ -376,7 +390,7 @@ async function updateItem({ itemId: itemIdValue, userId, payload, file }) {
     });
   }
 
-  const hasBodyChanges = ['itemType', 'title', 'description', 'category', 'location'].some(
+  const hasBodyChanges = ['itemType', 'title', 'description', 'category', 'location', 'isPrivate'].some(
     (fieldName) => payload[fieldName] !== undefined
   );
 
@@ -393,6 +407,7 @@ async function updateItem({ itemId: itemIdValue, userId, payload, file }) {
     description: getUpdatedFieldValue('description', payload.description, existingItem.description),
     category: getUpdatedFieldValue('category', payload.category, existingItem.category),
     location: getUpdatedFieldValue('location', payload.location, existingItem.location),
+    isPrivate: getUpdatedFieldValue('isPrivate', payload.isPrivate, existingItem.isPrivate),
     imagePath: file ? file.filename : existingItem.imagePath,
   });
 

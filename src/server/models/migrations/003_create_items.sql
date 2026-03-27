@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS items (
   location VARCHAR(150) NOT NULL,
   status VARCHAR(20) NOT NULL DEFAULT 'open',
   image_path TEXT,
+  is_private BOOLEAN NOT NULL DEFAULT false,
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
   CONSTRAINT items_type_check CHECK (item_type IN ('lost', 'found')),

@@ -8,6 +8,7 @@ async function createItem({
   category,
   location,
   imagePath,
+  isPrivate,
 }) {
   const result = await query(
     `
@@ -18,12 +19,13 @@ async function createItem({
         description,
         category,
         location,
-        image_path
+        image_path,
+        is_private
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING id
     `,
-    [ownerId, itemType, title, description, category, location, imagePath]
+    [ownerId, itemType, title, description, category, location, imagePath, isPrivate]
   );
 
   return result.rows[0];
@@ -42,6 +44,7 @@ async function findItemById(itemId) {
         items.location,
         items.status,
         items.image_path AS "imagePath",
+        items.is_private AS "isPrivate",
         items.created_at AS "createdAt",
         items.updated_at AS "updatedAt",
         users.name AS "ownerName",
@@ -124,6 +127,7 @@ async function searchItems({
         items.location,
         items.status,
         items.image_path AS "imagePath",
+        items.is_private AS "isPrivate",
         items.created_at AS "createdAt",
         items.updated_at AS "updatedAt"
       FROM items
@@ -196,6 +200,7 @@ async function updateItemById(itemId, fields) {
         category = $5,
         location = $6,
         image_path = $7,
+        is_private = $8,
         updated_at = NOW()
       WHERE id = $1
       RETURNING id
@@ -208,6 +213,7 @@ async function updateItemById(itemId, fields) {
       fields.category,
       fields.location,
       fields.imagePath,
+      fields.isPrivate,
     ]
   );
 
