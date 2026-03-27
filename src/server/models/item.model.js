@@ -232,11 +232,41 @@ async function deleteItemById(itemId) {
 
   return result.rows[0] || null;
 }
+//added by zehra
+async function findMatchCandidates({ itemType, status, excludeItemId }) {
+  const result = await query(
+    `
+      SELECT
+        items.id,
+        items.owner_id AS "ownerId",
+        items.item_type AS "itemType",
+        items.title,
+        items.description,
+        items.category,
+        items.location,
+        items.status,
+        items.image_path AS "imagePath",
+        items.created_at AS "createdAt",
+        items.updated_at AS "updatedAt"
+      FROM items
+      WHERE items.item_type = $1
+        AND items.status = $2
+        AND items.id <> $3
+        AND items.status <> 'removed'
+      ORDER BY items.created_at DESC, items.id DESC
+      LIMIT 200
+    `,
+    [itemType, status, excludeItemId]
+  );
+
+  return result.rows;
+}
 
 module.exports = {
   createItem,
   deleteItemById,
   findItemById,
+  findMatchCandidates, //added by zehra
   markItemAsRemovedById,
   searchItems,
   updateItemStatusById,

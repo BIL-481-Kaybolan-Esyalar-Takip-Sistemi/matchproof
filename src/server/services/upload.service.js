@@ -7,7 +7,14 @@ const multer = require('multer');
 const { AppError } = require('./app-error');
 const { env } = require('./env');
 
-const allowedMimeTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
+const allowedMimeTypes = new Set([ //added by zehra
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'application/octet-stream',
+]);
+
+const allowedExtensions = new Set(['.jpg', '.jpeg', '.png', '.webp']); //added by zehra
 const uploadRoot = path.resolve(process.cwd(), env.uploadDir);
 
 fs.mkdirSync(uploadRoot, { recursive: true });
@@ -29,19 +36,24 @@ const upload = multer({
   limits: {
     fileSize: 5 * 1024 * 1024,
   },
-  fileFilter(req, file, callback) {
-    if (!allowedMimeTypes.has(file.mimetype)) {
-      callback(
-        new AppError('Only JPEG, PNG, or WEBP images are allowed.', {
-          statusCode: 400,
-          code: 'INVALID_FILE_TYPE',
-        })
-      );
-      return;
-    }
+  fileFilter(req, file, callback) { //added by zehra
+ 
+  const extension = path.extname(file.originalname || '').toLowerCase();
+  const mimeAllowed = allowedMimeTypes.has(file.mimetype);
+  const extensionAllowed = allowedExtensions.has(extension);
 
-    callback(null, true);
-  },
+  if (!mimeAllowed && !extensionAllowed) {
+    callback(
+      new AppError('Only JPEG, PNG, or WEBP images are allowed.', {
+        statusCode: 400,
+        code: 'INVALID_FILE_TYPE',
+      })
+    );
+    return;
+  }
+
+  callback(null, true);
+},
 });
 
 function toPublicImageUrl(filename) {
