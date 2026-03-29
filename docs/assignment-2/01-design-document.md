@@ -290,3 +290,173 @@ The final project demo will include full implementation of UC1, UC2, UC3, and UC
 - The selected stack minimizes integration risk and supports the planned 160 person-hour effort budget.
 - AI matching is integrated as a module with fallback behavior, so core platform value does not depend on model availability.
 - Design prioritizes maintainability and demonstrability over distributed-system complexity.
+
+# AI Matching Module Design Pattern Decisions
+
+## Problem 1: Inflexible Management of Matching Criteria
+
+In the AI matching module, multiple criteria are used to match lost and found items. These include category, location, description text, image similarity, and posting date. If all these comparisons are implemented within a single class using fixed and nested `if-else` structures, the system becomes difficult to maintain. Additionally, adding a new similarity method or modifying an existing one would require changes across the entire module.
+
+## Solution: Strategy Pattern
+
+To address this problem, the **Strategy Pattern** has been adopted. Each similarity calculation method is modeled as a separate strategy class. This allows the system to compute each criterion independently and makes it easy to extend with new strategies when needed.
+
+### Example Strategies
+- `CategorySimilarityStrategy`
+- `LocationSimilarityStrategy`
+- `TextSimilarityStrategy`
+- `ImageSimilarityStrategy`
+- `DateSimilarityStrategy`
+
+## Architectural Placement
+
+The Strategy Pattern is used within the **AI Matching Service layer** of the backend architecture.  
+Instead of implementing all similarity calculations directly inside `MatchingService`, the service delegates each calculation to the appropriate strategy class. Thus, the service acts as an orchestrator rather than containing algorithm-specific logic.
+
+## UML Diagram Update
+
+Before applying the Strategy Pattern, similarity calculations could be implemented as internal methods of the `MatchingService`.  
+After applying the pattern, the UML design was updated as follows:
+
+- A common interface `SimilarityStrategy` was introduced.
+- Each similarity type is implemented as a separate concrete class.
+- `MatchingService` depends on the abstraction (`SimilarityStrategy`) instead of concrete implementations.
+
+This change reduces coupling and improves modularity.
+
+## Design Decision Rationale
+
+The similarity algorithms in the matching module are expected to evolve over time:
+
+- Text similarity may evolve from basic string matching to embedding-based semantic similarity.
+- Image similarity may use different models in the future.
+- Location scoring may become more advanced.
+
+A monolithic implementation would make these changes costly and error-prone. Therefore, the Strategy Pattern was selected because it supports **algorithm variability**, **extensibility**, and **independent testing**.
+
+Alternative approaches such as implementing all logic in a single service class were rejected due to poor maintainability and high coupling.
+
+## Quality Factors
+
+- **Modifiability**: New similarity algorithms can be added easily.
+- **Maintainability**: Each algorithm is isolated in its own class.
+- **Testability**: Each strategy can be tested independently.
+- **Reusability**: Strategies can be reused across different scenarios.
+- **Low Coupling**: The service depends on abstractions rather than concrete classes.
+
+## Quality Criteria
+
+- Adding a new similarity method should require minimal changes to existing code.
+- Each strategy must have a single responsibility.
+- Each strategy should be independently unit-testable.
+- The `MatchingService` should depend only on the `SimilarityStrategy` interface.
+
+## Trade-offs
+
+The Strategy Pattern increases the number of classes and introduces additional abstraction. While this may seem complex for small systems, it is justified here due to the expected evolution of matching algorithms.
+
+---
+
+## Problem 2: Monolithic Matching Workflow
+
+The matching process consists of multiple stages:
+
+- selecting candidate items
+- validating constraints
+- calculating similarity scores
+- aggregating results
+- producing the final decision
+
+If all these steps are implemented within a single service, the system becomes complex, hard to read, and difficult to extend.
+
+## Solution: Chain of Responsibility Pattern
+
+To solve this problem, the **Chain of Responsibility Pattern** has been applied.  
+The matching process is divided into sequential processing steps, where each handler performs a specific task and passes the result to the next handler.
+
+### Example Handler Structure
+- `CandidateSelectionHandler`
+- `CategoryValidationHandler`
+- `LocationScoringHandler`
+- `TextScoringHandler`
+- `ImageScoringHandler`
+- `DateScoringHandler`
+- `FinalDecisionHandler`
+
+## Architectural Placement
+
+This pattern is used in the **matching workflow layer** of the AI Matching Module.  
+A `MatchingContext` object is passed through the handler chain, and each handler processes and updates this context.
+
+## UML Diagram Update
+
+Before applying this pattern, the workflow could be represented as a single method inside a service.  
+After applying the pattern:
+
+- An abstract class `MatchHandler` was introduced.
+- Each processing step is implemented as a concrete handler.
+- Handlers are connected via a `nextHandler` reference.
+- A shared `MatchingContext` object is introduced.
+
+This results in a more modular and extensible design.
+
+## Matching Context
+
+The `MatchingContext` carries all necessary data throughout the pipeline, including:
+
+- source item
+- candidate items
+- partial similarity scores
+- matched fields
+- explanation reasons
+- final results
+
+This allows handlers to remain loosely coupled.
+
+## Design Decision Rationale
+
+The matching process is inherently multi-step and expected to grow.  
+New steps such as:
+
+- brand similarity
+- color similarity
+- user confidence scoring
+
+may be added in the future.
+
+The Chain of Responsibility Pattern enables easy extension by inserting new handlers without modifying existing ones.
+
+A monolithic approach was rejected due to poor scalability and maintainability.
+
+## Quality Factors
+
+- **Extensibility**: New steps can be added easily.
+- **Separation of Concerns**: Each handler has a single responsibility.
+- **Readability**: The workflow is clearly structured.
+- **Scalability**: The system can grow with new handlers.
+- **Testability**: Each handler can be tested independently.
+
+## Quality Criteria
+
+- Each handler must have exactly one responsibility.
+- Handlers should communicate via `MatchingContext`.
+- New handlers should be added without modifying existing ones.
+- Each handler should be independently testable.
+
+## Trade-offs
+
+The pattern introduces additional complexity and may make debugging harder due to distributed flow. However, this trade-off is acceptable given the flexibility and scalability it provides.
+
+---
+
+## Overall Evaluation
+
+Initially, the AI matching system had a more centralized and tightly coupled structure.  
+After applying the Strategy Pattern and Chain of Responsibility Pattern:
+
+- The system became more modular and extensible.
+- Similarity algorithms are decoupled from the core service.
+- The matching workflow is structured and easier to extend.
+
+Together, these patterns provide both **algorithmic flexibility** and **process modularity**.
+
