@@ -4,17 +4,17 @@ import '@testing-library/jest-dom';
 
 jest.mock('react-router-dom', () => ({
   useNavigate: jest.fn(),
-}), { virtual: true });
+}));
 
 jest.mock('../../../src/client/api', () => ({
   Items: {
     search: jest.fn(),
   },
-}), { virtual: true });
+}));
 
 jest.mock('../../../src/client/context/ToastContext', () => ({
   useToast: jest.fn(),
-}), { virtual: true });
+}));
 
 import SearchPage from '../../../src/client/pages/SearchPage';
 import { Items } from '../../../src/client/api';

@@ -58,6 +58,7 @@ jest.mock('../../../src/server/services/items.service', () => ({
   createItem: jest.fn(),
   deleteItem: jest.fn(),
   getItemById: jest.fn(),
+  getItemMatches: jest.fn(),
   searchItems: jest.fn(),
   updateItemStatus: jest.fn(),
   updateItem: jest.fn(),
@@ -360,6 +361,28 @@ describe('API routes integration', () => {
     expect(response.body.item.id).toBe(7);
   });
 
+  test('GET /api/items/:itemId/matches returns item matches', async () => {
+    itemsService.getItemMatches.mockResolvedValue({
+      sourceItemId: 7,
+      sourceItemType: 'lost',
+      matches: [{ itemId: 9, score: 0.81 }],
+    });
+
+    const response = await request(app)
+      .get('/api/items/7/matches')
+      .set('x-test-user-id', '3')
+      .set('x-test-user-role', 'user');
+
+    expect(response.status).toBe(200);
+    expect(itemsService.getItemMatches).toHaveBeenCalledWith({
+      itemId: '7',
+      userId: 3,
+      userRole: 'user',
+    });
+    expect(response.body.sourceItemId).toBe(7);
+    expect(response.body.matches).toHaveLength(1);
+  });
+
   test('GET /api/items/:itemId forwards service errors', async () => {
     itemsService.getItemById.mockRejectedValue({
       statusCode: 404,
@@ -476,8 +499,8 @@ describe('API routes integration', () => {
   test('DELETE /api/items/:itemId forwards service errors', async () => {
     itemsService.deleteItem.mockRejectedValue({
       statusCode: 403,
-      code: 'NOT_ITEM_OWNER',
-      message: 'You can only delete your own posts.',
+      code: 'ITEM_OWNERSHIP_REQUIRED',
+      message: 'You do not have permission to modify this item.',
     });
 
     const response = await request(app)
@@ -485,7 +508,7 @@ describe('API routes integration', () => {
       .set('x-test-user-id', '3');
 
     expect(response.status).toBe(403);
-    expect(response.body.error.code).toBe('NOT_ITEM_OWNER');
+    expect(response.body.error.code).toBe('ITEM_OWNERSHIP_REQUIRED');
   });
 
   test('GET /api/items/search preserves error contract from app error handler', async () => {
@@ -543,8 +566,8 @@ describe('API routes integration', () => {
   test('POST /api/moderation/items/:itemId/remove forwards service errors', async () => {
     moderationService.removeItemPost.mockRejectedValue({
       statusCode: 400,
-      code: 'MODERATION_REASON_REQUIRED',
-      message: 'Removal reason is required.',
+      code: 'INVALID_REASON',
+      message: 'reason is required.',
     });
 
     const response = await request(app)
@@ -554,7 +577,7 @@ describe('API routes integration', () => {
       .send({ reason: '' });
 
     expect(response.status).toBe(400);
-    expect(response.body.error.code).toBe('MODERATION_REASON_REQUIRED');
+    expect(response.body.error.code).toBe('INVALID_REASON');
   });
 
   test('returns 404 route contract for unknown API endpoint', async () => {

@@ -12,6 +12,10 @@ jest.mock('../../../src/server/services/upload.service', () => ({
   toPublicImageUrl: jest.fn((filename) => `/uploads/${filename}`),
 }));
 
+jest.mock('../../../src/server/services/matchingService', () => ({
+  getMatchesForItem: jest.fn(),
+}));
+
 const itemModel = require('../../../src/server/models/item.model');
 const uploadService = require('../../../src/server/services/upload.service');
 const {

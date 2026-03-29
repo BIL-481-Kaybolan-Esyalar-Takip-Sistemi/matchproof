@@ -4,15 +4,15 @@ import '@testing-library/jest-dom';
 
 jest.mock('react-router-dom', () => ({
   useNavigate: jest.fn(),
-}), { virtual: true });
+}));
 
 jest.mock('../../../src/client/context/AuthContext', () => ({
   useAuth: jest.fn(),
-}), { virtual: true });
+}));
 
 jest.mock('../../../src/client/context/ToastContext', () => ({
   useToast: jest.fn(),
-}), { virtual: true });
+}));
 
 import AuthPage from '../../../src/client/pages/AuthPage';
 import { useAuth } from '../../../src/client/context/AuthContext';
