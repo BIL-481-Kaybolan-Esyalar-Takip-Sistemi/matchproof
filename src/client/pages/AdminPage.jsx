@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Items, Moderation } from '../api';
 import { useAuth } from '../context/AuthContext';
@@ -16,20 +16,15 @@ export default function AdminPage() {
   const [removeTarget, setRemoveTarget] = useState(null);
   const [reason, setReason] = useState('');
 
-  const fetchItems = async (p = 1) => {
+  const fetchItemsCallbackCallback = useCallback((p = 1) => {
     setLoading(true);
-    try {
-      const data = await Items.search({ page: p, pageSize: 20 });
-      setItems(data.items);
-      setPagination(data.pagination);
-    } catch (err) {
-      showToast(err.message, 'error');
-    } finally {
-      setLoading(false);
-    }
-  };
+    Items.search({ page: p, pageSize: 20 })
+      .then(data => { setItems(data.items); setPagination(data.pagination); })
+      .catch(err => showToast(err.message, 'error'))
+      .finally(() => setLoading(false));
+  }, [showToast]);
 
-  useEffect(() => { fetchItems(page); }, [page]);
+  useEffect(() => { fetchItemsCallbackCallback(page); }, [page, fetchItemsCallbackCallback]);
 
   const handleRemove = async () => {
     if (!reason.trim()) { showToast('Reason is required.', 'error'); return; }
@@ -37,7 +32,7 @@ export default function AdminPage() {
       await Moderation.removePost(removeTarget.id, reason.trim());
       showToast('Post removed.');
       setRemoveTarget(null);
-      fetchItems(page);
+      fetchItemsCallback(page);
     } catch (err) {
       showToast(err.message, 'error');
     }
@@ -53,7 +48,7 @@ export default function AdminPage() {
 
   return (
     <div style={{ maxWidth: 900, margin: '0 auto', padding: '24px 24px 40px' }}>
-      <PageHeader title="Moderation Panel" subtitle="Admin — manage and remove posts" action={<Btn size="sm" onClick={() => fetchItems(page)}>↺ Refresh</Btn>} />
+      <PageHeader title="Moderation Panel" subtitle="Admin — manage and remove posts" action={<Btn size="sm" onClick={() => fetchItemsCallback(page)}>↺ Refresh</Btn>} />
       <div style={{ background: '#fff8e1', border: '1px solid #ffe082', borderLeft: '4px solid var(--amber)', borderRadius: 2, padding: '12px 16px', fontFamily: 'var(--font-mono)', fontSize: 12, color: '#7a5c00', marginBottom: 20 }}>
         ⚠ Admin panel — actions here are permanent. Always provide a clear reason when removing posts.
       </div>

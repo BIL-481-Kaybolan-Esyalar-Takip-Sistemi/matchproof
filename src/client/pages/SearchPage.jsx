@@ -26,7 +26,7 @@ export default function SearchPage() {
     }
   }, [showToast]);
 
-  useEffect(() => { fetchItems(filters); }, [filters]);
+  useEffect(() => { fetchItems(filters); }, [filters, fetchItems]);
 
   const handleSearch = () => setFilters({ ...draft, page: 1 });
   const setPage = (p) => setFilters(f => ({ ...f, page: p }));
