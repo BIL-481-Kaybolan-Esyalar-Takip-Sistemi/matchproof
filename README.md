@@ -8,9 +8,10 @@ MatchProof, kampüs içindeki kayıp ve bulunan eşyalar için geliştirilen dij
 
 - `IMPLEMENTATION_GUIDE.md` — genel mimari, ortak veri yapıları ve ekip kuralları
 - `BACKEND_TEAM_GUIDE.md` — backend tarafında tamamlanan işler, endpoint sözleşmeleri ve entegrasyon notları
-- `FRONTEND_TEAM_GUIDE.md` — frontend tarafında eksik olan katmanlar, sayfa bazlı ihtiyaçlar ve backend bağlantıları
+- `FRONTEND_TEAM_GUIDE.md` — frontend tarafında tamamlanan bağlantılar, kalan işler ve sayfa bazlı durum
 - `package.json` — bağımlılıklar ve scriptler
 - `jest.config.cjs` — backend ve frontend test yapılandırması
+- `scripts/dev-fullstack.js` — backend ve frontend geliştirme sunucularını tek komutla başlatan script
 - `.env.example` — gerekli environment değişkenleri
 
 ## Dokümantasyon
@@ -39,14 +40,17 @@ Frontend tarafında mevcut olanlar:
 
 - `src/client/App.jsx` — route yapısı ve protected route akışı
 - `src/client/main.jsx` — React giriş noktası
+- `src/client/api/` — backend endpoint’lerine giden frontend API katmanı
+- `src/client/context/` — auth ve toast state yönetimi
 - `src/client/pages/` — `AuthPage`, `SearchPage`, `PostFormPage`, `DetailPage`, `AdminPage`
 - `src/client/components/` — `Header` ve ortak UI bileşenleri
-- `src/client/services/` — frontend servis katmanı için ayrılmış klasör
+- `src/client/services/` — isteğe bağlı ek frontend servisleri için ayrılmış klasör
 
 Not:
 
-- sayfalar büyük ölçüde mevcut
-- `api`, `AuthContext` ve `ToastContext` gibi ortak frontend katmanları ayrı rehbere göre tamamlanmalıdır
+- sayfalar ve ortak frontend katmanları mevcut
+- AI matches dahil temel ürün akışları backend’e bağlanmış durumda
+- detaylı durum için `FRONTEND_TEAM_GUIDE.md` kullanılmalı
 
 ### `src/server/`
 
@@ -74,8 +78,10 @@ Backend tarafında mevcut olanlar:
 ## Frontend’de Mevcut Durum
 
 - temel sayfalar ve route yapısı var
-- detay, arama, post oluşturma ve admin ekranlarının UI iskeleti var
-- gerçek API katmanı ve context katmanları henüz tamamlanmamış
+- gerçek API katmanı var
+- `AuthContext` ve `ToastContext` var
+- `DetailPage` içinde AI possible matches akışı bağlı
+- Vite tabanlı frontend çalışma altyapısı var
 
 Detay için:
 
@@ -95,11 +101,35 @@ Not:
 
 ```bash
 npm run dev
+npm run dev:client
+npm run dev:full
 npm start
+npm run build
+npm run preview
 npm run db:migrate
 npm test
 npm run test:coverage
 npm run test:watch
+```
+
+## Geliştirme Akışı
+
+Sadece backend başlatmak için:
+
+```bash
+npm run dev
+```
+
+Sadece frontend başlatmak için:
+
+```bash
+npm run dev:client
+```
+
+Backend + frontend’i birlikte başlatmak için:
+
+```bash
+npm run dev:full
 ```
 
 ## Hızlı Referans

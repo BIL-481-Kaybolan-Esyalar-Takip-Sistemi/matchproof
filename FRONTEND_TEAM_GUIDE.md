@@ -1,71 +1,69 @@
-# MatchProof Frontend Ekip Rehberi
+# MatchProof Frontend Team Guide
 
 ## Amaç
 
-Bu doküman, frontend tarafında şu anda neyin hazır olduğunu, nelerin eksik olduğunu ve backend ile nasıl entegre olunacağını açık şekilde özetler.
-
-Bu dosyanın hedefi:
-
-- frontend geliştiren ekip üyesinin eksikleri hızlı görmesi
-- hangi sayfanın hangi endpoint'i kullanacağını netleştirmek
-- backend hazır olduğu halde henüz frontend'e bağlanmamış kısımları ayırmak
+Bu doküman, frontend tarafında şu an hangi parçaların tamamlandığını, backend ile hangi bağlantıların kurulduğunu ve hangi işlerin hâlâ kaldığını net şekilde özetler.
 
 ---
 
-## Kısa Durum Özeti
+## Genel Durum
 
-Şu anda frontend tarafında:
-
-- temel sayfalar var
-- route yapısı var
-- bazı UI bileşenleri var
-
-Ama şu kritik parçalar eksik:
-
-- gerçek `api` katmanı
-- gerçek `AuthContext`
-- gerçek `ToastContext`
-- frontend build/dev çalışma altyapısı
-
-Yani sorun sayfaların tamamen olmaması değil; asıl sorun bu sayfaların çalışması için gereken ortak altyapının eksik olması.
-
----
-
-## Şu Anda Frontend'de Olan Dosyalar
-
-Mevcut ana dosyalar:
-
-- `src/client/App.jsx`
-- `src/client/main.jsx`
-- `src/client/components/Header.jsx`
-- `src/client/components/ui.jsx`
-- `src/client/pages/AuthPage.jsx`
-- `src/client/pages/SearchPage.jsx`
-- `src/client/pages/PostFormPage.jsx`
-- `src/client/pages/DetailPage.jsx`
-- `src/client/pages/AdminPage.jsx`
-
-Bu sayfalar iskelet olarak mevcut. Yani sıfırdan sayfa yazmak gerekmiyor.
-
----
-
-## Kesin Eksik Olan Ortak Katmanlar
-
-### 1. API katmanı
-
-Sayfalar `../api` import ediyor ama gerçek dosya görünmüyor.
-
-Gerekli minimum yapı:
+Frontend tarafında kritik eksik olan ortak katmanlar artık eklenmiş durumda:
 
 - `src/client/api/index.js`
-- istenirse `src/client/api/http.js`
+- `src/client/context/AuthContext.jsx`
+- `src/client/context/ToastContext.jsx`
+- `vite.config.js`
+- `index.html`
 
-Burada en az şu fonksiyonlar olmalı:
+Bu yüzden frontend artık sadece sayfa iskeletlerinden ibaret değil; backend’e bağlı çalışan gerçek bir akış kurulmuş durumda.
+
+---
+
+## Şu Anda Hazır Olanlar
+
+### Ortak frontend katmanları
+
+- gerçek API katmanı var
+- auth state yönetimi var
+- toast sistemi var
+- Vite tabanlı frontend çalışma altyapısı var
+
+### Sayfalar
+
+- `AuthPage`
+- `SearchPage`
+- `PostFormPage`
+- `DetailPage`
+- `AdminPage`
+
+### Genel uygulama akışı
+
+- route yapısı var
+- login olmayan kullanıcı için protected route var
+- header üzerinden login / logout / admin görünürlüğü var
+
+---
+
+## Dosya Bazında Durum
+
+## 1. API Katmanı
+
+Dosya:
+
+- `src/client/api/index.js`
+
+Şu fonksiyonlar mevcut:
+
+### Auth
 
 - `Auth.register`
 - `Auth.login`
 - `Auth.logout`
 - `Auth.me`
+
+### Items
+
 - `Items.search`
 - `Items.get`
 - `Items.create`
@@ -73,47 +71,72 @@ Burada en az şu fonksiyonlar olmalı:
 - `Items.delete`
 - `Items.updateStatus`
 - `Items.getMatches`
+
+### Moderation
+
 - `Moderation.removePost`
 
-### 2. AuthContext
+Durum:
 
-Uygulama bunu kullanıyor ama gerçek dosya görünmüyor.
+- backend endpoint’leri ile temel bağlantı kurulmuş
+- `credentials: 'include'` kullanıldığı için session/cookie akışı düşünülmüş
+- `FormData` ile image upload desteği var
 
-Gerekli minimum yapı:
+Not:
+
+- ayrı bir `http.js` dosyası yok; şu an ihtiyaç zorunlu olmadığı için tek dosyada tutulmuş
+
+---
+
+## 2. AuthContext
+
+Dosya:
 
 - `src/client/context/AuthContext.jsx`
 
-Bu context en az şunları sağlamalı:
+Şu akışlar mevcut:
 
-- `user`
-- `login(payload)`
-- `register(payload)`
-- `logout()`
-- uygulama açılırken `GET /api/auth/me` ile session kontrolü
+- uygulama açılırken `Auth.me()` ile session kontrolü
+- `login`
+- `register`
+- `logout`
+- `user` state’i
 
-### 3. ToastContext
+Durum:
 
-Sayfalar hata ve başarı mesajı göstermek için bunu kullanıyor.
+- rehberde beklenen minimum auth davranışı sağlanmış
 
-Gerekli minimum yapı:
+---
+
+## 3. ToastContext
+
+Dosya:
 
 - `src/client/context/ToastContext.jsx`
 
-Bu context en az şunu sağlamalı:
+Durum:
 
-- `showToast(message, type?)`
+- `showToast(message, type?)` desteği var
+- success/error mesajları ekranda gösteriliyor
 
-### 4. Frontend çalışma altyapısı
+---
 
-Şu an repoda frontend'i doğrudan ayağa kaldıracak net bir yapı görünmüyor.
+## 4. Frontend Çalıştırma Altyapısı
 
-Eksik görünen şeyler:
+Mevcut dosyalar:
 
-- frontend için `dev/build` scriptleri
-- gerekiyorsa `vite.config`
-- gerekiyorsa `index.html`
+- `vite.config.js`
+- `index.html`
 
-Bu kısım hangi araç kullanılacaksa ona göre netleştirilmeli.
+Mevcut scriptler:
+
+- `npm run dev:client`
+- `npm run build`
+- `npm run preview`
+
+Not:
+
+- full-stack geliştirme için `npm run dev:full` scripti eklenmiştir
 
 ---
 
@@ -125,31 +148,23 @@ Dosya:
 
 - `src/client/pages/AuthPage.jsx`
 
-Amaç:
-
-- kayıt olma
-- giriş yapma
-
-Gerekli backend endpoint'leri:
+Bağlandığı backend endpoint’leri:
 
 - `POST /api/auth/register`
 - `POST /api/auth/login`
-
-Ek olarak gerekli:
-
-- `GET /api/auth/me`
-- `POST /api/auth/logout`
+- dolaylı olarak `GET /api/auth/me`
+- dolaylı olarak `POST /api/auth/logout`
 
 Durum:
 
-- UI var
-- form akışı var
-- `useAuth()` yoksa sayfa gerçek çalışmaz
+- form akışı çalışacak seviyede
+- auth context ile entegre
+- toast ve redirect akışı bağlı
 
-Eksik iş:
+Kalan olası işler:
 
-- `AuthContext` yazılmalı
-- auth API çağrıları yazılmalı
+- UX/polish
+- form validation iyileştirmeleri
 
 ---
 
@@ -159,18 +174,11 @@ Dosya:
 
 - `src/client/pages/SearchPage.jsx`
 
-Amaç:
-
-- ilanları listelemek
-- filtrelemek
-- aramak
-- detay sayfasına gitmek
-
-Kullandığı backend endpoint:
+Bağlandığı endpoint:
 
 - `GET /api/items/search`
 
-Desteklenen filtreler:
+Şu filtreleri kullanıyor:
 
 - `query`
 - `category`
@@ -183,18 +191,14 @@ Desteklenen filtreler:
 
 Durum:
 
-- UI var
-- filtre alanları var
-- pagination mantığı var
+- gerçek arama çağrısı bağlı
+- pagination bağlı
+- item detail sayfasına geçiş bağlı
 
-Eksik iş:
+Kalan olası işler:
 
-- `Items.search()` gerçek API çağrısı yazılmalı
-- sonuç formatı backend cevabına bağlanmalı
-
-Not:
-
-- `dateFrom/dateTo` şu an eşyanın kaybolduğu gün değil, ilanın sisteme eklenme tarihini filtreler
+- filtre UX iyileştirmesi
+- boş durum / loading polish
 
 ---
 
@@ -204,12 +208,7 @@ Dosya:
 
 - `src/client/pages/PostFormPage.jsx`
 
-Amaç:
-
-- yeni ilan oluşturma
-- mevcut ilanı düzenleme
-
-Kullandığı backend endpoint'leri:
+Bağlandığı endpoint’ler:
 
 - `POST /api/items`
 - `GET /api/items/:itemId`
@@ -217,20 +216,19 @@ Kullandığı backend endpoint'leri:
 
 Durum:
 
-- create/edit tek sayfada çözülmüş
-- form alanları hazır
-- fotoğraf seçme ve preview var
-
-Eksik iş:
-
-- multipart/form-data ile upload yapan `Items.create()` yazılmalı
-- multipart/form-data ile update yapan `Items.update()` yazılmalı
-- edit modunda item detayı gerçek API'den çekilmeli
+- create akışı bağlı
+- edit akışı bağlı
+- image upload bağlı
+- preview desteği var
 
 Not:
 
-- backend tarafı `image` alan adını bekliyor
-- frontend form data bunu doğru göndermeli
+- backend `image` alanını bekliyor; frontend bunu doğru şekilde `FormData` ile gönderiyor
+
+Kalan olası işler:
+
+- daha gelişmiş client-side validation
+- upload error mesajlarını daha açıklayıcı yapma
 
 ---
 
@@ -240,46 +238,30 @@ Dosya:
 
 - `src/client/pages/DetailPage.jsx`
 
-Amaç:
-
-- ilanın detayını göstermek
-- owner ise status güncellemek
-- owner ise düzenlemek / silmek
-- admin ise remove etmek
-
-Kullandığı backend endpoint'leri:
+Bağlandığı endpoint’ler:
 
 - `GET /api/items/:itemId`
+- `GET /api/items/:itemId/matches`
 - `PATCH /api/items/:itemId/status`
 - `DELETE /api/items/:itemId`
 - `POST /api/moderation/items/:itemId/remove`
 
-Backend'de mevcut ama sayfada henüz kullanılmayan endpoint:
-
-- `GET /api/items/:itemId/matches`
-
 Durum:
 
-- temel detay ekranı var
-- status butonları var
-- delete ve admin remove modal'ı var
+- detail verisi geliyor
+- owner status güncelleme akışı bağlı
+- delete akışı bağlı
+- admin remove akışı bağlı
+- AI Possible Matches bölümü eklenmiş ve backend’e bağlı
 
-Eksik iş:
+Bu önemli:
 
-- `Items.get()`
-- `Items.updateStatus()`
-- `Items.delete()`
-- `Moderation.removePost()`
-- isteğe bağlı ama proje için önemli: `Items.getMatches()` ile olası eşleşmeleri göstermek
+- daha önce eksik olan AI matches gösterimi artık var
 
-Bu sayfada özellikle eksik olan proje özelliği:
+Kalan olası işler:
 
-- AI benzer eşya sonuçlarını gösteren bölüm henüz yok
-
-Öneri:
-
-- detail sayfasına `Possible Matches` bölümü eklenmeli
-- bu bölüm `GET /api/items/:itemId/matches` kullanmalı
+- matches kartlarının görsel iyileştirmesi
+- hata durumunda daha açıklayıcı kullanıcı mesajları
 
 ---
 
@@ -289,66 +271,43 @@ Dosya:
 
 - `src/client/pages/AdminPage.jsx`
 
-Amaç:
-
-- admin kullanıcının ilanları görmesi
-- uygunsuz / tekrar eden ilanları kaldırması
-
-Kullandığı backend endpoint'leri:
+Bağlandığı endpoint’ler:
 
 - `GET /api/items/search`
 - `POST /api/moderation/items/:itemId/remove`
 
 Durum:
 
-- temel admin panel UI'ı var
-- remove akışı tasarlanmış
-
-Eksik iş:
-
-- gerçek admin API entegrasyonu
-- auth state üzerinden admin kontrolü
+- admin panel akışı bağlı
+- remove modal akışı bağlı
+- role kontrolü sayfa içinde yapılıyor
 
 Not:
 
-- backend tarafında moderation endpoint sadece `admin` role için açık
+- route seviyesi admin guard yok; şu an erişim kontrolü sayfa içinde yapılıyor
+- bu bir bug olmak zorunda değil ama daha sıkı koruma istenirse ayrı `AdminRoute` eklenebilir
 
 ---
 
-## 6. Header ve Genel App Akışı
+## 6. Header ve App Akışı
 
 Dosyalar:
 
 - `src/client/App.jsx`
 - `src/client/components/Header.jsx`
 
-Amaç:
-
-- route koruması
-- login olmayan kullanıcıyı `/login` sayfasına yönlendirme
-- logout
-- admin linkini sadece admin kullanıcıya gösterme
-
-Gerekli backend endpoint'leri:
-
-- `GET /api/auth/me`
-- `POST /api/auth/logout`
-
 Durum:
 
-- route mantığı hazır
-- header akışı hazır
-
-Eksik iş:
-
-- `AuthContext` olmadan bu yapı çalışmaz
-- uygulama açılır açılmaz session kontrolü yapılmalı
+- `AuthProvider` ve `ToastProvider` bağlı
+- login olmayan kullanıcı protected route ile `/login` sayfasına yönleniyor
+- logout akışı bağlı
+- admin linki role’a göre gösteriliyor
 
 ---
 
-## Frontend İçin Gerekli Backend Endpoint Listesi
+## Backend ile Bağlı Olan Endpoint Listesi
 
-Şu endpoint'ler frontend için hazır durumda:
+Frontend tarafının şu anda kullanabildiği backend endpoint’ler:
 
 ### Auth
 
@@ -371,46 +330,39 @@ Eksik iş:
 
 - `POST /api/moderation/items/:itemId/remove`
 
-Yani frontend'in şu an beklemesi gereken kritik bir backend endpoint eksiği yok.
+Bu listede frontend’in temel akışını engelleyen kritik bir backend endpoint eksiği görünmüyor.
 
 ---
 
-## Backend'de Şu Anda Olmayan veya Sonraya Kalabilecek Şeyler
+## Şu An Kalan Eksikler
 
-Frontend tarafı bunları varsaymamalı:
+Şu anda kalan işler daha çok tamamlayıcı nitelikte:
 
-- moderation history listeleme endpoint'i
-- remove edilen post'u geri alma endpoint'i
-- ayrı admin dashboard istatistik endpoint'i
-
-Bu yüzden frontend şimdilik mevcut endpoint'lere göre yazılmalı.
-
----
-
-## Öncelikli Yapılacaklar
-
-Frontend geliştiren kişi için en doğru sıra:
-
-1. `api` katmanını yaz
-2. `AuthContext` yaz
-3. `ToastContext` yaz
-4. `AuthPage` ile giriş/kayıt akışını çalıştır
-5. `SearchPage` ile listeleme/arama akışını çalıştır
-6. `PostFormPage` ile create/edit akışını çalıştır
-7. `DetailPage` ile detail/status/delete akışını çalıştır
-8. `AdminPage` ile moderation akışını çalıştır
-9. `DetailPage` içine `Possible Matches` bölümünü ekle
+- frontend testlerinin gerçekten çalıştırılıp doğrulanması
+- gerekirse Babel/Jest frontend test ayarlarının netleştirilmesi
+- UI/UX polish
+- stricter admin route guard istenirse eklenmesi
+- istenirse `src/client/services` klasörünün ya kullanılacak hale getirilmesi ya da sadeleştirilmesi
 
 ---
 
-## En Kritik Not
+## Net Sonuç
 
-Şu an frontend tarafında en büyük eksik sayfalar değil, ortak uygulama altyapısıdır.
+Frontend tarafında daha önce rehberde kritik eksik olarak yazılan ana parçalar artık eklenmiş durumda.
 
-Özellikle bu üç şey tamamlanmadan uygulama gerçek anlamda ayağa kalkmaz:
+Yani şu an:
 
-- `api`
-- `AuthContext`
-- `ToastContext`
+- backend’e bağlanan gerçek frontend katmanı var
+- auth/session akışı var
+- toast sistemi var
+- Vite tabanlı çalışma altyapısı var
+- AI matches dahil temel ürün akışları bağlı
 
-Backend tarafı temel entegrasyon için yeterince hazırdır. Frontend tarafının ana işi artık bu hazır endpoint'leri düzgün şekilde kullanmaktır.
+Bu noktadan sonra frontend tarafındaki iş daha çok:
+
+- doğrulama
+- iyileştirme
+- polish
+- test düzeltmesi
+
+seviyesine geçmiş durumda.
