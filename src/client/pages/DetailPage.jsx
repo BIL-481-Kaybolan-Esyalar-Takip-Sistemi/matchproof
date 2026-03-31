@@ -5,6 +5,48 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { Badge, Btn, Card, Spinner, Alert, Modal, MonoLabel, Divider, Field, Textarea, formatDate } from '../components/ui';
 
+function MatchScore({ score }) {
+  const pct = Math.round(score * 100);
+  const color = pct >= 70 ? '#16a34a' : pct >= 40 ? '#d97706' : '#6b7280';
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+      <div style={{ flex: 1, height: 6, background: 'var(--border)', borderRadius: 3, overflow: 'hidden' }}>
+        <div style={{ width: `${pct}%`, height: '100%', background: color, borderRadius: 3, transition: 'width 0.3s' }} />
+      </div>
+      <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color, fontWeight: 600, minWidth: 32 }}>{pct}%</span>
+    </div>
+  );
+}
+
+function MatchCard({ match, onClick }) {
+  const [hover, setHover] = useState(false);
+  return (
+    <div onClick={onClick} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
+      style={{ background: 'var(--surface)', border: `1px solid ${hover ? 'var(--accent)' : 'var(--border)'}`, borderRadius: 2, padding: '12px 16px', cursor: 'pointer', transition: 'border-color 0.12s' }}>
+      <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+        {match.item.imageUrl
+          ? <img src={match.item.imageUrl} alt="" style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 2, border: '1px solid var(--border)', flexShrink: 0 }} />
+          : <div style={{ width: 48, height: 48, background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 2, flexShrink: 0 }} />
+        }
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: 'flex', gap: 6, marginBottom: 4, flexWrap: 'wrap' }}>
+            <Badge value={match.item.itemType} /><Badge value={match.item.status} />
+          </div>
+          <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{match.item.title}</div>
+          <MatchScore score={match.score} />
+          {match.reasons.length > 0 && (
+            <div style={{ marginTop: 6, display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+              {match.reasons.map(r => (
+                <span key={r} style={{ fontFamily: 'var(--font-mono)', fontSize: 10, padding: '2px 6px', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 2, color: 'var(--text-2)' }}>{r}</span>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function DetailPage() {
   const { itemId } = useParams();
   const [item, setItem] = useState(null);
@@ -13,6 +55,8 @@ export default function DetailPage() {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [removeOpen, setRemoveOpen] = useState(false);
   const [removeReason, setRemoveReason] = useState('');
+  const [matches, setMatches] = useState(null);
+  const [matchesLoading, setMatchesLoading] = useState(false);
   const { user } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
@@ -20,7 +64,16 @@ export default function DetailPage() {
   useEffect(() => {
     setLoading(true);
     Items.get(itemId)
-      .then(d => setItem(d.item))
+      .then(d => {
+        setItem(d.item);
+        if (d.item.status !== 'removed') {
+          setMatchesLoading(true);
+          Items.getMatches(itemId)
+            .then(m => setMatches(m.matches))
+            .catch(() => setMatches([]))
+            .finally(() => setMatchesLoading(false));
+        }
+      })
       .catch(err => setError(err.message))
       .finally(() => setLoading(false));
   }, [itemId]);
@@ -117,6 +170,26 @@ export default function DetailPage() {
           </div>
         </div>
       </Card>
+
+      {item.status !== 'removed' && (
+        <div style={{ marginTop: 24 }}>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 600, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+            AI Possible Matches
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, padding: '2px 6px', background: 'var(--accent)', color: 'var(--accent-inv)', borderRadius: 2 }}>AI</span>
+          </div>
+          {matchesLoading ? (
+            <Spinner />
+          ) : matches && matches.length > 0 ? (
+            <div style={{ display: 'grid', gap: 8 }}>
+              {matches.map(m => (
+                <MatchCard key={m.itemId} match={m} onClick={() => navigate(`/items/${m.itemId}`)} />
+              ))}
+            </div>
+          ) : (
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--text-3)', padding: '16px 0' }}>No matches found for this item.</div>
+          )}
+        </div>
+      )}
 
       <Modal open={deleteOpen} onClose={() => setDeleteOpen(false)} title="Delete Post">
         <p style={{ fontSize: 14, color: 'var(--text-2)' }}>Are you sure you want to delete <strong>"{item.title}"</strong>? This cannot be undone.</p>
