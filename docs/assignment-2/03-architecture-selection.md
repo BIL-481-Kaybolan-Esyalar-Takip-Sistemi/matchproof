@@ -6,7 +6,7 @@
 - Version: 1.0 (Initial Architecture Decision)
 
 ## Selected Architecture Approach
-For this project, **Layered Monolithic Architecture** is selected.
+For this project, **Layered Architecture** is selected.
 
 Reasons for this selection:
 - Enables fast development and easy single-deployment operation within course project constraints.
@@ -22,7 +22,7 @@ Reasons for this selection:
 ## Why Not Other Architectures?
 - Full microservices: operationally heavy for the current project size and team capacity.
 - Event-driven-first architecture: useful for async workflows but adds unnecessary complexity in the first phase.
-- Full Hexagonal/Clean implementation: valuable but higher setup and alignment cost for current timeline.
+- Full Clean implementation: valuable but higher setup and alignment cost for current timeline.
 
 ## Architecture Decision Outcome
 The project starts as a layered monolith. The following areas can be extracted later if needed:
