@@ -86,3 +86,13 @@ This document defines the initial Product Backlog for **MatchProof**, a campus l
 - **No user-to-user messaging/chat:** The product does not include in-app direct messaging. Coordination is supported via **contact information display** (FR8 / PB8).
 - **No notifications:** In-app/push notifications (email/SMS) are out of scope for the initial version.
 - **MVP-first:** The system remains usable with keyword search/filtering even if AI items PB11–PB14 are incomplete.
+
+---
+
+## Agile Backlog Refinement Policy
+
+- The Product Backlog is a living artifact and is re-evaluated before each sprint.
+- It is **not required** to fully detail all backlog items at once.
+- Only items selected for the upcoming sprint are detailed to implementation level.
+- Sprint-level detailing includes acceptance criteria, technical subtasks, and test scope.
+- Requirement-to-backlog traceability (FR/NFR -> PB items) is preserved as items evolve.
