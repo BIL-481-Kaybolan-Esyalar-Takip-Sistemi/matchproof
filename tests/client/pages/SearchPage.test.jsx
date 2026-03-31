@@ -92,4 +92,24 @@ describe('SearchPage component', () => {
       expect(mockShowToast).toHaveBeenCalledWith('Network Error', 'error');
     });
   });
+
+  test('applies draft filters when clicking Find', async () => {
+    Items.search
+      .mockResolvedValueOnce({ items: [], pagination: { total: 0, page: 1, totalPages: 0 } })
+      .mockResolvedValueOnce({ items: [], pagination: { total: 0, page: 1, totalPages: 0 } });
+
+    render(<SearchPage />);
+
+    await waitFor(() => {
+      expect(Items.search).toHaveBeenCalledTimes(1);
+    });
+
+    fireEvent.change(screen.getByPlaceholderText('keywords…'), { target: { value: 'wallet' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Find' }));
+
+    await waitFor(() => {
+      expect(Items.search).toHaveBeenCalledTimes(2);
+      expect(Items.search).toHaveBeenLastCalledWith(expect.objectContaining({ query: 'wallet', page: 1 }));
+    });
+  });
 });

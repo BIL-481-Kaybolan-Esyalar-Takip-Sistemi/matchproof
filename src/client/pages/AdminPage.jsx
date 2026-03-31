@@ -16,7 +16,7 @@ export default function AdminPage() {
   const [removeTarget, setRemoveTarget] = useState(null);
   const [reason, setReason] = useState('');
 
-  const fetchItemsCallbackCallback = useCallback((p = 1) => {
+  const fetchItemsCallback = useCallback((p = 1) => {
     setLoading(true);
     Items.search({ page: p, pageSize: 20 })
       .then(data => { setItems(data.items); setPagination(data.pagination); })
@@ -24,7 +24,7 @@ export default function AdminPage() {
       .finally(() => setLoading(false));
   }, [showToast]);
 
-  useEffect(() => { fetchItemsCallbackCallback(page); }, [page, fetchItemsCallbackCallback]);
+  useEffect(() => { fetchItemsCallback(page); }, [page, fetchItemsCallback]);
 
   const handleRemove = async () => {
     if (!reason.trim()) { showToast('Reason is required.', 'error'); return; }
