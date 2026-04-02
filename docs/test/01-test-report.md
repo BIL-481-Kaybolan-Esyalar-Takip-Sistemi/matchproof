@@ -93,15 +93,8 @@
 
 ## 6. Deployment Diagram
 
-```mermaid
-flowchart LR
-    A[Tester / Browser<br/>Chromium via Playwright] --> B[Vite Frontend<br/>127.0.0.1:3000]
-    B --> C[Express Backend<br/>127.0.0.1:3001]
-    C --> D[Session Store<br/>MemoryStore in E2E]
-    C --> E[Test Database<br/>pg-mem://matchproof_e2e]
-    C --> F[Matching Service<br/>MATCHING_MODE=stub]
-    C --> G[Uploads Directory<br/>Local test filesystem]
-```
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/d085c731-c0d0-4d83-b103-ec13a2f20084" />
+
 
 ## 7. Notes
 
