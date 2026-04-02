@@ -29,7 +29,7 @@ async function getAppliedMigrations(client) {
   return new Set(result.rows.map((row) => row.filename));
 }
 
-async function runMigrations() {
+async function runMigrations({ closePool = true } = {}) {
   const client = await pool.connect();
 
   try {
@@ -67,7 +67,9 @@ async function runMigrations() {
     throw error;
   } finally {
     client.release();
-    await pool.end();
+    if (closePool) {
+      await pool.end();
+    }
   }
 }
 

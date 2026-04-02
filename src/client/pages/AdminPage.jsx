@@ -88,7 +88,7 @@ export default function AdminPage() {
 
 function ModerationCard({ item, onView, onRemove }) {
   return (
-    <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 2, padding: '16px 20px', display: 'flex', alignItems: 'flex-start', gap: 16 }}>
+    <div data-testid={`moderation-card-${item.id}`} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 2, padding: '16px 20px', display: 'flex', alignItems: 'flex-start', gap: 16 }}>
       {item.imageUrl
         ? <img src={item.imageUrl} alt="" style={{ width: 56, height: 56, objectFit: 'cover', borderRadius: 2, border: '1px solid var(--border)', flexShrink: 0 }} />
         : <div style={{ width: 56, height: 56, background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 2, flexShrink: 0 }} />
@@ -103,8 +103,8 @@ function ModerationCard({ item, onView, onRemove }) {
         </div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flexShrink: 0 }}>
-        <Btn size="sm" onClick={onView}>View</Btn>
-        {item.status !== 'removed' ? <Btn size="sm" variant="danger" onClick={onRemove}>Remove</Btn> : <Badge value="removed" />}
+        <Btn size="sm" data-testid={`view-item-${item.id}`} onClick={onView}>View</Btn>
+        {item.status !== 'removed' ? <Btn size="sm" variant="danger" data-testid={`remove-item-${item.id}`} onClick={onRemove}>Remove</Btn> : <Badge value="removed" />}
       </div>
     </div>
   );

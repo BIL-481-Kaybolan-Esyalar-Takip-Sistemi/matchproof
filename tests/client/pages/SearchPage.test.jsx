@@ -112,4 +112,33 @@ describe('SearchPage component', () => {
       expect(Items.search).toHaveBeenLastCalledWith(expect.objectContaining({ query: 'wallet', page: 1 }));
     });
   });
+
+  test('loads next page when pagination button is clicked', async () => {
+    Items.search
+      .mockResolvedValueOnce({
+        items: [
+          { id: 1, title: 'Lost Keys', description: 'Found keys', itemType: 'lost', status: 'open', createdAt: new Date().toISOString() },
+        ],
+        pagination: { total: 12, page: 1, totalPages: 2 },
+      })
+      .mockResolvedValueOnce({
+        items: [
+          { id: 2, title: 'Campus Card', description: 'Blue card', itemType: 'found', status: 'open', createdAt: new Date().toISOString() },
+        ],
+        pagination: { total: 12, page: 2, totalPages: 2 },
+      });
+
+    render(<SearchPage />);
+
+    await waitFor(() => {
+      expect(screen.getByText('Lost Keys')).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Next →' }));
+
+    await waitFor(() => {
+      expect(Items.search).toHaveBeenLastCalledWith(expect.objectContaining({ page: 2 }));
+      expect(screen.getByText('Campus Card')).toBeInTheDocument();
+    });
+  });
 });

@@ -87,17 +87,17 @@ export default function PostFormPage() {
                   ))}
                 </div>
               </div>
-              <Field label="Title *"><Input value={form.title} onChange={set('title')} placeholder="e.g. Black leather wallet" /></Field>
+              <Field label="Title *"><Input aria-label="Title" value={form.title} onChange={set('title')} placeholder="e.g. Black leather wallet" /></Field>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                 <Field label="Category *">
-                  <Select value={form.category} onChange={set('category')}>
+                  <Select aria-label="Category" value={form.category} onChange={set('category')}>
                     <option value="">Select…</option>
                     {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                   </Select>
                 </Field>
-                <Field label="Location *"><Input value={form.location} onChange={set('location')} placeholder="e.g. Library, Floor 2" /></Field>
+                <Field label="Location *"><Input aria-label="Location" value={form.location} onChange={set('location')} placeholder="e.g. Library, Floor 2" /></Field>
               </div>
-              <Field label="Description *"><Textarea value={form.description} onChange={set('description')} placeholder="Describe the item in detail…" /></Field>
+              <Field label="Description *"><Textarea aria-label="Description" value={form.description} onChange={set('description')} placeholder="Describe the item in detail…" /></Field>
               <Field label="Photo">
                 <div onClick={() => fileRef.current?.click()}
                   style={{ border: '2px dashed var(--border-dark)', borderRadius: 2, padding: 24, textAlign: 'center', cursor: 'pointer', background: 'var(--surface-2)' }}>

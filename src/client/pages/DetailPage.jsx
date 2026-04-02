@@ -21,7 +21,7 @@ function MatchScore({ score }) {
 function MatchCard({ match, onClick }) {
   const [hover, setHover] = useState(false);
   return (
-    <div onClick={onClick} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
+    <div data-testid={`match-card-${match.itemId}`} onClick={onClick} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
       style={{ background: 'var(--surface)', border: `1px solid ${hover ? 'var(--accent)' : 'var(--border)'}`, borderRadius: 2, padding: '12px 16px', cursor: 'pointer', transition: 'border-color 0.12s' }}>
       <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
         {match.item.imageUrl

@@ -1,18 +1,23 @@
 const session = require('express-session');
 const connectPgSimple = require('connect-pg-simple');
 
-const { pool } = require('./db');
+const { isInMemoryDatabase, pool } = require('./db');
 const { env } = require('./env');
 
 const PgStore = connectPgSimple(session);
 
 function createSessionMiddleware() {
+  const store =
+    env.nodeEnv === 'test' && isInMemoryDatabase
+      ? new session.MemoryStore()
+      : new PgStore({
+          pool,
+          tableName: 'user_sessions',
+          createTableIfMissing: false,
+        });
+
   return session({
-    store: new PgStore({
-      pool,
-      tableName: 'user_sessions',
-      createTableIfMissing: false,
-    }),
+    store,
     name: 'matchproof.sid',
     secret: env.sessionSecret,
     resave: false,

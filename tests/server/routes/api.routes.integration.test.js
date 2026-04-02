@@ -82,8 +82,15 @@ const uploadService = require('../../../src/server/services/upload.service');
 const { app } = require('../../../src/server/app');
 
 describe('API routes integration', () => {
+  let consoleErrorSpy;
+
   beforeEach(() => {
     jest.clearAllMocks();
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    consoleErrorSpy.mockRestore();
   });
 
   test('GET /api/health returns ok when db is up', async () => {

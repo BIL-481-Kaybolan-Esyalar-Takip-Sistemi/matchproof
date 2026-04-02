@@ -116,4 +116,40 @@ describe('DetailPage component', () => {
       expect(mockNavigate).toHaveBeenCalledWith('/');
     });
   });
+
+  test('renders AI matches and navigates to match detail on click', async () => {
+    useAuth.mockReturnValue({ user: { id: 1, role: 'user' } });
+    Items.get.mockResolvedValueOnce({ item: baseItem });
+    Items.getMatches.mockResolvedValueOnce({
+      matches: [
+        {
+          itemId: 88,
+          score: 0.82,
+          reasons: ['Same category'],
+          item: {
+            id: 88,
+            ownerId: 7,
+            itemType: 'found',
+            title: 'Found Keys',
+            description: 'Keys near cafeteria',
+            category: 'Keys',
+            location: 'Cafeteria',
+            status: 'open',
+            imageUrl: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          },
+        },
+      ],
+    });
+
+    render(<DetailPage />);
+
+    await waitFor(() => {
+      expect(screen.getByText('Found Keys')).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByTestId('match-card-88'));
+    expect(mockNavigate).toHaveBeenCalledWith('/items/88');
+  });
 });

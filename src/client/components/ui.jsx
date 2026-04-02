@@ -30,7 +30,7 @@ export function Badge({ value }) {
   );
 }
 
-export function Btn({ children, onClick, variant = 'default', size = 'md', disabled, type = 'button', style: sx }) {
+export function Btn({ children, onClick, variant = 'default', size = 'md', disabled, type = 'button', style: sx, ...props }) {
   const base = {
     display: 'inline-flex', alignItems: 'center', gap: 6,
     fontFamily: 'var(--font-mono)', fontSize: size === 'sm' ? 12 : 13,
@@ -45,7 +45,7 @@ export function Btn({ children, onClick, variant = 'default', size = 'md', disab
     danger:  { background: 'var(--red)', color: '#fff', borderColor: 'var(--red)' },
   };
   return (
-    <button type={type} onClick={onClick} disabled={disabled} style={{ ...base, ...variants[variant], ...sx }}>
+    <button type={type} onClick={onClick} disabled={disabled} style={{ ...base, ...variants[variant], ...sx }} {...props}>
       {children}
     </button>
   );

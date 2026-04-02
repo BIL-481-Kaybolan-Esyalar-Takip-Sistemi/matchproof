@@ -3,6 +3,7 @@ const path = require('path');
 const sharp = require('sharp');
 const { pipeline } = require('@xenova/transformers');
 
+const { env } = require('./env');
 const { uploadRoot } = require('./upload.service');
 
 const imageSignatureCache = new Map();
@@ -35,6 +36,25 @@ function buildSemanticText(item) {
     item.category || '',
     item.location || '',
   ].filter(Boolean).join('. '));
+}
+
+function keywordOverlapSimilarity(textA, textB) {
+  const tokensA = new Set(normalizeText(textA).split(' ').filter(Boolean));
+  const tokensB = new Set(normalizeText(textB).split(' ').filter(Boolean));
+  const union = new Set([...tokensA, ...tokensB]);
+
+  if (union.size === 0) {
+    return 0;
+  }
+
+  let commonCount = 0;
+  for (const token of tokensA) {
+    if (tokensB.has(token)) {
+      commonCount += 1;
+    }
+  }
+
+  return commonCount / union.size;
 }
 
 function cosineSimilarity(vectorA, vectorB) {
@@ -509,7 +529,97 @@ if (adjustedImageSim !== null) {
   };
 }
 
+async function getStubMatchesForItem({ itemId, itemModel, limit = 10 }) {
+  const item = await itemModel.findItemById(itemId);
+
+  if (!item) {
+    const error = new Error('Item not found');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (item.status === 'removed') {
+    const error = new Error('Removed item cannot be matched');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const oppositeType = item.itemType === 'lost' ? 'found' : 'lost';
+  const candidates = await itemModel.findMatchCandidates({
+    itemType: oppositeType,
+    status: 'open',
+    excludeItemId: item.id,
+  });
+
+  const matches = candidates
+    .map((candidate) => {
+      const textSim = keywordOverlapSimilarity(
+        buildSemanticText(item),
+        buildSemanticText(candidate)
+      );
+      const locationSim = locationSimilarity(item.location, candidate.location);
+      const categoryMatched = Boolean(categoryMatch(item, candidate));
+      const recency = recencyScore(item.createdAt, candidate.createdAt);
+      const score = Number(
+        Math.min(
+          0.95,
+          (
+            (categoryMatched ? 0.35 : 0) +
+            (0.45 * textSim) +
+            (0.20 * locationSim)
+          )
+        ).toFixed(4)
+      );
+
+      return {
+        itemId: candidate.id,
+        score,
+        reasons: generateReasons(item, candidate, {
+          categoryMatched,
+          textSim,
+          locationSim,
+          recency,
+          imageSim: null,
+        }),
+        matchedFields: {
+          category: categoryMatched,
+          location: locationSim >= 0.5,
+          textSimilarity: Number(textSim.toFixed(4)),
+          imageSimilarity: null,
+          adjustedImageSimilarity: null,
+          stage1Score: score,
+        },
+        item: {
+          id: candidate.id,
+          ownerId: candidate.ownerId,
+          itemType: candidate.itemType,
+          title: candidate.title,
+          description: candidate.description,
+          category: candidate.category,
+          location: candidate.location,
+          status: candidate.status,
+          imagePath: candidate.imagePath,
+          createdAt: candidate.createdAt,
+          updatedAt: candidate.updatedAt,
+        },
+      };
+    })
+    .filter((match) => match.score >= 0.15)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit);
+
+  return {
+    sourceItemId: item.id,
+    sourceItemType: item.itemType,
+    matches,
+  };
+}
+
 async function getMatchesForItem({ itemId, itemModel, limit = 10 }) {
+  if (env.matchingMode === 'stub') {
+    return getStubMatchesForItem({ itemId, itemModel, limit });
+  }
+
   const item = await itemModel.findItemById(itemId);
 
   if (!item) {

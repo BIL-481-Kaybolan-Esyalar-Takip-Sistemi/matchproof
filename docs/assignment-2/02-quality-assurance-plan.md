@@ -10,14 +10,14 @@ Bu belge, **MatchProof** uygulamasının güvenilirliğini, verimliliğini ve ku
 MatchProof QA stratejisinin temel amacı; kampüs içi kayıp ve buluntu eşyalar için güvenli, yüksek doğruluğa sahip ve kullanıcı dostu bir platform sunmaktır. Karmaşık yapay zeka (AI) tabanlı eşleştirme algoritmalarının ve dinamik arayüz etkileşimlerinin varlığı göz önünde bulundurulduğunda, yaklaşımımız temel mantığın (Yapay Zeka süreçleri) izole bir şekilde doğrulanmasını ve React uygulaması aracılığıyla son kullanıcı deneyiminin sürekli test edilmesini zorunlu kılar.
 
 ### Test Metodolojileri (Testing Methodologies)
-MatchProof, temel olarak **Jest** ile **Supertest** ve **React Testing Library** entegrasyonuna dayanan birkaç test metodolojisine güvenir:
-- **Birim Testleri (Unit Testing):** İzole edilmiş mantık parçalarının kontrolünde, özellikle veritabanı işlemlerini (`item.model.test.js`) ve yapay zekanın içindeki matematiksel işlemleri (`matchingService.test.js`) doğrulamakta sıkça kullanılır. Testlerin son derece hızlı ve tekrar edilebilir olması için `sharp` ve `@xenova/transformers` gibi dış bağımlılıklar mocklanarak sahte değerlerle test edilir.
-- **Entegrasyon Testleri (Integration Testing):** Uygulama katmanlarının (Kontrolcüler, Servisler, Veritabanı Sorguları, Ara katmanlar) API uç noktaları (endpoints) aracılığıyla birbirleriyle sorunsuz etkileşime girdiğini doğrular.
-- **Kullanılabilirlik Testleri (Usability Testing):** Arayüz (React) bileşenlerinin (`AuthPage`, `SearchPage` gibi) davranışsal testidir. Bir JSDOM test ortamında çalıştırılarak tıklama ve metin girişi gibi özellikler gerçek bir tarayıcıda yaşanıyormuş gibi test edilir.
+MatchProof, üç katmanlı bir otomatik test yaklaşımı kullanır:
+- **Backend Jest Testleri:** Servis, model, middleware ve route-contract katmanları Jest ile doğrulanır. Bu katman; auth kuralları, item iş kuralları, moderation akışı, matching servisi ve hata sözleşmeleri gibi backend mantığını hızlı şekilde test eder.
+- **Frontend Component Testleri:** React sayfaları ve temel kullanıcı etkileşimleri `React Testing Library` ile doğrulanır. Bu katmanda API çağrıları mocklanır, ancak eksik modülleri gizleyen sanal bağımlılık yaklaşımı kullanılmaz.
+- **Uçtan Uca (E2E) Testler:** Gerçek kullanıcı akışları `Playwright` ile doğrulanır. Tarayıcı seviyesinde register/login, ilan oluşturma, arama, detail görüntüleme, AI possible matches, status geçişi ve admin moderation akışları test edilir.
 
 ### Otomatik vs. Manuel Testler (Automated vs. Manual Testing)
-- **Otomatik Testler (Automated Testing):** Regresyon ve fonksiyonel doğrulamanın çoğunluğu otomatiktir. Birim ve entegrasyon test paketleri, mantık hatalarını anında yakalamak için hem frontend (React) hem de backend (Node.js) üzerinde otomatik test motorları tarafından çalıştırılır. Sistemin otomatik olarak teste sokulması hedeflenir.
-- **Manuel Testler (Manual Testing):** İnsan muhakemesi gerektiren yönler — örneğin, farklı tarayıcılardaki (Chrome, Safari vs.) arayüz render/tasarım düzeni kontrolleri, yüklenen fotoğrafların "blur"lanıp görülmesinin kullanılabilirliği ve genel görsel erişilebilirlik — büyük sürümler veya asıl platform dağıtımları öncesinde QA ekibi tarafından manuel olarak test edilir.
+- **Otomatik Testler (Automated Testing):** Ana doğrulama hattı otomatik çalışır. Jest katmanı hızlı regresyon kontrolü sağlar; Playwright katmanı ise gerçek kullanıcı akışlarını doğrular.
+- **Manuel Testler (Manual Testing):** Görsel düzen, responsive davranış, farklı tarayıcılardaki görünüm, yazı taşmaları ve kullanılabilirlik hissi gibi konular sürüm öncesinde manuel kontrol edilir.
 
 ---
 
@@ -38,30 +38,35 @@ MatchProof'un mükemmelliğini objektif olarak değerlendirebilmek için test ed
 
 ### Test Senaryoları (Test Cases - En az 5 detaylı senaryo)
 
-**TC-01: Kullanıcı Doğrulama Akışı (Login Flow)**
-- **Kapsam:** Kullanıcı kimlik doğrulamasının yapılarak güvenli erişimi onaylaması.
-- **İşlem Adımları:** Test kütüphanesi ile `<AuthPage />` yüklenir, forma geçerli `email` ve `password` değerleri girilir, sonrasında giriş (login) butonuna tıklanır.
-- **Beklenen Sonuç (Expected Result):** Sistem `login()` metodunu tetikler, başarılı olduğuna dair ekrana bir *Toast (Bildirim)* sunar ve kullanıcıyı `navigate('/')` fonksiyonuyla anasayfaya yönlendirir.
+**TC-01: Register + Login Akışı**
+- **Kapsam:** Yeni kullanıcı oluşturma ve güvenli oturum başlatma.
+- **İşlem Adımları:** Kullanıcı register formunu doldurur, başarılı kayıt sonrası çıkış yapar ve aynı bilgilerle tekrar login olur.
+- **Beklenen Sonuç (Expected Result):** Kullanıcı başarıyla ana sayfaya yönlendirilir; session bazlı oturum açılmış olur.
 
-**TC-02: Yapay Zeka Eşleştirme Dayanıklılığı (Eksik Görsel/ENOENT Handling)**
-- **Kapsam:** Yapay zekanın, kullanıcı tarafında yüklenmemiş (hata veren) fotoğraflı eşyaları kıyaslarken çökmemesi.
-- **İşlem Adımları:** Arka plandaki sisteme (backend) `missing-image.jpg` referansı verilir ve okuma sistemine `ENOENT` (Dosya mevcut değil) fırlatması manuel olarak simüle edilir.
-- **Beklenen Sonuç:** Uygulama veya AI eşleşme algoritması çökmez. Sistem, görsel inceleme evresini sadece "null" olarak geçer (`imageSimilarity: null`) ve kıyaslamayı diğer kurallar (lokasyon, metin analiz puanı vb.) üzerinden başarıyla tamamlayıp eşyayı listeler.
+**TC-02: Yeni İlan Oluşturma ve Detail Sayfasına Geçiş**
+- **Kapsam:** Authenticated kullanıcının yeni bir kayıp/buluntu ilanı oluşturabilmesi.
+- **İşlem Adımları:** Kullanıcı yeni ilan formunda `itemType`, `title`, `category`, `location` ve `description` alanlarını doldurup ilanı kaydeder.
+- **Beklenen Sonuç:** Backend yeni ilanı oluşturur ve kullanıcı ilgili detail sayfasına yönlendirilir.
 
-**TC-03: Arama Filtreleme Özelliğinin Test Edilmesi (Search UI Filtering)**
-- **Kapsam:** Sistemdeki dinamik verilerin filtrelenme kapasitesinin UI (Arayüz) tarafında doğrulanması.
-- **İşlem Adımları:** Ekrana `<SearchPage />` sayfası getirilir. Kategori açılır menüsünden (dropdown) "Electronics" nesnesi seçilir ve Ara (Submit) butonuna tıklanır.
-- **Beklenen Sonuç:** React mock kütüphanesi olan `Items.search()` simülasyonu çalıştırıldığında sistem bu çağrıyı başarıyla ele alır ve yapılan API gönderimi içerisine filtre parametresi olarak `category: 'Electronics'` değerini ekler.
+**TC-03: Arama ve Filtreleme Akışı**
+- **Kapsam:** Kullanıcının ilanları arayıp filtreleyebilmesi.
+- **İşlem Adımları:** Kullanıcı arama kutusuna bir anahtar kelime girer veya kategori / status filtresi uygular ve aramayı tetikler.
+- **Beklenen Sonuç:** İlgili `GET /api/items/search` çağrısı doğru parametrelerle yapılır ve beklenen ilanlar listelenir.
 
-**TC-04: Gizli İlanların Bulanıklaştırılması (Private Listing - Security)**
-- **Kapsam:** Gizli yayın özelliğinin, eşya bilgilerini yetkisiz erişimlerden gizleyerek güvenlik standartlarına uyması.
-- **İşlem Adımları:** Geliştirici konsolundan `GET /api/items` ucu test edilir. Sorgu içerisinde veritabanında `isPrivate = true` olarak kayıtlı bir ilan geri çağrılır.
-- **Beklenen Sonuç:** Backend sunucusu, DTO (Data Transfer Object) eşitlemesi esnasında özel bilgisi olan nesnenin gizlilik işaretini (`isPrivate`) "true" olarak sabitler. Herkese açık veriler maskelenerek frontend'in (Arayüz) bu objeyi bulanık gösterebilmesi güvence altına alınır. 
+**TC-04: AI Possible Matches Görüntüleme**
+- **Kapsam:** Detail sayfasında eşleşme sonuçlarının tutarlı biçimde gösterilmesi.
+- **İşlem Adımları:** Kullanıcı bir item detail sayfasını açar; test ortamında `MATCHING_MODE=stub` aktif olduğu için backend deterministik match sonucu döner.
+- **Beklenen Sonuç:** `AI Possible Matches` bölümü görünür, eşleşme kartları render edilir ve ilgili item detail sayfasına gidilebilir.
 
-**TC-05: İzinsiz Erişim Engeli (Unauthorized Access Blocking)**
-- **Kapsam:** Uygulanmış bir sistem uç noktasının (route) koruma kalkanlarının geçerli sayılması.
-- **İşlem Adımları:** Sistem Supertest botu üzerinden token kullanılmadan doğrudan eşya ilan açma isteğinde (`POST /api/items/`) bulunur.
-- **Beklenen Sonuç:** Arka planda güvenliği sağlayan `requireAuth` mimarisi (Middleware), bu illegal request'i yakalar. Sunucu anında isteği keserek bot tarafına hata (`HTTP 401 Unauthorized`) cevabını döner.
+**TC-05: Status Geçişi**
+- **Kapsam:** İlan sahibinin yalnızca izinli status geçişlerini yapabilmesi.
+- **İşlem Adımları:** İlan sahibi önce `open -> claimed`, ardından `claimed -> resolved` aksiyonlarını tetikler.
+- **Beklenen Sonuç:** Her iki geçiş de başarılı olur; geçersiz geçişler backend tarafından reddedilir.
+
+**TC-06: Admin Moderation Remove**
+- **Kapsam:** Admin kullanıcının uygunsuz veya gereksiz ilanı kaldırabilmesi.
+- **İşlem Adımları:** Admin moderation panelinden bir ilanı remove eder ve sebep alanını doldurur.
+- **Beklenen Sonuç:** İlan `removed` durumuna geçer, moderation kaydı oluşturulur ve ilan normal arama sonuçlarından kaybolur.
 
 ### Hata Takip Süreci (Bug Tracking)
 Gerek oluşturulan otomatik bot testlerinden (Jest) alınan dökümler, gerekse manuel test aşamasında tespit edilen sistemsel aksaklıklar, şu düzenli planlamaya göre kontrol edilir:

@@ -11,6 +11,7 @@ MatchProof, kampüs içindeki kayıp ve bulunan eşyalar için geliştirilen dij
 - `FRONTEND_TEAM_GUIDE.md` — frontend tarafında tamamlanan bağlantılar, kalan işler ve sayfa bazlı durum
 - `package.json` — bağımlılıklar ve scriptler
 - `jest.config.cjs` — backend ve frontend test yapılandırması
+- `playwright.config.cjs` — Playwright E2E test yapılandırması
 - `scripts/dev-fullstack.js` — backend ve frontend geliştirme sunucularını tek komutla başlatan script
 - `.env.example` — gerekli environment değişkenleri
 
@@ -31,6 +32,11 @@ MatchProof, kampüs içindeki kayıp ve bulunan eşyalar için geliştirilen dij
 - `docs/assignment-2/01-design-document.md` — sistem tasarımı, use case desteği, teknoloji kararları
 - `docs/assignment-2/02-quality-assurance-plan.md` — kalite güvencesi, test yaklaşımı ve doğrulama planı
 - `docs/assignment-2/design-document-design-patterns.docx` — tasarım kalıpları ile ilgili ek çalışma dosyası
+
+### `docs/test/`
+
+- `docs/test/01-test-report.md` — düzeltilen test sorunları ve son test özeti
+- `docs/test/02-test-strategy.md` — unit/component/E2E test yaklaşımı ve komutlar
 
 ## Kaynak Kod Yapısı
 
@@ -89,13 +95,15 @@ Detay için:
 
 ## Test Durumu
 
-- backend ve frontend için test dosyaları mevcut
-- test kontratlarında yapılan son düzeltmeler repo içinde yer alıyor
-- frontend testleri artık eksik bağımlılıkları gizlemeyecek şekilde sıkılaştırıldı
+- backend ve frontend için Jest test katmanı mevcut
+- gerçek kullanıcı akışları için Playwright E2E katmanı eklendi
+- AI matching E2E ortamında `MATCHING_MODE=stub` ile deterministik doğrulanır
+- E2E başlangıcında test verisi resetlenip seed edilir
 
 Not:
 
-- testleri gerçekten çalıştırıp doğrulamak için yerel ortamda `node` ve bağımlılıkların hazır olması gerekir
+- Playwright testleri için tarayıcı binary’lerinin kurulu olması gerekir
+- varsayılan E2E test veritabanı `pg-mem://matchproof_e2e` olarak gelir
 
 ## Mevcut Scriptler
 
@@ -108,6 +116,9 @@ npm run build
 npm run preview
 npm run db:migrate
 npm test
+npm run test:unit
+npm run test:e2e
+npm run test:all
 npm run test:coverage
 npm run test:watch
 ```
