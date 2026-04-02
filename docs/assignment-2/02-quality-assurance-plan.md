@@ -1,10 +1,48 @@
-# Kalite Güvence (QA) Planı
+# Quality Assurance (QA) Plan
+
+**Project Name:** MatchProof  
+**Course:** BIL 481  
+**Version:** 1.0  
+**Date:** 2026-04-02
+
+## List of Contributors
+
+### Team Members
+- Mehmet Gür
+- Zehra Atalay
+- Elif Beyza Turan
+- Yiğit Yıldız
+- Alp Eren Köksal
+
+### Contributors to this document
+- Alp Eren Köksal
+- Mehmet Gür
+
+## Table of Contents
+
+1. Document-Specific Task Matrix
+2. Kalite Güvence Stratejisi (Quality Assurance Strategy)
+3. Kalite Faktörleri ve Metrikleri (Quality Factors & Metrics)
+4. Test Planı (Test Plan)
 
 Bu belge, **MatchProof** uygulamasının güvenilirliğini, verimliliğini ve kullanılabilirliğini sağlamaya yönelik sistematik yaklaşımı özetlemektedir. Projenin yaşam döngüsüne entegre edilen test ve kalite güvence prosedürleri için kapsamlı bir rehber niteliğindedir.
 
 ---
 
-## 1. Kalite Güvence Stratejisi (Quality Assurance Strategy)
+## 1. Document-Specific Task Matrix
+
+| Task | Responsible | Support | Status |
+|---|---|---|---|
+| QA strategy writing | Alp Eren Köksal | - | Completed |
+| Quality factors table - performance row | Mehmet Gür | - | Completed |
+| Test methodologies writing | Mehmet Gür | - | Completed |
+| Test scenarios writing | Mehmet Gür | - | Completed |
+| Bug tracking workflow writing | Alp Eren Köksal | - | Completed |
+| Formatting and table of contents | Alp Eren Köksal | - | Completed |
+
+---
+
+## 2. Kalite Güvence Stratejisi (Quality Assurance Strategy)
 
 ### Genel Bakış (Overview)
 MatchProof QA stratejisinin temel amacı; kampüs içi kayıp ve buluntu eşyalar için güvenli, yüksek doğruluğa sahip ve kullanıcı dostu bir platform sunmaktır. Karmaşık yapay zeka (AI) tabanlı eşleştirme algoritmalarının ve dinamik arayüz etkileşimlerinin varlığı göz önünde bulundurulduğunda, yaklaşımımız temel mantığın (Yapay Zeka süreçleri) izole bir şekilde doğrulanmasını ve React uygulaması aracılığıyla son kullanıcı deneyiminin sürekli test edilmesini zorunlu kılar.
@@ -21,20 +59,25 @@ MatchProof, üç katmanlı bir otomatik test yaklaşımı kullanır:
 
 ---
 
-## 2. Kalite Faktörleri ve Metrikleri (Quality Factors & Metrics)
+## 3. Kalite Faktörleri ve Metrikleri (Quality Factors & Metrics)
 
-MatchProof'un mükemmelliğini objektif olarak değerlendirebilmek için test edilen 4 ana kalite faktörü ve bunların ölçüm metrikleri şunlardır:
+MatchProof için kalite değerlendirmesi yalnızca genel metriklerle değil; aynı zamanda hedef değer, ilgili test ve ilgili gereksinimlerle birlikte izlenmektedir. Aşağıdaki tablo, kalite faktörleri ile bunların ölçüm ve doğrulama ilişkisini göstermektedir:
 
-| Kalite Faktörü (Quality Factor) | Açıklama (Description) | Ölçüm Metriği (Measurement Metric) |
-| :--- | :--- | :--- |
-| **Performans (Performance)** | Sistemin, özellikle yapay zeka destekli metin ve resim inceleme işlemlerindeki yanıt süresi ve sürati. | API başına düşen **Ortalama yanıt süresi (Average response time - ms)**. |
-| **Doğruluk/Güvenlik (Match Accuracy)** | Yapay zekanın çalıştırdığı metin, sınıflandırma ve resim eşleştirme doğruluk kapasitesi. | Sistemde kurulan eşleşmeler arasından alınan dönütlere göre **Yanlış Eşleşme (False Positive Rate - %)** oranı. |
-| **Kullanılabilirlik (Usability)** | Kullanıcıların sistemi kolayca öğrenmesi, hızlıca giriş yapıp filtrelemeleri hatasız uygulayabilmesi. | Kullanıcılardan alınan geri dönüşlere göre oluşturulan **Kullanıcı Memnuniyet Puanı - CSAT (Survey Score 1-5 Skalası)**. |
-| **Sürdürülebilirlik (Maintainability)** | Sisteme yeni özellik eklendiğinde hataları kolay saptama veya kod tabanında değişiklik yapmanın kolaylığı. | Kod test kapsamı **(Code Test Coverage - %)**. (Mevcut test dosyalarının proje kodlarını örtme yüzdesinin her zaman %80 üzerinde kalması). |
+| Kalite Faktörü (Quality Factor) | Kalite Kriteri (Quality Criteria) | Ölçüm Metriği (Metric) | Hedef Değer (Target Value) | İlgili Test(ler) (Related Test) | İlgili Gereksinim(ler) (Related Requirements) |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Performans (Performance)** | Temel kullanıcı işlemleri etkileşimli kullanım için yeterince hızlı yanıt vermelidir. | Çekirdek API işlemleri için ortalama yanıt süresi (ms) | Normal koşullarda `<= 2000 ms` | TC-01, TC-02, TC-03, TC-05, TC-06 | NFR1, FR1, FR2, FR5, FR7, FR9 |
+| **Kullanılabilirlik (Usability)** | Kullanıcı, kayıt olma, ilan oluşturma ve arama akışlarını ek rehber gerektirmeden tamamlayabilmelidir. | Görev tamamlama başarısı + CSAT puanı | Kritik akışlarda başarılı tamamlama, CSAT `>= 4/5` | TC-01, TC-02, TC-03 + manuel UI kullanılabilirlik kontrolü | NFR2, FR1, FR2, FR5 |
+| **Tarayıcı Uyumluluğu (Browser Compatibility)** | Uygulama modern masaüstü tarayıcılarda tutarlı biçimde çalışmalıdır. | Tarayıcı smoke test geçiş oranı | Chrome, Firefox ve Edge üzerinde `%100` kritik akış geçişi | TC-01–TC-06 senaryolarının tarayıcı smoke kontrolü | NFR3 |
+| **Gizlilik ve Yetkilendirme (Privacy & Access Control)** | Yetkisiz kullanıcılar kısıtlı verilere ve korunan işlemlere erişememelidir. | Yetkisiz isteklerin doğru biçimde reddedilme oranı | İlgili authorization testlerinde `%100` doğru red | TC-01, TC-05, TC-06 | NFR4, FR1, FR8, FR9, FR10 |
+| **Eşleştirme Kalitesi (Matching Quality)** | Benzer kayıp ve buluntu ilanları tutarlı şekilde sıralanmalı ve kısa açıklama ile sunulmalıdır. | Küratörlü örnek set üzerinde yanlış eşleşme oranı + deterministic match contract geçişi | Yanlış eşleşme oranı `<= %20`, stub match senaryolarında `%100` geçiş | TC-04 + örnek eşleşme seti üzerinde manuel doğrulama | FR11, FR12, FR13, FR14 |
+| **Bakım Kolaylığı (Maintainability)** | Kod tabanı yeni özellik ve hata düzeltmelerine kontrollü şekilde açılabilmelidir. | Otomatik test kapsamı + tüm test hattının geçiş durumu | Çekirdek modüllerde kapsam `>= %80`, `test:all` `%100` geçiş | Jest backend/component testleri + Playwright E2E | NFR5 |
+| **Erişilebilirlik / Süreklilik (Availability)** | Sistem yayında olduğu sürece temel işlevleri kesintisiz sunabilmelidir. | Çalışma süresi yüzdesi (uptime) | Aylık `>= %99` erişilebilirlik | Deployment smoke testleri + operasyonel izleme kayıtları | NFR6 |
+
+Not: Tarayıcı uyumluluğu, kullanılabilirlik ve erişilebilirlik gibi kalite faktörlerinin bir kısmı otomatik testlerle, bir kısmı ise manuel doğrulama ve dağıtım sonrası izleme ile takip edilir. Bu nedenle tablo, yalnızca kod seviyesi testleri değil, proje genelindeki kalite güvence yaklaşımını temsil eder.
 
 ---
 
-## 3. Test Planı (Test Plan)
+## 4. Test Planı (Test Plan)
 
 ### Test Senaryoları (Test Cases - En az 5 detaylı senaryo)
 
