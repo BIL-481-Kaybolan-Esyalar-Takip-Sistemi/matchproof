@@ -115,6 +115,7 @@ export default function DetailPage() {
 
   const isOwner = user && String(item.ownerId) === String(user.id);
   const isAdmin = user?.role === 'admin';
+  const shouldBlur = item.isPrivate && !isOwner && !isAdmin;
 
   return (
     <div style={{ maxWidth: 900, margin: '0 auto', padding: '24px 24px 40px' }}>
@@ -124,13 +125,13 @@ export default function DetailPage() {
       <Card>
         <div style={{ padding: 24 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20, flexWrap: 'wrap' }}>
-            <Badge value={item.itemType} /><Badge value={item.status} />
+            <Badge value={item.itemType} /><Badge value={item.status} />{item.isPrivate && <Badge value="private" />}
             <h1 style={{ margin: 0 }}>{item.title}</h1>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 28, alignItems: 'start' }}>
             <div>
               {item.imageUrl
-                ? <img src={item.imageUrl} alt="Item" style={{ width: '100%', aspectRatio: '4/3', objectFit: 'cover', borderRadius: 2, border: '1px solid var(--border)', marginBottom: 20 }} />
+                ? <img src={item.imageUrl} alt="Item" style={{ width: '100%', aspectRatio: '4/3', objectFit: 'cover', borderRadius: 2, border: '1px solid var(--border)', marginBottom: 20, filter: shouldBlur ? 'blur(15px)' : 'none' }} />
                 : <div style={{ width: '100%', aspectRatio: '4/3', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-3)', fontFamily: 'var(--font-mono)', fontSize: 12, marginBottom: 20 }}>No photo uploaded</div>
               }
               <div style={{ marginBottom: 16 }}><MonoLabel>Description</MonoLabel><div style={{ fontSize: 14 }}>{item.description}</div></div>

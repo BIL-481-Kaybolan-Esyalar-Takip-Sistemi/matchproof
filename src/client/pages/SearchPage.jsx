@@ -72,7 +72,7 @@ export default function SearchPage() {
         <div style={{ flex: '1 1 110px' }}>
           <Field label="To"><Input aria-label="To" type="date" value={draft.dateTo} onChange={d('dateTo')} /></Field>
         </div>
-        <div><Btn variant="primary" onClick={handleSearch}>Find</Btn></div>
+        <div style={{ marginBottom: 16 }}><Btn variant="primary" onClick={handleSearch}>Find</Btn></div>
       </div>
       {loading ? <Spinner /> : (
         <>
@@ -95,7 +95,7 @@ function ItemCard({ item, onClick }) {
       style={{ background: 'var(--surface)', border: `1px solid ${hover ? 'var(--accent)' : 'var(--border)'}`, borderRadius: 2, padding: '16px 20px', cursor: 'pointer', boxShadow: hover ? '0 2px 8px rgba(0,0,0,0.08)' : 'var(--shadow)', display: 'grid', gridTemplateColumns: '1fr auto', gap: 12, alignItems: 'start', transition: 'border-color 0.12s, box-shadow 0.12s' }}>
       <div>
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 6 }}>
-          <Badge value={item.itemType} /><Badge value={item.status} />
+          <Badge value={item.itemType} /><Badge value={item.status} />{item.isPrivate && <Badge value="private" />}
         </div>
         <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 4 }}>{item.title}</div>
         <div style={{ fontSize: 13, color: 'var(--text-2)', marginBottom: 8 }}>{(item.description || '').slice(0, 120)}{item.description?.length > 120 ? '…' : ''}</div>
@@ -103,7 +103,7 @@ function ItemCard({ item, onClick }) {
           <span>📁 {item.category}</span><span>📍 {item.location}</span><span>🗓 {formatDate(item.createdAt)}</span>
         </div>
       </div>
-      {item.imageUrl && <img src={item.imageUrl} alt="" style={{ width: 64, height: 64, objectFit: 'cover', borderRadius: 2, border: '1px solid var(--border)' }} />}
+      {item.imageUrl && <img src={item.imageUrl} alt="" style={{ width: 64, height: 64, objectFit: 'cover', borderRadius: 2, border: '1px solid var(--border)', filter: item.isPrivate ? 'blur(8px)' : 'none' }} />}
     </div>
   );
 }

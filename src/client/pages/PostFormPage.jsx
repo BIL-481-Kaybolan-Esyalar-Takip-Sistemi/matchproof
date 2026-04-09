@@ -11,7 +11,7 @@ export default function PostFormPage() {
   const { showToast } = useToast();
   const fileRef = useRef(null);
 
-  const [form, setForm] = useState({ itemType: 'lost', title: '', category: '', location: '', description: '' });
+  const [form, setForm] = useState({ itemType: 'lost', title: '', category: '', location: '', description: '', isPrivate: false });
   const [imageFile, setImageFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [existingImageUrl, setExistingImageUrl] = useState(null);
@@ -24,7 +24,7 @@ export default function PostFormPage() {
     Items.get(itemId)
       .then(d => {
         const it = d.item;
-        setForm({ itemType: it.itemType, title: it.title, category: it.category, location: it.location, description: it.description });
+        setForm({ itemType: it.itemType, title: it.title, category: it.category, location: it.location, description: it.description, isPrivate: it.isPrivate || false });
         setExistingImageUrl(it.imageUrl);
       })
       .catch(err => setError(err.message))
@@ -98,6 +98,12 @@ export default function PostFormPage() {
                 <Field label="Location *"><Input aria-label="Location" value={form.location} onChange={set('location')} placeholder="e.g. Library, Floor 2" /></Field>
               </div>
               <Field label="Description *"><Textarea aria-label="Description" value={form.description} onChange={set('description')} placeholder="Describe the item in detail…" /></Field>
+              <Field label="Privacy">
+                <label style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: 13 }}>
+                  <input type="checkbox" checked={form.isPrivate} onChange={e => setForm(f => ({ ...f, isPrivate: e.target.checked }))} />
+                  Mark as Private (Image will be blurred for others)
+                </label>
+              </Field>
               <Field label="Photo">
                 <div onClick={() => fileRef.current?.click()}
                   style={{ border: '2px dashed var(--border-dark)', borderRadius: 2, padding: 24, textAlign: 'center', cursor: 'pointer', background: 'var(--surface-2)' }}>
