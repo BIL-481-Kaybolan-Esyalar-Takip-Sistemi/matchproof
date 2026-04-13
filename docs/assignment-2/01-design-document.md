@@ -205,7 +205,7 @@ ModerationService.removePost(adminUserId, itemId, reason) -> ModerationAction
 +--------------------------------------------------+
 | Item Title                                       |
 | Status: OPEN                                     |
-| Owner Contact: name/email                        |
+| Owner Name + Email                             |
 | (Mark Claimed) (Mark Resolved)                   |
 | Admin: (Remove Post)                             |
 +--------------------------------------------------+
@@ -252,7 +252,7 @@ ModerationService.removePost(adminUserId, itemId, reason) -> ModerationAction
 - Output: ranked list with concise explainable reasons
 
 #### UC4: Claim/Resolve and Moderate Post
-- Interaction flow (user): item detail -> contact info display -> status update action
+- Interaction flow (user): item detail -> owner contact display -> status update action
 - Interaction flow (admin): moderation panel -> remove post action
 - Data flow: status/moderation updates persisted with actor metadata
 - State change: `Open -> Claimed -> Resolved` (and optional `Open -> Removed` by admin)

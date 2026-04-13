@@ -4,6 +4,7 @@ import { Items, Moderation } from '../api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { Badge, Btn, Card, Spinner, Alert, Modal, MonoLabel, Divider, Field, Textarea, formatDate } from '../components/ui';
+import { shouldBlurItemImage } from '../services/itemPrivacy';
 
 function MatchScore({ score }) {
   const pct = Math.round(score * 100);
@@ -18,14 +19,14 @@ function MatchScore({ score }) {
   );
 }
 
-function MatchCard({ match, onClick }) {
+function MatchCard({ match, onClick, shouldBlur }) {
   const [hover, setHover] = useState(false);
   return (
     <div data-testid={`match-card-${match.itemId}`} onClick={onClick} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
       style={{ background: 'var(--surface)', border: `1px solid ${hover ? 'var(--accent)' : 'var(--border)'}`, borderRadius: 2, padding: '12px 16px', cursor: 'pointer', transition: 'border-color 0.12s' }}>
       <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
         {match.item.imageUrl
-          ? <img src={match.item.imageUrl} alt="" style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 2, border: '1px solid var(--border)', flexShrink: 0 }} />
+          ? <img src={match.item.imageUrl} alt="" style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 2, border: '1px solid var(--border)', flexShrink: 0, filter: shouldBlur ? 'blur(10px)' : 'none' }} />
           : <div style={{ width: 48, height: 48, background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 2, flexShrink: 0 }} />
         }
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -57,6 +58,7 @@ export default function DetailPage() {
   const [removeReason, setRemoveReason] = useState('');
   const [matches, setMatches] = useState(null);
   const [matchesLoading, setMatchesLoading] = useState(false);
+  const [matchesUnavailable, setMatchesUnavailable] = useState(false);
   const { user } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
@@ -66,11 +68,15 @@ export default function DetailPage() {
     Items.get(itemId)
       .then(d => {
         setItem(d.item);
+        setMatchesUnavailable(false);
         if (d.item.status !== 'removed') {
           setMatchesLoading(true);
           Items.getMatches(itemId)
             .then(m => setMatches(m.matches))
-            .catch(() => setMatches([]))
+            .catch(() => {
+              setMatches([]);
+              setMatchesUnavailable(true);
+            })
             .finally(() => setMatchesLoading(false));
         }
       })
@@ -115,7 +121,7 @@ export default function DetailPage() {
 
   const isOwner = user && String(item.ownerId) === String(user.id);
   const isAdmin = user?.role === 'admin';
-  const shouldBlur = item.isPrivate && !isOwner && !isAdmin;
+  const shouldBlur = shouldBlurItemImage(item, user);
 
   return (
     <div style={{ maxWidth: 900, margin: '0 auto', padding: '24px 24px 40px' }}>
@@ -178,12 +184,22 @@ export default function DetailPage() {
             AI Possible Matches
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, padding: '2px 6px', background: 'var(--accent)', color: 'var(--accent-inv)', borderRadius: 2 }}>AI</span>
           </div>
+          {matchesUnavailable && (
+            <Alert type="info">
+              AI matching is temporarily unavailable. You can continue with manual search and filters.
+            </Alert>
+          )}
           {matchesLoading ? (
             <Spinner />
           ) : matches && matches.length > 0 ? (
             <div style={{ display: 'grid', gap: 8 }}>
               {matches.map(m => (
-                <MatchCard key={m.itemId} match={m} onClick={() => navigate(`/items/${m.itemId}`)} />
+                <MatchCard
+                  key={m.itemId}
+                  match={m}
+                  shouldBlur={shouldBlurItemImage(m.item, user)}
+                  onClick={() => navigate(`/items/${m.itemId}`)}
+                />
               ))}
             </div>
           ) : (

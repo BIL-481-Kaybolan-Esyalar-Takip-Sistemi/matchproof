@@ -9,6 +9,7 @@ MatchProof, kampüs içindeki kayıp ve bulunan eşyalar için geliştirilen dij
 - `IMPLEMENTATION_GUIDE.md` — genel mimari, ortak veri yapıları ve ekip kuralları
 - `BACKEND_TEAM_GUIDE.md` — backend tarafında tamamlanan işler, endpoint sözleşmeleri ve entegrasyon notları
 - `FRONTEND_TEAM_GUIDE.md` — frontend tarafında tamamlanan bağlantılar, kalan işler ve sayfa bazlı durum
+- `.github/workflows/ci.yml` — GitHub Actions ile unit/component test doğrulaması
 - `package.json` — bağımlılıklar ve scriptler
 - `jest.config.cjs` — backend ve frontend test yapılandırması
 - `playwright.config.cjs` — Playwright E2E test yapılandırması
@@ -37,6 +38,10 @@ MatchProof, kampüs içindeki kayıp ve bulunan eşyalar için geliştirilen dij
 
 - `docs/test/01-test-report.md` — düzeltilen test sorunları ve son test özeti
 - `docs/test/02-test-strategy.md` — unit/component/E2E test yaklaşımı ve komutlar
+
+### `docs/assignment-3/`
+
+- `docs/assignment-3/01-delta-design-implementation-report.md` — review sonrası seçilen iyileştirmeler, efor/maliyet hesabı ve delta tasarım raporu
 
 ## Kaynak Kod Yapısı
 
@@ -99,6 +104,7 @@ Detay için:
 - gerçek kullanıcı akışları için Playwright E2E katmanı eklendi
 - AI matching E2E ortamında `MATCHING_MODE=stub` ile deterministik doğrulanır
 - E2E başlangıcında test verisi resetlenip seed edilir
+- GitHub Actions CI hattı `npm run test:unit` ile temel doğrulamayı otomatik çalıştırır
 
 Not:
 

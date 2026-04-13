@@ -46,7 +46,7 @@ MatchProof is a web-based campus lost and found platform that provides a central
 - Keyword-based search and filtering (category, date, status)
 - AI-powered image analysis to extract basic visual features (color, object type)
 - AI-enhanced matching for improved search relevance
-- User communication (contact information display)
+- User communication (owner contact display)
 - Item status management (claimed/resolved), post edit/delete by owner
 - Administrative moderation (remove inappropriate/duplicate posts)
 - Desktop browser support
@@ -80,7 +80,7 @@ Constraints:
 
 - Deliver a functional web application accessible via desktop browsers.
 - Implement FR1–FR14 (authentication, posting, search/filtering, status flow, moderation, and AI-enhanced matching).
-- Meet non-functional requirements: response time under 2 seconds and 99% availability during the testing period.
+- Meet non-functional requirements: response time under 2 seconds and at least 95% availability during the planned testing period.
 
 ## 3.2 Management Objectives
 

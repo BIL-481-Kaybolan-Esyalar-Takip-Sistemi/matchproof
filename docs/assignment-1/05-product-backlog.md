@@ -65,7 +65,7 @@ This document defines the initial Product Backlog for **MatchProof**, a campus l
 | PB5 | Core | As a user, I can search listings using keywords. | FR5 | Must | 3 | Alp Eren Köksal |
 | PB6 | Core | As a user, I can filter by category and date. | FR6 | Must | 2 | Alp Eren Köksal |
 | PB7 | Core | As a user, I can mark an item as claimed/resolved. | FR7 | Must | 2 | Alp Eren Köksal |
-| PB8 | Core | As a user, I can view contact information of the post owner to coordinate handoff. | FR8 | Must | 2 | Elif Beyza Turan |
+| PB8 | Core | As a user, I can view the basic contact information of the post owner to coordinate handoff. | FR8 | Must | 2 | Elif Beyza Turan |
 | PB9 | Core | As an admin, I can remove inappropriate/duplicate posts. | FR9 | Should | 3 | Elif Beyza Turan |
 | PB10 | Core | As a user, I can edit/delete my own posts. | FR10 | Should | 3 | Alp Eren Köksal |
 | PB11 | AI | System extracts basic visual attributes (object type, dominant color) from photos. | FR11 | Should | 5 | Mehmet Gür |
@@ -83,7 +83,7 @@ This document defines the initial Product Backlog for **MatchProof**, a campus l
 
 ## Notes and Constraints
 
-- **No user-to-user messaging/chat:** The product does not include in-app direct messaging. Coordination is supported via **contact information display** (FR8 / PB8).
+- **No user-to-user messaging/chat:** The product does not include in-app direct messaging. Coordination is supported via **basic owner contact display** (FR8 / PB8).
 - **No notifications:** In-app/push notifications (email/SMS) are out of scope for the initial version.
 - **MVP-first:** The system remains usable with keyword search/filtering even if AI items PB11–PB14 are incomplete.
 

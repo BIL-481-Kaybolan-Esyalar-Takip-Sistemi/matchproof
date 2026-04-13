@@ -85,9 +85,9 @@ MatchProof solves this problem by providing a centralized digital bulletin board
 - Integrate multi-modal AI similarity ranking combining text and image analysis for improved matching accuracy
 - Implement explainable matching system that provides match reasons and score breakdowns to users
 - Develop intelligent search functionality with filtering by category, location, date, and status
-- Enable a simple item status workflow with contact information display and resolution capabilities
+- Enable a simple item status workflow with basic contact display and resolution capabilities
 - Implement administrative moderation tools for content management and policy enforcement
-- Achieve system response time under 2 seconds and 99% uptime availability
+- Achieve system response time under 2 seconds and at least 95% availability during the planned testing period
 
 ---
 
@@ -105,7 +105,7 @@ MatchProof solves this problem by providing a centralized digital bulletin board
 - Multi-modal AI similarity ranking using text and image embeddings
 - Explainable matching with match reasons and score breakdown visualization
 - Match suggestions UI displaying ranked list with explanations
-- Item status workflow with contact information display and `open/claimed/resolved` states
+- Item status workflow with basic owner contact display and `open/claimed/resolved` states
 - Post editing and deletion by original poster
 - Report and moderation policy with defined workflow
 - Administrative moderation capability for removing inappropriate or duplicate posts
@@ -263,7 +263,7 @@ The team consists of 5 members with clearly defined roles:
 ## Project Success Criteria
 
 - **Functional Completeness:** All 14 functional requirements (FR1-FR14 from Requirements Document) are successfully implemented and operational
-- **Performance Standards:** System achieves sub-2-second response time for 95% of user operations and maintains 99% uptime during 2-week testing period
+- **Performance Standards:** System achieves sub-2-second response time for 95% of user operations and maintains at least 95% availability during the planned 2-week testing period
 - **Usability Achievement:** At least 80% of test users (minimum 10 users) successfully complete key tasks (post item, search, view matches, claim) without assistance on first attempt
 - **AI Matching Effectiveness:** Multi-modal similarity ranking returns at least one correct match in top 5 results for 75% of test cases with known ground truth
 - **Explainability Quality:** At least 80% of users understand why items are matched based on provided explanations (verified through user survey)

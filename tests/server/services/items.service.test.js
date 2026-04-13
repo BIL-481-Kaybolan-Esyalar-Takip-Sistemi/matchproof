@@ -168,6 +168,41 @@ describe('items.service', () => {
     );
   });
 
+  test('createItem forces private mode for sensitive ID Card posts', async () => {
+    itemModel.createItem.mockResolvedValue({ id: 21 });
+    itemModel.findItemById.mockResolvedValue({
+      id: 21,
+      ownerId: 1,
+      itemType: 'found',
+      title: 'Campus ID',
+      description: 'Student ID card',
+      category: 'ID Card',
+      location: 'Library',
+      status: 'open',
+      isPrivate: true,
+      imagePath: null,
+      ownerEmail: 'ada@example.com',
+      createdAt: '2026-03-01T00:00:00.000Z',
+      updatedAt: '2026-03-01T00:00:00.000Z',
+    });
+
+    await createItem({
+      userId: 1,
+      payload: {
+        itemType: 'found',
+        title: 'Campus ID',
+        description: 'Student ID card',
+        category: 'ID Card',
+        location: 'Library',
+        isPrivate: false,
+      },
+    });
+
+    expect(itemModel.createItem).toHaveBeenCalledWith(
+      expect.objectContaining({ isPrivate: true, category: 'ID Card' })
+    );
+  });
+
   test('getItemById hides removed item from non-owner/non-admin', async () => {
     itemModel.findItemById.mockResolvedValue({
       id: 5,
@@ -620,6 +655,49 @@ describe('items.service', () => {
     expect(itemModel.updateItemById).toHaveBeenCalledWith(
       3,
       expect.objectContaining({ isPrivate: false })
+    );
+  });
+
+  test('updateItem keeps sensitive ID Card posts private even when unchecked', async () => {
+    itemModel.findItemById
+      .mockResolvedValueOnce({
+        id: 4,
+        ownerId: 1,
+        itemType: 'lost',
+        title: 'Campus ID',
+        description: 'Blue card',
+        category: 'ID Card',
+        location: 'Library',
+        status: 'open',
+        isPrivate: true,
+        imagePath: null,
+      })
+      .mockResolvedValueOnce({
+        id: 4,
+        ownerId: 1,
+        itemType: 'lost',
+        title: 'Campus ID',
+        description: 'Blue card',
+        category: 'ID Card',
+        location: 'Library',
+        status: 'open',
+        isPrivate: true,
+        imagePath: null,
+        ownerEmail: 'ada@example.com',
+        createdAt: '2026-03-01T00:00:00.000Z',
+        updatedAt: '2026-03-01T00:00:00.000Z',
+      });
+
+    await updateItem({
+      itemId: 4,
+      userId: 1,
+      payload: { isPrivate: false, category: 'ID Card' },
+      file: null,
+    });
+
+    expect(itemModel.updateItemById).toHaveBeenCalledWith(
+      4,
+      expect.objectContaining({ isPrivate: true, category: 'ID Card' })
     );
   });
 
