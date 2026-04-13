@@ -47,9 +47,9 @@ export default function AdminPage() {
   }
 
   return (
-    <div style={{ maxWidth: 900, margin: '0 auto', padding: '24px 24px 40px' }}>
+    <div style={{ maxWidth: 980, margin: '0 auto', padding: '24px 24px 40px' }}>
       <PageHeader title="Moderation Panel" subtitle="Admin — manage and remove posts" action={<Btn size="sm" onClick={() => fetchItemsCallback(page)}>↺ Refresh</Btn>} />
-      <div style={{ background: '#fff8e1', border: '1px solid #ffe082', borderLeft: '4px solid var(--amber)', borderRadius: 2, padding: '12px 16px', fontFamily: 'var(--font-mono)', fontSize: 12, color: '#7a5c00', marginBottom: 20 }}>
+      <div style={{ background: '#fff8e1', border: '1px solid #ffe082', borderLeft: '4px solid var(--amber)', borderRadius: 16, padding: '12px 16px', fontFamily: 'var(--font-mono)', fontSize: 12, color: '#7a5c00', marginBottom: 20, boxShadow: '0 10px 22px rgba(183, 121, 31, 0.08)' }}>
         ⚠ Admin panel — actions here are permanent. Always provide a clear reason when removing posts.
       </div>
       {loading ? <Spinner /> : (
@@ -88,10 +88,10 @@ export default function AdminPage() {
 
 function ModerationCard({ item, onView, onRemove }) {
   return (
-    <div data-testid={`moderation-card-${item.id}`} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 2, padding: '16px 20px', display: 'flex', alignItems: 'flex-start', gap: 16 }}>
+    <div data-testid={`moderation-card-${item.id}`} style={{ background: 'rgba(255,255,255,0.92)', border: '1px solid var(--border)', borderRadius: 18, padding: '18px 20px', display: 'flex', alignItems: 'flex-start', gap: 16, boxShadow: 'var(--shadow)' }}>
       {item.imageUrl
-        ? <img src={item.imageUrl} alt="" style={{ width: 56, height: 56, objectFit: 'cover', borderRadius: 2, border: '1px solid var(--border)', flexShrink: 0 }} />
-        : <div style={{ width: 56, height: 56, background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 2, flexShrink: 0 }} />
+        ? <img src={item.imageUrl} alt="" style={{ width: 56, height: 56, objectFit: 'cover', borderRadius: 14, border: '1px solid var(--border)', flexShrink: 0, boxShadow: '0 8px 18px rgba(20, 32, 51, 0.08)' }} />
+        : <div style={{ width: 56, height: 56, background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 14, flexShrink: 0 }} />
       }
       <div style={{ flex: 1 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>

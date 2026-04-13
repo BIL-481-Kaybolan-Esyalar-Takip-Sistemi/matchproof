@@ -11,15 +11,19 @@ export default function AuthPage() {
   const navigate = useNavigate();
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 52px)', padding: '40px 24px' }}>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 64px)', padding: '40px 24px' }}>
       <div style={{ width: '100%', maxWidth: 400 }}>
-        <Card>
-          <div style={{ padding: 28 }}>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 22, fontWeight: 600, marginBottom: 2 }}>MatchProof</div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--text-2)', marginBottom: 24 }}>Campus Lost & Found Board</div>
-            <div style={{ display: 'flex', borderBottom: '2px solid var(--border)', marginBottom: 24 }}>
+        <Card style={{ overflow: 'hidden' }}>
+          <div style={{ padding: 30 }}>
+            <div style={{ width: 64, height: 4, background: 'linear-gradient(90deg, var(--blue), var(--green))', borderRadius: 999, marginBottom: 14 }} />
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 24, fontWeight: 600, marginBottom: 4 }}>MatchProof</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--text-2)', marginBottom: 8 }}>Campus Lost & Found Board</div>
+            <div style={{ fontSize: 14, color: 'var(--text-2)', marginBottom: 24 }}>
+              Sign in to browse item listings, publish posts, and review AI-supported matches.
+            </div>
+            <div style={{ display: 'flex', gap: 8, background: 'var(--surface-2)', padding: 6, borderRadius: 999, marginBottom: 24 }}>
               {['login', 'register'].map(t => (
-                <button key={t} onClick={() => setTab(t)} style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 500, padding: '10px 20px', cursor: 'pointer', background: 'none', border: 'none', color: tab === t ? 'var(--text)' : 'var(--text-3)', borderBottom: `2px solid ${tab === t ? 'var(--accent)' : 'transparent'}`, marginBottom: -2, textTransform: 'capitalize', transition: 'all 0.12s' }}>
+                <button key={t} onClick={() => setTab(t)} style={{ flex: 1, fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 500, padding: '10px 18px', cursor: 'pointer', background: tab === t ? 'var(--surface)' : 'transparent', border: 'none', color: tab === t ? 'var(--text)' : 'var(--text-3)', borderRadius: 999, boxShadow: tab === t ? '0 8px 18px rgba(20, 32, 51, 0.08)' : 'none', textTransform: 'capitalize', transition: 'all 0.12s' }}>
                   {t === 'login' ? 'Login' : 'Register'}
                 </button>
               ))}
