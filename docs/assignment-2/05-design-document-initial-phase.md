@@ -1,5 +1,15 @@
 # 05 - Design Document (Initial Phase)
 
+## Document-Specific Task Matrix
+
+| Task | Responsible | Support | Status |
+|---|---|---|---|
+| Initial architecture summary writing | Yiğit Yıldız | - | Completed |
+| High-level component structure definition | Yiğit Yıldız | - | Completed |
+| Component interface descriptions | Yiğit Yıldız | - | Completed |
+| Interface input/output specification | Yiğit Yıldız | - | Completed |
+| Initial phase scope boundary definition | Yiğit Yıldız | - | Completed |
+
 ## 1. Selected Software Architecture
 - Architecture: Layered Monolithic Architecture
 - Goal: Fast delivery, clear layering, straightforward testing, and simple deployment.

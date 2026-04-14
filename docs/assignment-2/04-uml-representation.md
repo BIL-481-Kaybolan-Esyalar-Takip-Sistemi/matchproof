@@ -2,6 +2,17 @@
 
 This document presents the selected Layered Monolithic Architecture with high-level UML diagrams.
 
+## Document-Specific Task Matrix
+
+| Task | Responsible | Support | Status |
+|---|---|---|---|
+| UML scope definition for initial phase | Yiğit Yıldız | - | Completed |
+| Component diagram preparation | Yiğit Yıldız | - | Completed |
+| Class diagram preparation | Yiğit Yıldız | - | Completed |
+| Sequence diagram preparation | Yiğit Yıldız | - | Completed |
+| Deployment diagram preparation | Yiğit Yıldız | - | Completed |
+| Diagram consistency review | Yiğit Yıldız | - | Completed |
+
 ## 1) Component Diagram
 
 ```mermaid

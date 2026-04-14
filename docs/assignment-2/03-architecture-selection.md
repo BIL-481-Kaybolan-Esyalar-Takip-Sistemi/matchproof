@@ -5,6 +5,16 @@
 - Date: 2026-03-31
 - Version: 1.0 (Initial Architecture Decision)
 
+## Document-Specific Task Matrix
+
+| Task | Responsible | Support | Status |
+|---|---|---|---|
+| Architecture alternatives review | Yiğit Yıldız | - | Completed |
+| Layered architecture selection rationale | Yiğit Yıldız | - | Completed |
+| Layer definitions and responsibilities | Yiğit Yıldız | - | Completed |
+| Architecture trade-off summary | Yiğit Yıldız | - | Completed |
+| Initial evolution path documentation | Yiğit Yıldız | - | Completed |
+
 ## Selected Architecture Approach
 For this project, **Layered Architecture** is selected.
 

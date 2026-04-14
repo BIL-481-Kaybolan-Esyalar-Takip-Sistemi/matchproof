@@ -3,6 +3,16 @@
 ## Objective
 This document explains how the requirements defined in assignment-1 are mapped into the Product Backlog and how they are refined in an Agile manner.
 
+## Document-Specific Task Matrix
+
+| Task | Responsible | Support | Status |
+|---|---|---|---|
+| Requirements source identification | Yiğit Yıldız | - | Completed |
+| Requirements-to-backlog mapping method definition | Yiğit Yıldız | - | Completed |
+| Traceability example preparation | Yiğit Yıldız | - | Completed |
+| Agile refinement principle documentation | Yiğit Yıldız | - | Completed |
+| Related document linkage and consistency check | Yiğit Yıldız | - | Completed |
+
 ## 1. Source Requirements
 - Functional Requirements: FR1 - FR14
 - Non-Functional Requirements: NFR1 - NFR6
