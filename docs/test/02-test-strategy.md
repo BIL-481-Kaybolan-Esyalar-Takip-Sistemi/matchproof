@@ -1,11 +1,22 @@
 # MatchProof Test Strategy
 
 ## Table of Contents
+- [0. Document-Specific Task Matrix](#0-document-specific-task-matrix)
 - [1. Overview](#1-overview)
 - [2. Test Layers](#2-test-layers)
 - [3. E2E Environment](#3-e2e-environment)
 - [4. Commands](#4-commands)
 - [5. Covered Flows](#5-covered-flows)
+
+## 0. Document-Specific Task Matrix
+
+| Task | Responsible | Support | Status |
+|---|---|---|---|
+| Test strategy scope definition | Mehmet Gür | - | Completed |
+| Test layer breakdown writing | Mehmet Gür | - | Completed |
+| E2E environment documentation | Mehmet Gür | - | Completed |
+| Test command and CI summary writing | Mehmet Gür | - | Completed |
+| Covered flow definitions | Mehmet Gür | - | Completed |
 
 ## 1. Overview
 
