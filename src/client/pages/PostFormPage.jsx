@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Items } from '../api';
 import { useToast } from '../context/ToastContext';
 import { PageHeader, Card, Field, Input, Select, Textarea, Btn, Alert, Spinner, CATEGORIES } from '../components/ui';
+import { isSensitiveImageCategory } from '../services/itemPrivacy';
 
 export default function PostFormPage() {
   const { itemId } = useParams();
@@ -18,6 +19,7 @@ export default function PostFormPage() {
   const [loading, setLoading] = useState(isEdit);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const isSensitiveCategory = isSensitiveImageCategory(form.category);
 
   useEffect(() => {
     if (!isEdit) return;
@@ -30,6 +32,12 @@ export default function PostFormPage() {
       .catch(err => setError(err.message))
       .finally(() => setLoading(false));
   }, [itemId, isEdit]);
+
+  useEffect(() => {
+    if (isSensitiveCategory && !form.isPrivate) {
+      setForm((current) => ({ ...current, isPrivate: true }));
+    }
+  }, [isSensitiveCategory, form.isPrivate]);
 
   const handleFile = (e) => {
     const file = e.target.files[0];
@@ -100,8 +108,15 @@ export default function PostFormPage() {
               <Field label="Description *"><Textarea aria-label="Description" value={form.description} onChange={set('description')} placeholder="Describe the item in detail…" /></Field>
               <Field label="Privacy">
                 <label style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: 13 }}>
-                  <input type="checkbox" checked={form.isPrivate} onChange={e => setForm(f => ({ ...f, isPrivate: e.target.checked }))} />
-                  Mark as Private (Image will be blurred for others)
+                  <input
+                    type="checkbox"
+                    checked={form.isPrivate}
+                    disabled={isSensitiveCategory}
+                    onChange={e => setForm(f => ({ ...f, isPrivate: e.target.checked }))}
+                  />
+                  {isSensitiveCategory
+                    ? 'Sensitive category selected. This post is automatically private and its image will be blurred for other users.'
+                    : 'Mark as Private (Image will be blurred for others)'}
                 </label>
               </Field>
               <Field label="Photo">

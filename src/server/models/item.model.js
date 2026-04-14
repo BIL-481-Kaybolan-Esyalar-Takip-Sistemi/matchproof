@@ -245,6 +245,7 @@ async function findMatchCandidates({ itemType, status, excludeItemId }) {
         items.category,
         items.location,
         items.status,
+        items.is_private AS "isPrivate",
         items.image_path AS "imagePath",
         items.created_at AS "createdAt",
         items.updated_at AS "updatedAt"

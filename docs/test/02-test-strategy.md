@@ -85,6 +85,11 @@ Command summary:
 - `test:e2e` → Playwright browser tests
 - `test:all` → full verification pipeline
 
+CI summary:
+
+- `.github/workflows/ci.yml` runs `npm run test:unit` on push and pull request events
+- browser-level E2E remains a local/pre-release verification step because it is heavier than the baseline CI gate
+
 ## 5. Covered Flows
 
 The current automated strategy is intended to catch:

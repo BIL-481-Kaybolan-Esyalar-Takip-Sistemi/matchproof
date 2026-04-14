@@ -26,12 +26,13 @@ Tamamlanan temel backend kapsamı:
 - Item search + filtering + pagination
 - Item status update flow
 - Admin moderation remove flow
+- AI matching endpoint'leri
+- otomatik testler
 
 Henüz tamamlanmayan backend kapsamı:
 
-- AI matching endpoint'leri
-- otomatik testler
 - deploy / production hardening
+- production ortamı için ek güvenlik sertleştirmeleri
 
 ---
 
@@ -114,7 +115,7 @@ Desteklenen status değerleri:
 
 Şu an item içinde `contactInfo` alanı saklanmıyor.
 
-Backend detail response içinde `ownerContact` üretiyor:
+Backend detail response içinde `ownerContact` üretiyor ve temel iletişim bilgisi olarak isim + e-posta döndürüyor:
 
 ```json
 {
@@ -125,7 +126,10 @@ Backend detail response içinde `ownerContact` üretiyor:
 }
 ```
 
-Not: Bunun gizlilik açısından final karar olup olmadığı ekip içinde ayrıca netleştirilmeli.
+Ek gizlilik kuralı:
+
+- `ID Card` kategorisindeki ilanlar backend tarafında otomatik olarak private işaretlenir
+- private ilanların görselleri kamuya açık listelerde ve eşleşme kartlarında bulanık gösterilir
 
 ### 6. Search davranışı
 
@@ -517,7 +521,7 @@ Frontend'in dikkat etmesi gerekenler:
 
 ## AI Ekibi İçin Notlar
 
-AI tarafı henüz backend'e bağlanmış değil. Ama mevcut temel yapı AI ekibinin üstüne koyması için hazır:
+AI matching endpoint'i backend'e bağlanmış durumda. Mevcut temel yapı AI ekibinin model kalitesi ve eşleştirme stratejisi üzerinde iterasyon yapması için hazır:
 
 - item verileri PostgreSQL'de tutuluyor
 - detail endpoint mevcut
@@ -526,11 +530,11 @@ AI tarafı henüz backend'e bağlanmış değil. Ama mevcut temel yapı AI ekibi
 
 AI ekibinin muhtemel sonraki işi:
 
-- `GET /api/items/:itemId/matches`
 - text similarity
 - image similarity
 - ranked candidate list
 - kısa explanation üretimi
+- fallback kalitesini ve skor eşiklerini iyileştirme
 
 AI ekibi için önemli mevcut alanlar:
 
@@ -599,19 +603,17 @@ AI ekibi için önemli mevcut alanlar:
 
 Kalan backend geliştirmeler:
 
-- AI matching route ve service
-- privacy/contact modelinin netleştirilmesi
-- test altyapısı ve otomatik testler
 - production/deploy iyileştirmeleri
+- ek güvenlik sertleştirmeleri
+- gerekirse moderation restore gibi ikinci faz işlemler
 
 ---
 
 ## Ekip İçinde Netleştirilmesi Gereken Açık Kararlar
 
-1. `ownerContact` olarak gerçek email göstermek final karar mı?
-2. İletişim için ayrıca paylaşılabilir `contactMethod/contactValue` alanı eklenecek mi?
-3. `dateFrom` / `dateTo` ilan oluşturulma tarihini mi, yoksa eşyanın kaybolduğu/bulunduğu tarihi mi temsil etmeli?
-4. Moderation sadece `remove` mu olacak, yoksa ileride `restore` da eklenecek mi?
-5. Test ve frontend ekipleri için admin kullanıcı nasıl üretilecek? (şu an en basit yol: DB'de kullanıcının `role` alanını `admin` yapmak)
+1. `ownerContact` ileride login email’den ayrı bir paylaşılabilir iletişim alanına ayrılacak mı?
+2. `dateFrom` / `dateTo` ilan oluşturulma tarihini mi, yoksa eşyanın kaybolduğu/bulunduğu tarihi mi temsil etmeli?
+3. Moderation sadece `remove` mu olacak, yoksa ileride `restore` da eklenecek mi?
+4. Test ve frontend ekipleri için admin kullanıcı nasıl üretilecek? (şu an en basit yol: DB'de kullanıcının `role` alanını `admin` yapmak)
 
 Bu kararlar netleşmeden frontend ve AI ekipleri varsayım yapmamalı.

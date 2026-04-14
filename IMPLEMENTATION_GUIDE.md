@@ -120,6 +120,11 @@ pageSize
 
 Not: `dateFrom` ve `dateTo`, ilk aşamada ilanın sisteme eklenme tarihini filtreler.
 
+Ek gizlilik kuralı:
+
+- `ID Card` kategorisindeki ilanlar otomatik olarak private kabul edilir.
+- Private ilanların görselleri arama, detay ve eşleşme kartlarında owner/admin dışındaki kullanıcılara bulanık gösterilir.
+
 ### 4. MatchCandidate
 
 Kullanım alanları:
@@ -248,6 +253,7 @@ Kurallar:
 - frontend yalnızca dönen veriyi kullanır
 - gelişmiş ranking hazır olmasa bile uygulama çalışmaya devam etmeli, AI matching için fallback olmalıdır
 - owner iletişim bilgisi item içinde saklanmaz; detail response'ta `ownerContact` olarak user bilgisinden üretilir
+- `ownerContact` bu sürümde temel paylaşılabilir iletişim bilgisi olarak `name + email` içerir
 - normal arama sonuçlarında `removed` durumundaki ilanlar dönmez
 - `removed` ilanlar detail endpoint'te yalnızca admin veya ilan sahibi tarafından görülebilir
 - status geçişleri backend tarafından sınırlandırılır: `open -> claimed -> resolved`

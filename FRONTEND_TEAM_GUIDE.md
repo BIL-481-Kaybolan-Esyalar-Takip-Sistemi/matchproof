@@ -220,10 +220,12 @@ Durum:
 - edit akışı bağlı
 - image upload bağlı
 - preview desteği var
+- `ID Card` kategorisi seçildiğinde ilan otomatik olarak private olur
 
 Not:
 
 - backend `image` alanını bekliyor; frontend bunu doğru şekilde `FormData` ile gönderiyor
+- hassas kategoriler için privacy checkbox otomatik kilitlenir ve kullanıcıya açıklama gösterilir
 
 Kalan olası işler:
 
@@ -253,6 +255,7 @@ Durum:
 - delete akışı bağlı
 - admin remove akışı bağlı
 - AI Possible Matches bölümü eklenmiş ve backend’e bağlı
+- AI servisi hata verirse kullanıcıya manuel aramaya dönmesini söyleyen fallback mesajı gösteriliyor
 
 Bu önemli:
 
@@ -261,7 +264,7 @@ Bu önemli:
 Kalan olası işler:
 
 - matches kartlarının görsel iyileştirmesi
-- hata durumunda daha açıklayıcı kullanıcı mesajları
+- AI hata durumunda kullanıcıyı filtrelenmiş aramaya yönlendiren daha gelişmiş akış
 
 ---
 

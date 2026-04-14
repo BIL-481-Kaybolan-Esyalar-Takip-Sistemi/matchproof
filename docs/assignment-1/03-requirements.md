@@ -68,7 +68,7 @@ FR6 - Users must be able to filter items by category and date.
 
 FR7 - Users must be able to mark items as claimed or resolved.
 
-FR8 - Users must be able to contact the person who created an item post via contact information display.
+FR8 - Users must be able to view the basic contact information of the person who created an item post in order to coordinate item return.
 
 FR9 - Admin must be able to remove inappropriate or duplicate posts.
 
@@ -94,7 +94,7 @@ NFR4 – The system must ensure basic data privacy by restricting access to user
 
 NFR5 – The system must be designed to allow future extension of AI models without major architectural changes.
 
-NFR6 - The system must be available 99% of the time.
+NFR6 - The system must be available for at least 95% of the planned testing and demo period.
 
 **Product Backlog :**
 

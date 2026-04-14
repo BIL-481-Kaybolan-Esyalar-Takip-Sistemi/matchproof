@@ -25,7 +25,7 @@
 
 | Item | Value |
 | --- | --- |
-| Test Execution Date | `2026-04-02` |
+| Test Execution Date | `2026-04-13` |
 | Latest Full Verification Run | `cmd.exe /c npm run test:all` |
 
 ## 3. Test Configuration
@@ -40,6 +40,7 @@
 | Database for E2E | `pg-mem://matchproof_e2e` |
 | Session Strategy in E2E | In-memory session store |
 | AI Test Mode | `MATCHING_MODE=stub` |
+| CI Verification | GitHub Actions (`npm run test:unit`) |
 | Frontend Base URL | `http://127.0.0.1:3000` |
 | Backend Base URL | `http://127.0.0.1:3001` |
 | Browser Used for E2E | Chromium (Playwright) |
@@ -50,9 +51,9 @@
 
 | Command | Purpose | Result | Duration |
 | --- | --- | --- | --- |
-| `cmd.exe /c npm run test:unit` | Backend + frontend Jest suites | Passed | ~9.22s |
-| `cmd.exe /c npm run test:e2e` | Browser-level end-to-end validation | Passed | ~12.4s |
-| `cmd.exe /c npm run test:all` | Full combined verification pipeline | Passed | ~20.1s |
+| `cmd.exe /c npm run test:unit` | Backend + frontend Jest suites | Passed | ~10.15s |
+| `cmd.exe /c npm run test:e2e` | Browser-level end-to-end validation | Passed | ~17.4s |
+| `cmd.exe /c npm run test:all` | Full combined verification pipeline | Passed | ~16.9s |
 
 ### 4.2 Test Inputs
 
@@ -71,8 +72,8 @@
 | Test Scope | Input / Scenario | Expected Result | Actual Result | Status |
 | --- | --- | --- | --- | --- |
 | Backend Route Contract | Auth, items, moderation endpoints | Error and success contracts remain stable | Contracts matched expected responses | Passed |
-| Backend Business Rules | Status transitions, removed item visibility, moderation authorization | Only valid transitions and permissions allowed | Rules enforced correctly | Passed |
-| Frontend Component | Search pagination and detail match rendering | UI triggers correct API calls and renders state correctly | Component behavior matched expected output | Passed |
+| Backend Business Rules | Status transitions, removed item visibility, moderation authorization, sensitive-item privacy rules | Only valid transitions and permissions allowed | Rules enforced correctly, including forced-private handling for `ID Card` posts | Passed |
+| Frontend Component | Search pagination, detail match rendering, AI fallback messaging, sensitive-item privacy behavior | UI triggers correct API calls and renders state correctly | Component behavior matched expected output | Passed |
 | E2E Flow 1 | Register → login → create lost post → search → detail → matches → status updates | Full user flow completes without failure | Flow completed successfully | Passed |
 | E2E Flow 2 | Admin login → moderation panel → remove seeded post | Admin can remove post with reason | Moderation flow completed successfully | Passed |
 
@@ -90,6 +91,11 @@
 | T-08 | `scripts/e2e/reset-and-seed.js`, `scripts/e2e/start-backend.js`, `src/server/index.js`, `src/server/services/migrate.js` | E2E environment lacked deterministic backend startup, seed data, and reusable migration flow. | Added seeded E2E startup path and reusable migration execution with optional pool reuse. | Fixed |
 | T-09 | `src/server/services/db.js`, `src/server/services/session-store.js`, `src/server/services/matchingService.js` | E2E tests needed deterministic DB + AI behavior without external PostgreSQL/model downloads. | Added `pg-mem` test database support, memory session store for test mode, and `MATCHING_MODE=stub`. | Fixed |
 | T-10 | `src/client/pages/*.jsx`, `tests/client/pages/SearchPage.test.jsx`, `tests/client/pages/DetailPage.test.jsx` | E2E selectors and component coverage were too weak for stable browser tests. | Added stable test hooks/labels and extended component coverage for pagination and match rendering. | Fixed |
+| T-11 | `src/server/services/items.service.js`, `src/client/pages/DetailPage.jsx`, related docs | Contact information policy became inconsistent across backend, frontend, and documentation after privacy-related revisions. | Standardized item-detail contact output as generated `ownerContact` with basic `name + email` and aligned the related docs. | Fixed |
+| T-12 | `src/server/services/item-privacy.js`, `src/client/services/itemPrivacy.js`, `src/client/pages/PostFormPage.jsx`, `tests/server/services/items.service.test.js`, `tests/client/pages/PostFormPage.test.jsx` | Sensitive `ID Card` posts could still be created as public unless the user manually enabled privacy. | Added centralized privacy helpers and forced `ID Card` posts to private mode in both backend enforcement and frontend UX. | Fixed |
+| T-13 | `src/server/models/item.model.js`, `src/server/services/items.service.js`, `src/client/pages/DetailPage.jsx` | Private matched items could expose unblurred images inside AI match cards. | Added `isPrivate` to match payloads and blurred private match thumbnails for non-owner/non-admin viewers. | Fixed |
+| T-14 | `src/client/pages/DetailPage.jsx`, `tests/client/pages/DetailPage.test.jsx` | AI service failure appeared to the user as if there were simply no matches. | Added explicit fallback message for temporary AI unavailability and test coverage for that case. | Fixed |
+| T-15 | `.github/workflows/ci.yml` | The repository had no lightweight CI gate for regression checks. | Added GitHub Actions workflow to run `npm run test:unit` on push and pull request events. | Fixed |
 
 ## 6. Deployment Diagram
 
@@ -101,3 +107,4 @@
 - Full verification was completed successfully after the fixes.
 - No failing backend, frontend, or E2E tests remained in the latest run.
 - The E2E layer uses deterministic seed data and stubbed AI matching to keep browser tests stable.
+- Vite/Playwright startup emits non-blocking environment warnings during E2E startup, but the test run completes successfully.

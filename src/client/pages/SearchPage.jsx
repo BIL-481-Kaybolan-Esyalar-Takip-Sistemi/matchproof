@@ -33,9 +33,9 @@ export default function SearchPage() {
   const d = (key) => (e) => setDraft(f => ({ ...f, [key]: e.target.value }));
 
   return (
-    <div style={{ maxWidth: 900, margin: '0 auto', padding: '24px 24px 40px' }}>
+    <div style={{ maxWidth: 980, margin: '0 auto', padding: '24px 24px 40px' }}>
       <PageHeader title="Lost & Found Board" subtitle="Browse and search campus item listings" action={<Btn variant="primary" onClick={() => navigate('/new')}>+ New Post</Btn>} />
-      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'flex-end', padding: 16, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 2, marginBottom: 20 }}>
+      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'flex-end', padding: 18, background: 'linear-gradient(135deg, rgba(255,255,255,0.95), rgba(247,249,252,0.92))', border: '1px solid var(--border)', borderRadius: 18, marginBottom: 20, boxShadow: 'var(--shadow)' }}>
         <div style={{ flex: '1 1 160px' }}>
           <Field label="Search"><Input aria-label="Search" value={draft.query} onChange={d('query')} placeholder="keywords…" onKeyDown={e => e.key === 'Enter' && handleSearch()} /></Field>
         </div>
@@ -92,7 +92,7 @@ function ItemCard({ item, onClick }) {
   const [hover, setHover] = useState(false);
   return (
     <div data-testid={`item-card-${item.id}`} onClick={onClick} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
-      style={{ background: 'var(--surface)', border: `1px solid ${hover ? 'var(--accent)' : 'var(--border)'}`, borderRadius: 2, padding: '16px 20px', cursor: 'pointer', boxShadow: hover ? '0 2px 8px rgba(0,0,0,0.08)' : 'var(--shadow)', display: 'grid', gridTemplateColumns: '1fr auto', gap: 12, alignItems: 'start', transition: 'border-color 0.12s, box-shadow 0.12s' }}>
+      style={{ background: 'rgba(255,255,255,0.92)', border: `1px solid ${hover ? 'var(--blue)' : 'var(--border)'}`, borderRadius: 18, padding: '18px 20px', cursor: 'pointer', boxShadow: hover ? 'var(--shadow-lg)' : 'var(--shadow)', display: 'grid', gridTemplateColumns: '1fr auto', gap: 14, alignItems: 'start', transition: 'border-color 0.12s, box-shadow 0.12s, transform 0.12s', transform: hover ? 'translateY(-2px)' : 'translateY(0)' }}>
       <div>
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 6 }}>
           <Badge value={item.itemType} /><Badge value={item.status} />{item.isPrivate && <Badge value="private" />}
@@ -103,7 +103,7 @@ function ItemCard({ item, onClick }) {
           <span>📁 {item.category}</span><span>📍 {item.location}</span><span>🗓 {formatDate(item.createdAt)}</span>
         </div>
       </div>
-      {item.imageUrl && <img src={item.imageUrl} alt="" style={{ width: 64, height: 64, objectFit: 'cover', borderRadius: 2, border: '1px solid var(--border)', filter: item.isPrivate ? 'blur(8px)' : 'none' }} />}
+      {item.imageUrl && <img src={item.imageUrl} alt="" style={{ width: 72, height: 72, objectFit: 'cover', borderRadius: 14, border: '1px solid var(--border)', filter: item.isPrivate ? 'blur(8px)' : 'none', boxShadow: '0 8px 18px rgba(20, 32, 51, 0.08)' }} />}
     </div>
   );
 }

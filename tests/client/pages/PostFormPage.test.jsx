@@ -70,6 +70,32 @@ describe('PostFormPage component', () => {
     });
   });
 
+  test('forces private mode for sensitive ID Card category in the form', async () => {
+    Items.create.mockResolvedValueOnce({ item: { id: 101 } });
+
+    render(<PostFormPage />);
+
+    fireEvent.change(screen.getByPlaceholderText('e.g. Black leather wallet'), { target: { value: 'Student ID' } });
+    fireEvent.change(screen.getByLabelText('Category'), { target: { value: 'ID Card' } });
+    fireEvent.change(screen.getByPlaceholderText('e.g. Library, Floor 2'), { target: { value: 'Library' } });
+    fireEvent.change(screen.getByPlaceholderText('Describe the item in detail…'), { target: { value: 'Blue student card' } });
+
+    const privateCheckbox = screen.getByRole('checkbox');
+    await waitFor(() => {
+      expect(privateCheckbox).toBeChecked();
+      expect(privateCheckbox).toBeDisabled();
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Save Post' }));
+
+    await waitFor(() => {
+      expect(Items.create).toHaveBeenCalledWith(
+        expect.objectContaining({ category: 'ID Card', isPrivate: true }),
+        null
+      );
+    });
+  });
+
   test('loads item in edit mode and saves changes', async () => {
     useParams.mockReturnValue({ itemId: '12' });
     Items.get.mockResolvedValueOnce({

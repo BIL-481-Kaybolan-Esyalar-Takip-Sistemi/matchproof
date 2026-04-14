@@ -9,6 +9,7 @@ const {
 const { AppError } = require('./app-error');
 const { getMatchesForItem } = require('./matchingService'); //added by zehra
 const { deleteStoredImage, toPublicImageUrl } = require('./upload.service');
+const { resolvePrivacyFlag } = require('./item-privacy');
 
 const VALID_ITEM_TYPES = new Set(['lost', 'found']);
 const VALID_SEARCH_STATUSES = new Set(['open', 'claimed', 'resolved']);
@@ -94,6 +95,7 @@ function toPublicMatch(match) {
       category: match.item.category,
       location: match.item.location,
       status: match.item.status,
+      isPrivate: Boolean(match.item.isPrivate),
       imageUrl: match.item.imagePath ? toPublicImageUrl(match.item.imagePath) : null,
       createdAt: match.item.createdAt,
       updatedAt: match.item.updatedAt,
@@ -242,7 +244,10 @@ function getCreatePayload(payload) {
     description: validateRequiredField('description', payload.description),
     category: validateRequiredField('category', payload.category),
     location: validateRequiredField('location', payload.location),
-    isPrivate: parseOptionalBoolean(payload.isPrivate),
+    isPrivate: resolvePrivacyFlag({
+      category: payload.category,
+      isPrivate: parseOptionalBoolean(payload.isPrivate),
+    }),
   };
 }
 
@@ -458,13 +463,18 @@ async function updateItem({ itemId: itemIdValue, userId, payload, file }) {
     });
   }
 
+  const nextCategory = getUpdatedFieldValue('category', payload.category, existingItem.category);
+
   await updateItemById(itemId, {
     itemType: getUpdatedFieldValue('itemType', payload.itemType, existingItem.itemType),
     title: getUpdatedFieldValue('title', payload.title, existingItem.title),
     description: getUpdatedFieldValue('description', payload.description, existingItem.description),
-    category: getUpdatedFieldValue('category', payload.category, existingItem.category),
+    category: nextCategory,
     location: getUpdatedFieldValue('location', payload.location, existingItem.location),
-    isPrivate: getUpdatedFieldValue('isPrivate', payload.isPrivate, existingItem.isPrivate),
+    isPrivate: resolvePrivacyFlag({
+      category: nextCategory,
+      isPrivate: getUpdatedFieldValue('isPrivate', payload.isPrivate, existingItem.isPrivate),
+    }),
     imagePath: file ? file.filename : existingItem.imagePath,
   });
 

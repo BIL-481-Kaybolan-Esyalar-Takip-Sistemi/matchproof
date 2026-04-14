@@ -185,17 +185,19 @@ ModerationService.removePost(adminUserId, itemId, reason) -> ModerationAction
 +--------------------------------------------------+
 ```
 
-3. Search and Match page
+3. Search Results page
 
 ```text
 +--------------------------------------------------+
 | Search: [wallet] [Category v] [Date v] (Find)    |
 | Result A                                         |
-|  - Similarity: 0.86                              |
-|  - Why: black color, wallet category, key terms  |
+|  - Category: Wallet                              |
+|  - Location: Library                             |
+|  - Status: Open                                  |
 | Result B                                         |
-|  - Similarity: 0.72                              |
-|  - Why: category overlap                         |
+|  - Category: Wallet                              |
+|  - Location: Cafeteria                           |
+|  - Status: Found                                 |
 +--------------------------------------------------+
 ```
 
@@ -205,8 +207,13 @@ ModerationService.removePost(adminUserId, itemId, reason) -> ModerationAction
 +--------------------------------------------------+
 | Item Title                                       |
 | Status: OPEN                                     |
-| Owner Contact: name/email                        |
+| Owner Name + Email                               |
 | (Mark Claimed) (Mark Resolved)                   |
+|--------------------------------------------------|
+| AI Possible Matches                              |
+| - Similarity: 0.86                               |
+| - Why: black color, wallet category              |
+| - Open matched item detail                       |
 | Admin: (Remove Post)                             |
 +--------------------------------------------------+
 ```
@@ -219,7 +226,7 @@ ModerationService.removePost(adminUserId, itemId, reason) -> ModerationAction
 |---|---|---|
 | UC1 | Register and Login | Student/User |
 | UC2 | Create Lost/Found Post with Photo | Student/User |
-| UC3 | Search and AI-Assisted Match | Student/User |
+| UC3 | Search and Review AI Matches | Student/User |
 | UC4 | Claim/Resolve and Moderate Post | User/Admin |
 
 ### 4.2 Requirement Mapping
@@ -245,14 +252,14 @@ ModerationService.removePost(adminUserId, itemId, reason) -> ModerationAction
 - State change: new item is created with `Open` status
 - Output: searchable post visible in listing feed
 
-#### UC3: Search and AI-Assisted Match
-- Interaction flow: search request -> SearchService -> candidate retrieval -> MatchingService ranking
-- Data flow: keyword and filters query database; AI module calculates similarity and explanations
+#### UC3: Search and Review AI Matches
+- Interaction flow: search request -> SearchService -> result list -> item detail request -> MatchingService ranking
+- Data flow: keyword and filters first query the listing database; after the user opens a specific item detail page, the AI module calculates similarity scores and explanations for that selected item
 - State change: query state only (no item lifecycle transition)
-- Output: ranked list with concise explainable reasons
+- Output: normal search results on the board, then a ranked AI-supported match list with concise explainable reasons on the selected item detail page
 
 #### UC4: Claim/Resolve and Moderate Post
-- Interaction flow (user): item detail -> contact info display -> status update action
+- Interaction flow (user): item detail -> owner contact display -> status update action
 - Interaction flow (admin): moderation panel -> remove post action
 - Data flow: status/moderation updates persisted with actor metadata
 - State change: `Open -> Claimed -> Resolved` (and optional `Open -> Removed` by admin)

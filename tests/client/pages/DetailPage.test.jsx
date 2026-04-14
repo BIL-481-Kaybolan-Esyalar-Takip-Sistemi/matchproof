@@ -135,6 +135,7 @@ describe('DetailPage component', () => {
             category: 'Keys',
             location: 'Cafeteria',
             status: 'open',
+            isPrivate: false,
             imageUrl: null,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
@@ -151,5 +152,17 @@ describe('DetailPage component', () => {
 
     fireEvent.click(screen.getByTestId('match-card-88'));
     expect(mockNavigate).toHaveBeenCalledWith('/items/88');
+  });
+
+  test('shows fallback message when AI matches are unavailable', async () => {
+    useAuth.mockReturnValue({ user: { id: 1, role: 'user' } });
+    Items.get.mockResolvedValueOnce({ item: baseItem });
+    Items.getMatches.mockRejectedValueOnce(new Error('AI unavailable'));
+
+    render(<DetailPage />);
+
+    await waitFor(() => {
+      expect(screen.getByText('AI matching is temporarily unavailable. You can continue with manual search and filters.')).toBeInTheDocument();
+    });
   });
 });
