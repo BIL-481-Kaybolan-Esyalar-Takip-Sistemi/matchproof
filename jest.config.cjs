@@ -14,7 +14,10 @@ module.exports = {
       testEnvironment: 'jsdom',
       testMatch: ['<rootDir>/tests/client/**/*.test.{js,jsx}'],
       clearMocks: true,
-      setupFilesAfterEnv: ['@testing-library/jest-dom'],
+      setupFilesAfterEnv: ['@testing-library/jest-dom', '<rootDir>/tests/setup-env.js'],
+      moduleNameMapper: {
+        '\\.(css|less|scss|sass)$': '<rootDir>/tests/__mocks__/styleMock.js',
+      },
       transform: {
         '^.+\\.jsx?$': 'babel-jest',
       },
