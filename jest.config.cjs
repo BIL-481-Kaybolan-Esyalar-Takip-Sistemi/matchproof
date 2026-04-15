@@ -1,4 +1,5 @@
 module.exports = {
+  collectCoverageFrom: ['<rootDir>/src/**/*.{js,jsx}'],
   projects: [
     {
       displayName: 'backend',
@@ -11,7 +12,7 @@ module.exports = {
     {
       displayName: 'frontend',
       testEnvironment: 'jsdom',
-      testMatch: ['<rootDir>/tests/client/**/*.test.jsx'],
+      testMatch: ['<rootDir>/tests/client/**/*.test.{js,jsx}'],
       clearMocks: true,
       setupFilesAfterEnv: ['@testing-library/jest-dom'],
       transform: {
