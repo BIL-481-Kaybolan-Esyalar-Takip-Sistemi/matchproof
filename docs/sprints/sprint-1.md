@@ -121,11 +121,11 @@ The following planning and baseline documents were completed before Sprint 1 beg
 | PB-ID | Backlog Item | Priority | SP | Development Owner | Status |
 |---|---|---|---|---|---|
 | PB1 | As a user, I can register and log in. | Must | 5 | Mehmet Gür | Completed |
-| PB2 | As a user, I can create a lost item post (title/desc/category/location). | Must | 3 | Mehmet Gür | Completed |
-| PB3 | As a user, I can create a found item post (details/location). | Must | 3 | Mehmet Gür | Completed |
+| PB2 | As a user, I can create a lost item post (title/desc/category/location). | Must | 3 | Elif Beyza Turan | Completed |
+| PB3 | As a user, I can create a found item post (details/location). | Must | 3 | Elif Beyza Turan | Completed |
 | PB4 | As a user, I can upload item photos with validation and storage. | Must | 5 | Mehmet Gür | Completed |
-| PB5 | As a user, I can search listings using keywords. | Must | 3 | Mehmet Gür | Completed |
-| PB6 | As a user, I can filter by category and date. | Must | 2 | Mehmet Gür | Completed |
+| PB5 | As a user, I can search listings using keywords. | Must | 3 | Elif Beyza Turan | Completed |
+| PB6 | As a user, I can filter by category and date. | Must | 2 | Elif Beyza Turan | Completed |
 | PB7 | As a user, I can mark an item as claimed/resolved. | Must | 2 | Mehmet Gür | Completed |
 | PB8 | As a user, I can view the contact information of the post owner. | Must | 2 | Elif Beyza Turan | Completed |
 | PB17 | Works on modern desktop browsers (Chrome/Firefox/Edge). | Must | 2 | Elif Beyza Turan | Completed |

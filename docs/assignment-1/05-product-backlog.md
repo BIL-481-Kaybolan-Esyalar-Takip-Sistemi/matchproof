@@ -15,6 +15,7 @@
 
 ### Contributors to this document
 - Mehmet Gür
+- Elif Beyza Turan
 
 ---
 
@@ -43,6 +44,7 @@ This document defines the initial Product Backlog for **MatchProof**, a campus l
 | UI/UX-related backlog items (screens, usability) | Mehmet Gür | - | Completed |
 | Backend/data-related backlog items (auth, listings, media, search) | Mehmet Gür | - | Completed |
 | Formatting & ToC | Mehmet Gür | - | Completed |
+| Owner corrections per git commit history | Elif Beyza Turan | - | Completed |
 
 ---
 
@@ -58,26 +60,26 @@ This document defines the initial Product Backlog for **MatchProof**, a campus l
 
 | PB-ID | Epic | Backlog Item (User Story / Work Item) | Linked Req. | Priority | Estimate (SP) | Owner |
 |---:|---|---|---|---|---:|---|
-| PB1 | Core | As a user, I can register and log in. | FR1 | Must | 5 | Alp Eren Köksal |
+| PB1 | Core | As a user, I can register and log in. | FR1 | Must | 5 | Mehmet Gür |
 | PB2 | Core | As a user, I can create a lost item post (title/desc/category/location). | FR2 | Must | 3 | Elif Beyza Turan |
 | PB3 | Core | As a user, I can create a found item post (details/location). | FR3 | Must | 3 | Elif Beyza Turan |
-| PB4 | Core | As a user, I can upload item photos with validation and storage. | FR4 | Must | 5 | Alp Eren Köksal |
-| PB5 | Core | As a user, I can search listings using keywords. | FR5 | Must | 3 | Alp Eren Köksal |
-| PB6 | Core | As a user, I can filter by category and date. | FR6 | Must | 2 | Alp Eren Köksal |
-| PB7 | Core | As a user, I can mark an item as claimed/resolved. | FR7 | Must | 2 | Alp Eren Köksal |
+| PB4 | Core | As a user, I can upload item photos with validation and storage. | FR4 | Must | 5 | Mehmet Gür |
+| PB5 | Core | As a user, I can search listings using keywords. | FR5 | Must | 3 | Elif Beyza Turan |
+| PB6 | Core | As a user, I can filter by category and date. | FR6 | Must | 2 | Elif Beyza Turan |
+| PB7 | Core | As a user, I can mark an item as claimed/resolved. | FR7 | Must | 2 | Mehmet Gür |
 | PB8 | Core | As a user, I can view the basic contact information of the post owner to coordinate handoff. | FR8 | Must | 2 | Elif Beyza Turan |
-| PB9 | Core | As an admin, I can remove inappropriate/duplicate posts. | FR9 | Should | 3 | Elif Beyza Turan |
-| PB10 | Core | As a user, I can edit/delete my own posts. | FR10 | Should | 3 | Alp Eren Köksal |
-| PB11 | AI | System extracts basic visual attributes (object type, dominant color) from photos. | FR11 | Should | 5 | Mehmet Gür |
-| PB12 | AI | System computes similarity scores across lost/found items using text+image analysis. | FR12 | Should | 8 | Mehmet Gür |
-| PB13 | AI | System shows a ranked list of potential matches based on similarity score. | FR13 | Should | 5 | Mehmet Gür |
-| PB14 | AI | System provides brief match explanations (e.g., color/category/description overlap). | FR14 | Should | 5 | Mehmet Gür |
-| PB15 | Quality | Response time under 2 seconds for normal actions (browse/search/post). | NFR1 | Must | 3 | Zehra Atalay |
+| PB9 | Core | As an admin, I can remove inappropriate/duplicate posts. | FR9 | Should | 3 | Mehmet Gür |
+| PB10 | Core | As a user, I can edit/delete my own posts. | FR10 | Should | 3 | Mehmet Gür |
+| PB11 | AI | System extracts basic visual attributes (object type, dominant color) from photos. | FR11 | Should | 5 | Zehra Atalay |
+| PB12 | AI | System computes similarity scores across lost/found items using text+image analysis. | FR12 | Should | 8 | Zehra Atalay |
+| PB13 | AI | System shows a ranked list of potential matches based on similarity score. | FR13 | Should | 5 | Zehra Atalay |
+| PB14 | AI | System provides brief match explanations (e.g., color/category/description overlap). | FR14 | Should | 5 | Zehra Atalay |
+| PB15 | Quality | Response time under 2 seconds for normal actions (browse/search/post). | NFR1 | Must | 3 | Mehmet Gür |
 | PB16 | Quality | Usability pass for non-technical users (core flows + error states). | NFR2 | Should | 3 | Elif Beyza Turan |
-| PB17 | Quality | Works on modern desktop browsers (Chrome/Firefox/Edge). | NFR3 | Must | 2 | Zehra Atalay |
-| PB18 | Quality | Basic privacy & authorization (own-post edit/delete, admin-only moderation). | NFR4 | Must | 3 | Yiğit Yıldız |
-| PB19 | Quality | AI module is extensible (swap/upgrade models without major rewrites). | NFR5 | Could | 3 | Mehmet Gür |
-| PB20 | Quality | Basic availability target (deployment + simple monitoring/checklist). | NFR6 | Could | 2 | Zehra Atalay |
+| PB17 | Quality | Works on modern desktop browsers (Chrome/Firefox/Edge). | NFR3 | Must | 2 | Elif Beyza Turan |
+| PB18 | Quality | Basic privacy & authorization (own-post edit/delete, admin-only moderation). | NFR4 | Must | 3 | Alp Eren Köksal |
+| PB19 | Quality | AI module is extensible (swap/upgrade models without major rewrites). | NFR5 | Could | 3 | Zehra Atalay |
+| PB20 | Quality | Basic availability target (deployment + simple monitoring/checklist). | NFR6 | Could | 2 | Mehmet Gür |
 
 ---
 
