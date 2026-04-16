@@ -6,12 +6,12 @@ This document presents the selected Layered Monolithic Architecture with high-le
 
 | Task | Responsible | Support | Status |
 |---|---|---|---|
-| UML scope definition for initial phase | Yiğit Yıldız | - | Completed |
-| Component diagram preparation | Yiğit Yıldız | - | Completed |
-| Class diagram preparation | Yiğit Yıldız | - | Completed |
-| Sequence diagram preparation | Yiğit Yıldız | - | Completed |
-| Deployment diagram preparation | Yiğit Yıldız | - | Completed |
-| Diagram consistency review | Yiğit Yıldız | - | Completed |
+| UML scope definition for initial phase | Yiğit Yıldız | Alp Eren Köksal | Completed |
+| Component diagram preparation | Yiğit Yıldız | Alp Eren Köksal | Completed |
+| Class diagram preparation | Yiğit Yıldız | Alp Eren Köksal | Completed |
+| Sequence diagram preparation | Yiğit Yıldız | Alp Eren Köksal | Completed |
+| Deployment diagram preparation | Yiğit Yıldız | Alp Eren Köksal | Completed |
+| Diagram consistency review | Yiğit Yıldız | Alp Eren Köksal | Completed |
 
 ## 1) Component Diagram
 

@@ -53,9 +53,17 @@
 - [3.1.2 Hardware Interfaces](#312-hardware-interfaces)
 - [3.1.3 Software Interfaces](#313-software-interfaces)
 - [3.1.4 Communication Interfaces](#314-communication-interfaces)
+- [3.2 Functional Requirements](#32-functional-requirements)
 - [3.3 Detailed Performance Requirements](#33-detailed-performance-requirements)
+- [3.4 Design Constraints](#34-design-constraints)
+- [3.5.1 Reliability Requirements](#351-reliability-requirements)
+- [3.5.2 Availability Requirements](#352-availability-requirements)
 - [3.5.3 Security Requirements](#353-security-requirements)
+- [3.5.4 Maintainability Requirements](#354-maintainability-requirements)
+- [3.5.5 Portability Requirements](#355-portability-requirements)
+- [3.6 Other Requirements](#36-other-requirements)
 - [4.2 Data Collection Specification](#42-data-collection-specification)
+- [4.5 Data Limitations & Assumptions](#45-data-limitations--assumptions)
 - [9.1 Societal Benefits](#91-societal-benefits)
 - [9.2 Economic Constraints](#92-economic-constraints)
 - [9.3 Legal and Ethical Compliance](#93-legal-and-ethical-compliance)
@@ -198,7 +206,7 @@ This section summarizes the structure and content of the complete Assignment 3 d
 |---|---|---|
 | **01-delta-design-implementation-report.md** | Delta Design & Implementation Report | Review context and feedback summary, selected improvements, effort estimation, architecture impact, implemented changes, quality factor impact, testing and bugfixing summary |
 | **02-quality-factors.md** | Quality Factors | ISO/IEC 25010 quality factors with measurable metrics, target values, related tests, and test-to-requirement traceability table |
-| **03-supplementary-requirements.md** | Supplementary Requirements | Project purpose (1.1), project scope (1.2), definitions (1.3), references (1.4), overview (1.5), hardware interfaces (3.1.2), performance requirements (3.3), security requirements (3.5.3), data collection (4.2), societal benefits (9.1), legal and ethical compliance (9.3) |
+| **03-supplementary-requirements.md** | Supplementary Requirements | Project purpose (1.1), project scope (1.2), definitions (1.3), references (1.4), overview (1.5), hardware interfaces (3.1.2), functional traceability (3.2), performance requirements (3.3), design constraints (3.4), reliability/availability/security/maintainability/portability requirements (3.5), other cross-cutting requirements (3.6), data collection and data limitations (4.2, 4.5), societal benefits (9.1), legal and ethical compliance (9.3) |
 | **04-risk-management.md** | Risk Management | Risk classification matrix, risk analysis and mitigation strategies (7.3) with 14 risks, risk monitoring plan |
 | **05-user-stories.md** | User Stories | Target audience (8.1), 11 user stories including delta stories (8.2), acceptance criteria, FR traceability matrix |
 | **06-product-acceptance-and-config-management.md** | Product Acceptance & Config Management | Configuration and change management (6.3), verification and validation approach (6.2), risk and defect management (6.4), product acceptance criteria (6.5) |
@@ -504,6 +512,29 @@ Client (Browser)
 
 ---
 
+## 3.2 Functional Requirements
+
+The baseline functional requirements for MatchProof were first defined in `docs/assignment-1/03-requirements.md`. This section republishes them in a traceable form by linking each requirement to the user scenarios documented in `docs/assignment-3/05-user-stories.md`.
+
+| FR ID | Functional Requirement | Primary User Scenario(s) | Traceable User Outcome |
+|---|---|---|---|
+| FR1 | Users must be able to register and log in to the system. | US-01, US-02 | A campus user can create an account and establish an authenticated session. |
+| FR2 | Users must be able to create a lost item post including title, description, category, and location. | US-03 | A user can publish a structured lost-item listing. |
+| FR3 | Users must be able to create a found item post including item details and discovery location. | US-04 | A user can publish a structured found-item listing. |
+| FR4 | Users must be able to upload photos of lost or found items. | US-03, US-04, US-11 | Users can attach visual evidence to posts while sensitive images remain privacy-aware in later views. |
+| FR5 | Users must be able to search items using keyword-based text search. | US-05 | Users can find relevant listings through free-text queries. |
+| FR6 | Users must be able to filter items by category and date. | US-05 | Users can narrow result sets to a manageable shortlist. |
+| FR7 | Users must be able to mark items as claimed or resolved. | US-08 | Post owners can keep the recovery lifecycle accurate. |
+| FR8 | Users must be able to view the basic contact information of the person who created an item post in order to coordinate item return. | US-07 | An authenticated user can contact the owner using name and email only. |
+| FR9 | Admin must be able to remove inappropriate or duplicate posts. | US-10 | An administrator can keep the board clean and trustworthy. |
+| FR10 | Users must be able to edit or delete their own posts. | US-09 | Post owners can correct or remove their own listings. |
+| FR11 | The system must analyze uploaded item photos using AI techniques to identify basic object characteristics such as object type and dominant color. | US-06 | The matching pipeline can derive visual signals from uploaded photos. |
+| FR12 | The system must generate similarity scores between lost and found items using AI-based analysis of text descriptions and images. | US-06 | Potential matches can be ranked using combined textual and visual evidence. |
+| FR13 | The system must present users with a ranked list of potential matching items based on similarity scores. | US-06 | Users see the most promising candidate matches first. |
+| FR14 | The system must provide a brief explanation indicating why two items are considered similar (for example: color, category, or description similarity). | US-06 | Users understand why the system suggested a given match. |
+
+---
+
 ## 3.3 Detailed Performance Requirements
 
 NFR1 in `03-requirements.md` states that the system must respond within 2 seconds under normal operating conditions. This section defines measurable sub-requirements derived from that baseline.
@@ -520,6 +551,52 @@ NFR1 in `03-requirements.md` states that the system must respond within 2 second
 | PERF-08 | GET /api/health must respond within a short fixed interval regardless of database state. | <= 500 ms |
 | PERF-09 | Frontend initial page load (SearchPage, AuthPage) on a localhost development server must complete within a reasonable time. | <= 3000 ms |
 | PERF-10 | The system is not required to maintain the 2-second target under concurrent load from multiple simultaneous users, as the deployment scope is limited to a single-server campus demonstration environment. | Not applicable under load testing |
+
+---
+
+## 3.4 Design Constraints
+
+This section consolidates the standards, platform choices, and hardware/runtime decisions that directly constrain the MatchProof design. It summarizes the practical decisions previously scattered across the Assignment 2 design document and the technical constraints in Section 2.4 of this document.
+
+| Constraint ID | Constraint Type | Design Constraint | Impact on the Solution |
+|---|---|---|---|
+| DC-01 | Documentation and quality standards | Requirements and quality language follow the structure of IEEE Std 830 and ISO/IEC 25010. | Section naming, traceability, and quality-factor definitions must remain aligned with accepted software engineering standards. |
+| DC-02 | Application platform | MatchProof must remain a web-based, layered monolith using React 19 + Vite 5 on the client and Node.js/Express on the server. | The solution favors a single deployable application over distributed services or native/mobile clients. |
+| DC-03 | Data platform | PostgreSQL 14+ is the required relational database and session store. | Data modeling, persistence, and session management decisions must stay compatible with PostgreSQL semantics. |
+| DC-04 | Runtime environment | The system must run on Node.js 18+ with environment-driven configuration (`DATABASE_URL`, `SESSION_SECRET`, `CLIENT_ORIGIN`, `UPLOAD_DIR`, `MATCHING_MODE`). | Deployment portability depends on externalized configuration rather than code changes. |
+| DC-05 | Browser target | The primary supported clients are modern desktop browsers (Chrome, Firefox, Edge). Mobile browsers and Internet Explorer are outside the baseline scope. | UI design and testing focus on desktop layouts and standard browser APIs. |
+| DC-06 | Hardware boundary | Demo and test execution assume commodity x86-64 or ARM64 hardware with at least 2 GB free RAM for optional in-process AI inference and enough local disk for uploaded files. | Heavy hardware-specific optimizations and high-concurrency deployment patterns are intentionally excluded. |
+| DC-07 | External service policy | Core demo flows must work without runtime dependence on external AI APIs, CDNs, or cloud object storage. | Images are stored locally and AI matching must degrade gracefully if live inference is unavailable. |
+
+---
+
+## 3.5.1 Reliability Requirements
+
+Reliability for MatchProof means that invalid inputs, partial dependency failures, and state-transition edge cases are handled predictably without corrupting item state or misleading the user.
+
+| Requirement ID | Reliability Requirement | Verification / Evidence Basis |
+|---|---|---|
+| REL-01 | Protected routes must fail closed: unauthenticated requests return a structured `AUTH_REQUIRED` error and unauthorized admin actions return `ADMIN_REQUIRED`. | `require-auth`, `require-admin`, and route integration tests |
+| REL-02 | Database health failures must produce a controlled degraded response on `/api/health` rather than a hang or unhandled crash. | `GET /api/health` healthy/degraded integration tests |
+| REL-03 | Failure in the AI matching path must not block the core item-detail workflow; the UI must render an explicit fallback message instead of silently showing an empty result. | `DetailPage.test.jsx` unavailable-match scenario |
+| REL-04 | Item lifecycle consistency must be preserved by allowing only valid owner-driven transitions (`open -> claimed -> resolved`) and rejecting invalid transitions. | `items.service.test.js` and E2E status-flow coverage |
+| REL-05 | Sensitive-category privacy rules must be enforced server-side so that a client cannot disable privacy for `ID Card` posts. | `items.service.test.js` forced-private scenarios |
+| REL-06 | The matching pipeline must handle removed items, missing images, and item-not-found cases without leaking raw failures to the user interface. | `matchingService.test.js` edge-case coverage |
+
+---
+
+## 3.5.2 Availability Requirements
+
+Availability is defined for the planned academic test and demo windows, not for 24/7 production hosting. Because the system is deployed as a single-node web application, the availability target is paired with an operational recovery target for recoverable local failures.
+
+| Requirement ID | Availability Requirement | Target |
+|---|---|---|
+| AVL-01 | The system must remain operational during scheduled test and demo windows. | `>= 95%` uptime during the planned window |
+| AVL-02 | The unauthenticated health endpoint must expose the current service state and distinguish healthy vs degraded operation when the database is unreachable. | Correct `ok` / `degraded` contract with appropriate HTTP status |
+| AVL-03 | Recoverable single-node failures such as backend process restart, local database reconnect, or configuration correction before demo restart must be restored within a short manual intervention window. | MTTR `<= 15 minutes` during scheduled support periods |
+| AVL-04 | AI matching degradation must not make posting, searching, moderation, or item-detail access unavailable. | Core non-AI flows remain usable when the AI module is unavailable |
+
+**Operational note:** The MTTR target assumes the team is restoring the service from the latest local repository state on the designated demo machine with PostgreSQL data already present.
 
 ---
 
@@ -542,11 +619,52 @@ NFR4 in `03-requirements.md` defines a single-sentence privacy requirement. This
 
 ---
 
+## 3.5.4 Maintainability Requirements
+
+Maintainability requirements ensure that MatchProof can accept bug fixes, documentation corrections, and AI-related improvements without large-scale rework.
+
+| Requirement ID | Maintainability Requirement | Verification / Evidence Basis |
+|---|---|---|
+| MAI-01 | Backend responsibilities must remain separated into route, service, and model layers, and frontend flows must remain organized by page/component responsibility. | Current layered codebase structure in `src/server` and `src/client` |
+| MAI-02 | Core modules must retain automated test coverage at or above the project target before release. | Coverage target `>= 80%` on core modules; `test:all` passes |
+| MAI-03 | The AI matching module must continue to support deterministic `stub` mode alongside live inference mode. | `MATCHING_MODE=stub` in automated tests and demo fallback strategy |
+| MAI-04 | Deployment-specific behavior must stay externalized in configuration rather than being hard-coded into source files. | `.env.example`, environment readers, and startup validation |
+| MAI-05 | Requirement, user-story, QA, and acceptance documents must remain cross-referenced so that changes can be traced through design and verification artifacts. | Traceability tables across `03-requirements.md`, `05-user-stories.md`, `02-quality-factors.md`, and acceptance documents |
+
+---
+
+## 3.5.5 Portability Requirements
+
+Portability for MatchProof refers to the system's ability to be moved between supported desktop browsers and common development/demo operating systems with minimal reconfiguration.
+
+| Requirement ID | Portability Requirement | Scope / Boundary |
+|---|---|---|
+| POR-01 | The client application must run in the latest two major versions of Chrome, Firefox, and Edge on desktop operating systems. | Primary browser portability target defined by NFR3 |
+| POR-02 | The server application must be runnable on macOS, Linux, and Windows environments where Node.js 18+, PostgreSQL 14+, and compatible `sharp` binaries are available. | Supported runtime portability for team and CI environments |
+| POR-03 | Environment-specific values must be supplied through environment variables instead of code edits. | Supports machine-to-machine migration without source changes |
+| POR-04 | Core demo functionality must remain executable on localhost without mandatory cloud services. | Improves portability between classroom, home, and lab machines |
+| POR-05 | Mobile browsers, PWA packaging, and legacy browsers are explicitly outside the current portability commitment. | Out-of-scope portability boundary |
+
+---
+
+## 3.6 Other Requirements
+
+The following cross-cutting requirements do not fit neatly into the interface, performance, or quality sub-sections above but still affect acceptance and operational suitability.
+
+| Requirement ID | Other Requirement | Why It Matters |
+|---|---|---|
+| OTH-01 | Moderation actions must record the acting admin, a mandatory reason, and a timestamp. | Provides auditability and accountability for content removal decisions. |
+| OTH-02 | AI-generated match suggestions must remain advisory and explainable; the system must not make automatic ownership decisions on behalf of users. | Keeps the platform transparent and ethically bounded for a campus setting. |
+| OTH-03 | The system must be demonstrable offline on a single local machine during the course demo. | Supports predictable academic evaluation without internet dependence. |
+| OTH-04 | Owner contact exposure is limited to name and email; additional channels such as phone number, messaging, or push notification remain out of scope. | Preserves the project's privacy boundary and MVP scope. |
+
+---
+
 ## 4.2 Data Collection Specification
 
 This section defines what personal and item data the MatchProof system collects, how it is used, and for how long it is retained during the planned testing and demonstration period.
 
-### 5.1 Data Collected
+### 4.2.1 Data Collected
 
 | Data Category | Fields Collected | Collection Point | Purpose |
 |---|---|---|---|
@@ -556,17 +674,32 @@ This section defines what personal and item data the MatchProof system collects,
 | Uploaded images | Image files stored on the local server filesystem under the configured upload directory | File upload during item creation | Visual display and AI visual similarity analysis |
 | Moderation action data | Moderated item ID, admin user ID, reason text, action timestamp | Admin removal (POST /api/moderation/items/:id/remove) | Audit trail for content moderation decisions |
 
-### 5.2 Data Not Collected
+### 4.2.2 Data Not Collected
 
 The system does not collect payment information, location GPS coordinates, biometric data, in-app messages between users, or behavioral analytics. No third-party analytics or tracking scripts are included in the frontend.
 
-### 5.3 Data Retention
+### 4.2.3 Data Retention
 
 Data is retained for the duration of the academic demonstration period. No automated deletion policy is enforced. The system does not implement data export or account deletion flows in the current scope (deferred as out-of-scope per `01-project-definition.md`).
 
-### 5.4 Data Access
+### 4.2.4 Data Access
 
 Item data is visible only to authenticated users. Owner contact information (name and email) is visible only in the single-item detail view, not in search or list responses. Private items have their images blurred for non-owner, non-admin users.
+
+---
+
+## 4.5 Data Limitations & Assumptions
+
+The collected data is sufficient for a course-scale lost-and-found workflow, but it carries important limitations that affect search quality, AI matching confidence, and long-term operational use.
+
+| ID | Data Limitation / Assumption | Effect on Interpretation or Use |
+|---|---|---|
+| DLA-01 | The operational dataset is expected to remain small to moderate (hundreds of records, not a production-scale archive). | Reported match quality and search behavior are indicative for a campus demo, not for large-scale deployment. |
+| DLA-02 | Item titles and descriptions are user-entered and may be short, inconsistent, bilingual (Turkish/English), or incomplete. | Text search and semantic similarity quality can vary significantly across posts. |
+| DLA-03 | Uploaded images may be missing, low-resolution, poorly lit, cropped, or taken from inconsistent angles. | Visual similarity signals may be weak or misleading for some items. |
+| DLA-04 | The project does not maintain a large labeled ground-truth dataset or a formal fairness benchmark for the AI matching module. | Similarity scores must be treated as advisory recommendations, not authoritative decisions. |
+| DLA-05 | No GPS coordinates, phone numbers, payment data, or behavioral analytics are collected. | Privacy is improved, but precise location recovery and richer communication workflows are intentionally limited. |
+| DLA-06 | Data retention is tied to the academic test/demo period and no automated deletion, export, or account-erasure workflow is implemented. | The current data model is not yet suitable for long-term production governance without extension. |
 
 ---
 

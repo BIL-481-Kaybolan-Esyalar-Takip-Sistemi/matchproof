@@ -35,7 +35,7 @@
 | Risk identification | Mehmet Gür | Yiğit Yıldız | Completed |
 | Risk analysis (likelihood × impact) | Mehmet Gür | Alp Eren Köksal | Completed |
 | Mitigation strategy definition | Yiğit Yıldız | Alp Eren Köksal | Completed |
-| Risk monitoring plan | Yiğit Yıldız | - | Completed |
+| Risk monitoring plan | Yiğit Yıldız | Alp Eren Köksal | Completed |
 
 ---
 
