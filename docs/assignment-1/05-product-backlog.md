@@ -80,6 +80,9 @@ This document defines the initial Product Backlog for **MatchProof**, a campus l
 | PB18 | Quality | Basic privacy & authorization (own-post edit/delete, admin-only moderation). | NFR4 | Must | 3 | Alp Eren Köksal |
 | PB19 | Quality | AI module is extensible (swap/upgrade models without major rewrites). | NFR5 | Could | 3 | Zehra Atalay |
 | PB20 | Quality | Basic availability target (deployment + simple monitoring/checklist). | NFR6 | Could | 2 | Mehmet Gür |
+| PB21 | Quality | Automated backend test suite covering auth, items, moderation, middleware, routes, and models. | NFR5 | Should | 8 | Yiğit Yıldız |
+| PB22 | Quality | Automated frontend component test suite covering all page components with JSDOM. | NFR5 | Should | 5 | Yiğit Yıldız |
+| PB23 | Quality | Model unit tests and AI matching test suite using MATCHING_MODE=stub. | NFR5 | Should | 5 | Alp Eren Köksal |
 
 ---
 

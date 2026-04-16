@@ -86,8 +86,9 @@ Remaining product backlog items completed in this sprint:
 | PB16 | Usability pass for non-technical users (core flows + error states). | Should | 3 | Elif Beyza Turan | Completed |
 | PB19 | AI module is extensible (swap/upgrade models without major rewrites). | Could | 3 | Zehra Atalay | Completed |
 | PB20 | Basic availability target (deployment + simple monitoring/checklist). | Could | 2 | Mehmet Gür | Completed |
+| PB22 | Automated frontend component test suite covering all page components with JSDOM. | Should | 5 | Yiğit Yıldız | Completed |
 
-**Total: 11 SP**
+**Total: 16 SP**
 
 ---
 

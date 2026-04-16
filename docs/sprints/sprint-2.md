@@ -87,8 +87,10 @@
 | PB13 | System shows a ranked list of potential matches based on similarity score. | Should | 5 | Zehra Atalay | Completed |
 | PB14 | System provides brief match explanations (e.g., color/category/description overlap). | Should | 5 | Zehra Atalay | Completed |
 | PB18 | Basic privacy and authorization (own-post edit/delete, admin-only moderation). | Must | 3 | Alp Eren Köksal | Completed |
+| PB21 | Automated backend test suite covering auth, items, moderation, middleware, routes, and models. | Should | 8 | Yiğit Yıldız | Completed |
+| PB23 | Model unit tests and AI matching test suite using MATCHING_MODE=stub. | Should | 5 | Alp Eren Köksal | Completed |
 
-**Total: 32 SP**
+**Total: 45 SP**
 
 ---
 
