@@ -32,6 +32,10 @@ MatchProof, kampüs içindeki kayıp ve bulunan eşyalar için geliştirilen dij
 
 - `docs/assignment-2/01-design-document.md` — sistem tasarımı, use case desteği, teknoloji kararları
 - `docs/assignment-2/02-quality-assurance-plan.md` — kalite güvencesi, test yaklaşımı ve doğrulama planı
+- `docs/assignment-2/03-architecture-selection.md` — mimari alternatifler ve seçimin gerekçesi
+- `docs/assignment-2/04-uml-representation.md` — top-level architecture, class, sequence ve deployment UML çıktıları
+- `docs/assignment-2/05-design-document-initial-phase.md` — tasarım dokümanının ilk faz sürümü
+- `docs/assignment-2/06-requirements-to-product-backlog-transition.md` — requirement-backlog geçişinin izlenebilir özeti
 - `docs/assignment-2/design-document-design-patterns.docx` — tasarım kalıpları ile ilgili ek çalışma dosyası
 
 ### `docs/test/`
@@ -41,7 +45,28 @@ MatchProof, kampüs içindeki kayıp ve bulunan eşyalar için geliştirilen dij
 
 ### `docs/assignment-3/`
 
-- `docs/assignment-3/01-delta-design-implementation-report.md` — review sonrası seçilen iyileştirmeler, efor/maliyet hesabı ve delta tasarım raporu
+- `docs/assignment-3/01-delta-design-implementation-report.md` — review sonrası seçilen iyileştirmeler, efor tahmini ve delta tasarım raporu
+- `docs/assignment-3/02-quality-factors.md` — kalite faktörleri, metrikler ve hedef değerler
+- `docs/assignment-3/03-supplementary-requirements.md` — ek gereksinimler ve son durumları
+- `docs/assignment-3/04-risk-management.md` — güncellenmiş risk analizi ve aksiyonlar
+- `docs/assignment-3/05-user-stories.md` — demo odaklı user story seti
+- `docs/assignment-3/06-product-acceptance-and-config-management.md` — kabul kriterleri ve konfigürasyon yönetimi özeti
+
+### `docs/demo/`
+
+- `docs/demo/02-full-team-demo-script.md` — 15 dakikalık final demo akışı ve konuşma planı
+
+### `docs/sprints/`
+
+- `docs/sprints/sprint-1.md` — ilk sprint özeti
+- `docs/sprints/sprint-2.md` — ikinci sprint özeti
+- `docs/sprints/sprint-3.md` — üçüncü sprint özeti
+
+### `docs/reviews/`
+
+- `docs/reviews/MatchProof.odt` — proje review notları
+- `docs/reviews/dizi_kutusu.odt` — örnek review dokümanı
+- `docs/reviews/osman.odt` — ek review dokümanı
 
 ## Kaynak Kod Yapısı
 
