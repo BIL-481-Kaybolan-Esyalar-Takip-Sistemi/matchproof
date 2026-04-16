@@ -29,6 +29,15 @@
 ### 3.1 UI -> API
 - HTTP/JSON REST requests
 - Session cookie/header for authenticated requests
+- Browser-mediated local file selection for optional image upload
+
+### 3.1.2 Hardware Interfaces
+- MatchProof uses only commodity desktop/laptop hardware exposed through the browser and operating system; there is no direct device-driver integration.
+- Required client-side hardware interface: display + keyboard + mouse/touchpad for form entry, navigation, moderation actions, and detail view interactions.
+- Required upload interface: browser file picker backed by the user's local filesystem for selecting item images.
+- Required connectivity interface: standard Ethernet/Wi-Fi network adapter for client-server communication.
+- Required server-side hardware interface: a general-purpose machine capable of running Node.js/Express, PostgreSQL, and local image storage for the demo environment.
+- No dedicated campus kiosks, card readers, barcode scanners, GPS modules, or biometric devices are part of the current scope.
 
 ### 3.2 API -> Services
 - Route handlers are responsible for calling service methods.

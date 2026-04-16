@@ -28,6 +28,7 @@
 | Document overview table (1.5) | Alp Eren Köksal | Completed |
 | Definitions, Acronyms, and Abbreviations tables | Elif Beyza Turan | Completed |
 | References section | Elif Beyza Turan | Completed |
+| Hardware interface requirements section (3.1.2) | Elif Beyza Turan | Completed |
 | Detailed performance requirements | Elif Beyza Turan | Completed |
 | Security requirements expansion | Elif Beyza Turan | Completed |
 | Data collection specification | Elif Beyza Turan | Completed |
@@ -45,6 +46,7 @@
 - [1.5 Overview](#15-overview)
 - [2.1 Product Perspective](#21-product-perspective)
 - [2.2 Product Functions](#22-product-functions)
+- [3.1.2 Hardware Interfaces](#312-hardware-interfaces)
 - [3.3 Detailed Performance Requirements](#33-detailed-performance-requirements)
 - [3.5.3 Security Requirements](#353-security-requirements)
 - [4.2 Data Collection Specification](#42-data-collection-specification)
@@ -189,7 +191,7 @@ This section summarizes the structure and content of the complete Assignment 3 d
 |---|---|---|
 | **01-delta-design-implementation-report.md** | Delta Design & Implementation Report | Review context and feedback summary, selected improvements, effort estimation, architecture impact, implemented changes, quality factor impact, testing and bugfixing summary |
 | **02-quality-factors.md** | Quality Factors | ISO/IEC 25010 quality factors with measurable metrics, target values, related tests, and test-to-requirement traceability table |
-| **03-supplementary-requirements.md** | Supplementary Requirements | Project purpose (1.1), project scope (1.2), definitions (1.3), references (1.4), overview (1.5), performance requirements (3.3), security requirements (3.5.3), data collection (4.2), societal benefits (9.1), legal and ethical compliance (9.3) |
+| **03-supplementary-requirements.md** | Supplementary Requirements | Project purpose (1.1), project scope (1.2), definitions (1.3), references (1.4), overview (1.5), hardware interfaces (3.1.2), performance requirements (3.3), security requirements (3.5.3), data collection (4.2), societal benefits (9.1), legal and ethical compliance (9.3) |
 | **04-risk-management.md** | Risk Management | Risk classification matrix, risk analysis and mitigation strategies (7.3) with 14 risks, risk monitoring plan |
 | **05-user-stories.md** | User Stories | Target audience (8.1), 11 user stories including delta stories (8.2), acceptance criteria, FR traceability matrix |
 | **06-product-acceptance-and-config-management.md** | Product Acceptance & Config Management | Configuration and change management (6.3), verification and validation approach (6.2), risk and defect management (6.4), product acceptance criteria (6.5) |
@@ -250,6 +252,25 @@ The following table summarises all product functions implemented in the current 
 | PF-14 | AI fallback UX **[Δ]** | Show explicit message when AI matching service is unavailable | FR13 |
 | PF-15 | Admin moderation | Admin can remove any post with a mandatory reason; moderation record created | FR9 |
 | PF-16 | CI-backed test execution **[Δ]** | GitHub Actions runs `npm run test:unit` on every push and pull request | NFR5 |
+
+---
+
+## 3.1.2 Hardware Interfaces
+
+MatchProof does **not** depend on proprietary campus hardware, embedded controllers, scanners, or device-driver level integrations. The system is a standard web application and all hardware interaction is mediated through the user's operating system, browser, and the server runtime environment. This section therefore documents the required commodity hardware interfaces and their compatibility boundaries.
+
+| Interface ID | Hardware Interface | Input to the System | Output from the System | Compatibility Requirement | Related Standards / Vendors |
+|---|---|---|---|---|---|
+| HI-01 | Client display and input peripherals | Keyboard input, mouse/touchpad clicks, scroll actions, and browser-based file selection | Rendered UI screens, validation feedback, search results, and blurred/unblurred item images | Desktop or laptop computer with a modern browser and standard pointing/input devices | USB HID-class keyboards/mice or built-in laptop equivalents; commodity devices from vendors such as Dell, HP, Lenovo, Asus, and Apple |
+| HI-02 | Client local file access for image upload | User-selected image file provided through the browser file picker | Multipart upload request sent to the backend after browser selection and server-side validation | Browser must support standard HTML file input and the operating system must expose a readable local filesystem path to the browser picker | W3C HTML file input behavior; common desktop operating systems (Windows, macOS, Linux) and browser-managed filesystem access |
+| HI-03 | Client network adapter | HTTP(S) requests carrying authentication, search filters, and item data | JSON/API responses, uploaded media transfer, and page assets | Wired Ethernet or Wi-Fi connectivity sufficient to access the demo/development server | IEEE 802.3 Ethernet, IEEE 802.11 Wi-Fi; no vendor-specific NIC dependency |
+| HI-04 | Server compute and persistent storage | Incoming HTTP requests, SQL queries, validated image bytes written to local storage | API responses, persisted relational data, stored image files, and AI match results | Single-machine server capable of running Node.js, Express.js, PostgreSQL, and local upload storage for the course demo | Commodity x86-64 or ARM64 hardware; PostgreSQL-supported host platforms from common cloud or local vendors |
+
+**Compatibility notes**
+
+- No camera, GPS, biometric reader, NFC/RFID reader, campus-card scanner, or other specialized hardware is required by the current scope.
+- The application does not access hardware directly; browser and operating system abstractions isolate the codebase from vendor-specific device drivers.
+- If the platform is demonstrated on a different machine, equivalent commodity desktop hardware is sufficient as long as the supported browser, Node.js runtime, and PostgreSQL environment are available.
 
 ---
 
