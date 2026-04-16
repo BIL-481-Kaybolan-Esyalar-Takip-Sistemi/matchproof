@@ -115,7 +115,9 @@ Browser UI -> API Controller -> Service Layer -> Model Layer -> Database
 
 ### 1.6 Overview
 
-This section summarizes the structure of the complete Assignment 2 documentation set for MatchProof. Each document covers a distinct concern; together they provide a full picture of the system design, quality plan, and project context.
+This section summarizes the structure of the Assignment 2 documentation set for MatchProof. Each document covers a distinct concern; together they provide a full picture of the system design, quality plan, and project context.
+
+> **Note:** Risk management, user stories, and societal/economic/legal topics were initially planned as Assignment 2 documents (`07`, `08`, `09`). Following the Assignment 3 delta phase, these were consolidated and expanded under the Assignment 3 documentation set (`docs/assignment-3/`). See `docs/assignment-3/03-supplementary-requirements.md`, `04-risk-management.md`, and `05-user-stories.md` for the current versions of those documents.
 
 | Document | Title | Contents |
 |---|---|---|
@@ -125,12 +127,9 @@ This section summarizes the structure of the complete Assignment 2 documentation
 | **04-uml-representation.md** | UML Representation | Component diagram, class diagram, sequence diagram (search + AI matching flow), and deployment diagram |
 | **05-design-document-initial-phase.md** | Design Document – Initial Phase | High-level component structure, interface definitions between layers, and input/output parameter specifications for all API endpoints |
 | **06-requirements-to-product-backlog-transition.md** | Requirements to Product Backlog | Mapping of FR/NFR requirements to Product Backlog items, Agile refinement approach, traceability examples, and sprint-based planning strategy |
-| **07-risk-management.md** | Risk Management | Risk classification (Likelihood × Impact), 13 identified risks across technical/process/external categories with mitigation and contingency strategies, and a risk monitoring plan |
-| **08-user-stories.md** | User Stories | Target audience definition and 10 user stories (US-01–US-10) with mapped functional requirements and acceptance criteria |
-| **09-societal-economic-legal.md** | Societal, Economic, and Legal-Ethical Considerations | Societal benefits and social impact analysis, economic constraints and budget summary, KVKK/GDPR legal compliance measures, and ethical considerations |
 
 **Reading order recommendation:**  
-For a first read, follow the order: `01` (system design) → `03` (architecture rationale) → `04` (UML) → `06` (backlog) → `07` (risk management) → `08` (user stories) → `02` (QA plan) → `09` (societal/legal context).
+For a first read, follow the order: `01` (system design) → `03` (architecture rationale) → `04` (UML) → `06` (backlog) → `02` (QA plan). For risk management, user stories, and societal/legal context, refer to the Assignment 3 documentation set under `docs/assignment-3/`.
 
 ---
 
