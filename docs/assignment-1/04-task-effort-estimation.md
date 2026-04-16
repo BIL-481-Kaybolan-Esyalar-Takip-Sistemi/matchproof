@@ -70,9 +70,9 @@
 
 | Work Item | Responsible | Support |
 |---|---|---|
-| Requirements baseline (FR/NFR + acceptance checklist) | Yiğit Yıldız | Zehra Atalay |
-| Documentation package (Assignment docs alignment) | Yiğit Yıldız | Elif Beyza Turan |
-| Requirements traceability (FR→tasks) + acceptance review | Yiğit Yıldız | Mehmet Gür |
+| Requirements baseline (FR/NFR + acceptance checklist) | Yiğit Yıldız | Zehra Atalay, Alp Eren Köksal |
+| Documentation package (Assignment docs alignment) | Yiğit Yıldız | Elif Beyza Turan, Alp Eren Köksal |
+| Requirements traceability (FR→tasks) + acceptance review | Yiğit Yıldız | Mehmet Gür, Alp Eren Köksal |
 | Project coordination (milestones, risks, change requests) | Zehra Atalay | Yiğit Yıldız |
 | QA plan + test execution + bug triage | Zehra Atalay | Elif Beyza Turan |
 | Release/deploy checklist | Zehra Atalay | Alp Eren Köksal |

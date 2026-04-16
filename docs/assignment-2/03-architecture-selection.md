@@ -9,11 +9,11 @@
 
 | Task | Responsible | Support | Status |
 |---|---|---|---|
-| Architecture alternatives review | Yiğit Yıldız | - | Completed |
-| Layered architecture selection rationale | Yiğit Yıldız | - | Completed |
-| Layer definitions and responsibilities | Yiğit Yıldız | - | Completed |
-| Architecture trade-off summary | Yiğit Yıldız | - | Completed |
-| Initial evolution path documentation | Yiğit Yıldız | - | Completed |
+| Architecture alternatives review | Yiğit Yıldız | Alp Eren Köksal | Completed |
+| Layered architecture selection rationale | Yiğit Yıldız | Alp Eren Köksal | Completed |
+| Layer definitions and responsibilities | Yiğit Yıldız | Alp Eren Köksal | Completed |
+| Architecture trade-off summary | Yiğit Yıldız | Alp Eren Köksal | Completed |
+| Initial evolution path documentation | Yiğit Yıldız | Alp Eren Köksal | Completed |
 
 ## Selected Architecture Approach
 For this project, **Layered Architecture** is selected.

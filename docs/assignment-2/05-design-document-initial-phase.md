@@ -4,11 +4,11 @@
 
 | Task | Responsible | Support | Status |
 |---|---|---|---|
-| Initial architecture summary writing | Yiğit Yıldız | - | Completed |
-| High-level component structure definition | Yiğit Yıldız | - | Completed |
-| Component interface descriptions | Yiğit Yıldız | - | Completed |
-| Interface input/output specification | Yiğit Yıldız | - | Completed |
-| Initial phase scope boundary definition | Yiğit Yıldız | - | Completed |
+| Initial architecture summary writing | Yiğit Yıldız | Alp Eren Köksal | Completed |
+| High-level component structure definition | Yiğit Yıldız | Alp Eren Köksal | Completed |
+| Component interface descriptions | Yiğit Yıldız | Alp Eren Köksal | Completed |
+| Interface input/output specification | Yiğit Yıldız | Alp Eren Köksal | Completed |
+| Initial phase scope boundary definition | Yiğit Yıldız | Alp Eren Köksal | Completed |
 
 ## 1. Selected Software Architecture
 - Architecture: Layered Monolithic Architecture

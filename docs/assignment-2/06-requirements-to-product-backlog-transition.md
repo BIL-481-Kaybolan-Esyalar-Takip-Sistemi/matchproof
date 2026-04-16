@@ -7,11 +7,11 @@ This document explains how the requirements defined in assignment-1 are mapped i
 
 | Task | Responsible | Support | Status |
 |---|---|---|---|
-| Requirements source identification | Yiğit Yıldız | - | Completed |
-| Requirements-to-backlog mapping method definition | Yiğit Yıldız | - | Completed |
-| Traceability example preparation | Yiğit Yıldız | - | Completed |
-| Agile refinement principle documentation | Yiğit Yıldız | - | Completed |
-| Related document linkage and consistency check | Yiğit Yıldız | - | Completed |
+| Requirements source identification | Yiğit Yıldız | Alp Eren Köksal | Completed |
+| Requirements-to-backlog mapping method definition | Yiğit Yıldız | Alp Eren Köksal | Completed |
+| Traceability example preparation | Yiğit Yıldız | Alp Eren Köksal | Completed |
+| Agile refinement principle documentation | Yiğit Yıldız | Alp Eren Köksal | Completed |
+| Related document linkage and consistency check | Yiğit Yıldız | Alp Eren Köksal | Completed |
 
 ## 1. Source Requirements
 - Functional Requirements: FR1 - FR14

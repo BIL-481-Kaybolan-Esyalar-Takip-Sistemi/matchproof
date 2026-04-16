@@ -16,15 +16,15 @@ Date: 2026-02-03
 
 Document-Specific Task Matrix:
 
-| Task | Responsible | Status |
-| --- | --- | --- |
-| Identifying Project Objectives | Yigit Yildiz | Completed |
-| Project Scheduling | Yigit Yildiz | Completed |
-| Team-Communications Plans | Yigit Yildiz | Completed |
-| Resource Plan | Yigit Yildiz | Completed |
-| Change Management Plan | Yigit Yildiz | Completed |
-| Timeline and GANTT Chart(ToC) | Yigit Yildiz | Completed |
-| Effort & task tables (aligned with 04-task-effort-estimation) | Mehmet Gür | Completed |
+| Task | Responsible | Support | Status |
+| --- | --- | --- | --- |
+| Identifying Project Objectives | Yigit Yildiz | Alp Eren Köksal | Completed |
+| Project Scheduling | Yigit Yildiz | Alp Eren Köksal | Completed |
+| Team-Communications Plans | Yigit Yildiz | Alp Eren Köksal | Completed |
+| Resource Plan | Yigit Yildiz | Alp Eren Köksal | Completed |
+| Change Management Plan | Yigit Yildiz | Alp Eren Köksal | Completed |
+| Timeline and GANTT Chart(ToC) | Yigit Yildiz | Alp Eren Köksal | Completed |
+| Effort & task tables (aligned with 04-task-effort-estimation) | Mehmet Gür | - | Completed |
 
 # Revision History
 
