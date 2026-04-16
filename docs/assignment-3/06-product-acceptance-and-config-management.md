@@ -16,6 +16,8 @@
 
 ### Contributors to this document
 - Alp Eren Köksal
+- Yiğit Yıldız
+- Zehra Atalay
 
 ## Table of Contents
 

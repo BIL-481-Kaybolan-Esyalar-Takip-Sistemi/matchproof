@@ -46,11 +46,18 @@
 - [1.5 Overview](#15-overview)
 - [2.1 Product Perspective](#21-product-perspective)
 - [2.2 Product Functions](#22-product-functions)
+- [2.3 User Characteristics](#23-user-characteristics)
+- [2.4 Constraints](#24-constraints)
+- [2.5 Assumptions and Dependencies](#25-assumptions-and-dependencies)
+- [3.1.1 User Interfaces](#311-user-interfaces)
 - [3.1.2 Hardware Interfaces](#312-hardware-interfaces)
+- [3.1.3 Software Interfaces](#313-software-interfaces)
+- [3.1.4 Communication Interfaces](#314-communication-interfaces)
 - [3.3 Detailed Performance Requirements](#33-detailed-performance-requirements)
 - [3.5.3 Security Requirements](#353-security-requirements)
 - [4.2 Data Collection Specification](#42-data-collection-specification)
 - [9.1 Societal Benefits](#91-societal-benefits)
+- [9.2 Economic Constraints](#92-economic-constraints)
 - [9.3 Legal and Ethical Compliance](#93-legal-and-ethical-compliance)
 
 ---
@@ -255,6 +262,127 @@ The following table summarises all product functions implemented in the current 
 
 ---
 
+## 2.3 User Characteristics
+
+MatchProof targets three distinct user groups within a university campus environment. Their technical proficiency, usage context, and expectations differ and directly influence the interface design and access control decisions.
+
+| User Type | Description | Technical Proficiency | Frequency of Use | Key Expectations |
+|---|---|---|---|---|
+| **Student / Regular User** | Any enrolled student or campus member who has lost or found an item on campus. The primary actor of all core platform flows (post, search, claim, resolve). | Low to moderate — comfortable with web form submission and basic browser navigation. Not expected to understand the AI algorithm. | Occasional — primarily during or shortly after a loss or discovery event. | Fast, intuitive item posting; clear search results; visible and actionable match suggestions; protected contact information. |
+| **Administrator** | A designated campus staff member or power user responsible for content moderation and maintaining platform integrity. Has elevated privileges (`isAdmin = true` in the database). | Moderate — familiar with basic admin workflows; does not require programming knowledge. | Periodic — reviews flagged or reported posts and performs removal actions as needed. | Simple moderation interface; mandatory reason field for removal actions; audit trail of moderation decisions. |
+| **Guest (Unauthenticated Visitor)** | A visitor who accesses the platform without logging in. Can browse public listings but cannot post, contact owners, or claim/resolve items. | Low — read-only browser interaction only. | Very infrequent — typically a one-time or first-visit experience before deciding to register. | Ability to see that the platform exists and what items are listed; clear prompt to register or log in to take action. |
+
+**Common characteristics across all user types:**
+- Access the platform via modern desktop browsers (Chrome, Firefox, Edge) on campus networks or home connections.
+- Have limited time and expect quick, validated workflows with immediate error feedback.
+- Are not expected to have knowledge of the underlying AI matching implementation.
+- Expect personal data (email, name) to be handled responsibly and visible only to authenticated users in the appropriate context.
+- May handle sensitive items (ID cards, wallets) and expect the system to enforce privacy controls automatically rather than relying on manual configuration.
+
+---
+
+## 2.4 Constraints
+
+This section defines the technical, operational, time, performance, capacity, and environmental constraints that bound the design and implementation of MatchProof.
+
+### 2.4.1 Technical Constraints
+
+| Constraint ID | Category | Description |
+|---|---|---|
+| TC-01 | Runtime environment | The backend must run on Node.js version 18 or higher. Lower versions are not supported due to native ESM and built-in fetch API usage. |
+| TC-02 | Database | PostgreSQL version 14 or higher is required. The schema uses UUID primary keys and server-side session storage (`connect-pg-simple`), which require compatible PostgreSQL extensions (`pgcrypto` or `gen_random_uuid()`). |
+| TC-03 | AI matching module | The embedding model (`Xenova/all-MiniLM-L6-v2`) runs in-process via ONNX runtime. It requires the `@xenova/transformers` package and a host machine with at least 2 GB of available RAM for model loading. |
+| TC-04 | Image processing | Image validation and perceptual hashing depend on the `sharp` library, which requires a native binary compatible with the host OS and CPU architecture (x86-64 or ARM64). |
+| TC-05 | Frontend build | The frontend is built with Vite 5 and React 19. Node.js >= 18 is required for the build process. |
+| TC-06 | Browser support | The application targets modern desktop browsers only (Chrome, Firefox, Edge — latest two major versions). Mobile browsers and Internet Explorer are not supported. |
+| TC-07 | File storage | Uploaded images are stored on the local server filesystem under the configured `UPLOAD_DIR`. No cloud object storage (S3, Cloudinary) is integrated in the current scope. Storage is therefore bounded by the host machine's available disk space. |
+
+### 2.4.2 Operational and Deployment Constraints
+
+| Constraint ID | Category | Description |
+|---|---|---|
+| OC-01 | Deployment scope | The system is scoped to a single-server, single-campus deployment for the academic demonstration period. Multi-tenant or multi-campus operation is not supported. |
+| OC-02 | Internet dependency | The demo environment must operate fully offline (localhost). No runtime dependency on external APIs, CDNs, or cloud inference endpoints is permitted during the demo. |
+| OC-03 | Environment configuration | All sensitive configuration values (database URL, session secret, CORS origin) must be provided through environment variables. The server refuses to start if `SESSION_SECRET` is absent. |
+| OC-04 | Authentication mechanism | Session-based authentication is used (`express-session` + `connect-pg-simple`). JWT-based stateless authentication is not implemented in the current scope. |
+
+### 2.4.3 Time and Capacity Constraints
+
+| Constraint ID | Category | Description |
+|---|---|---|
+| CAP-01 | Concurrent users | The system is designed and tested for single-user or very low concurrency loads consistent with a course demo. It is not load-tested for concurrent production-level traffic. |
+| CAP-02 | Image upload size | Each uploaded image is limited to a maximum file size enforced by the upload middleware (configured via `MAX_FILE_SIZE`). Files exceeding this limit are rejected before storage. |
+| CAP-03 | Project timeline | Implementation is constrained to the BIL 481 course schedule. The delta improvement set was selected to fit within the remaining implementation window after Assignment 2 peer review. |
+
+---
+
+## 2.5 Assumptions and Dependencies
+
+### 2.5.1 Assumptions
+
+The following assumptions were made during requirements definition and design. If any assumption proves false, the affected requirements or design decisions must be revisited.
+
+| Assumption ID | Assumption | Impact if False |
+|---|---|---|
+| AS-01 | Users access the platform via modern desktop browsers (Chrome, Firefox, Edge). Mobile and legacy browsers are not primary targets. | UI layout and interaction design may need revision for mobile viewports or older rendering engines. |
+| AS-02 | The demo and testing environment is a single local machine with Node.js >= 18, PostgreSQL >= 14, and sufficient RAM (>= 2 GB) for in-process AI inference. | The AI matching module may fail to load or produce timeouts on lower-specification hardware; stub mode must be used. |
+| AS-03 | All users belong to a single campus community and share a common understanding of campus locations referenced in item listings. | Location-based filtering becomes less meaningful if users from different campuses or institutions use the platform. |
+| AS-04 | Item descriptions, titles, and categories are provided in English or Turkish. The embedding model (`Xenova/all-MiniLM-L6-v2`) was trained primarily on English text; cross-lingual similarity quality may vary. | Text similarity scores may be less accurate for Turkish-language descriptions, potentially reducing match quality. |
+| AS-05 | Uploaded images are genuine photographs of the reported items. The perceptual hash similarity assumes comparable photographic conditions (similar angle, lighting). | Similarity scores based on image features may be unreliable for low-quality, cropped, or stylized images. |
+| AS-06 | The platform operates during the academic semester with a limited and relatively trusted user base. Adversarial behavior (spam, coordinated abuse) is not a primary threat in the current scope. | If malicious usage occurs, the current moderation tooling (admin remove with reason) may be insufficient without rate limiting or automated abuse detection. |
+| AS-07 | The dataset of lost and found items is small to moderate in size (hundreds of records, not millions). Full-text search and embedding-based matching are feasible without a dedicated vector database or search index. | For large-scale deployments, PostgreSQL full-text search and in-memory embedding comparison would need to be replaced with a dedicated search engine (Elasticsearch) or vector store (pgvector, Pinecone). |
+
+### 2.5.2 External Dependencies
+
+| Dependency ID | Dependency | Version / Source | Purpose | Risk |
+|---|---|---|---|---|
+| DEP-01 | Node.js | >= 18 LTS | Backend runtime and frontend build toolchain | Low — LTS version with long support window |
+| DEP-02 | PostgreSQL | >= 14 | Relational data storage and server-side session store | Low — mature, stable database engine |
+| DEP-03 | Express.js | ^4.x | HTTP server framework and middleware pipeline | Low — stable, widely used |
+| DEP-04 | React + Vite | React 19, Vite 5 | Frontend component framework and build tool | Low — recent stable releases |
+| DEP-05 | @xenova/transformers | ^2.x | In-process ONNX inference for text embedding | Medium — relatively new JS library; model loading time sensitive to hardware |
+| DEP-06 | sharp | ^0.33 | Image validation, MIME detection, and perceptual hashing | Medium — requires native binary; platform-specific build |
+| DEP-07 | Playwright | ^1.x | End-to-end browser automation testing | Low — widely adopted, maintained by Microsoft |
+| DEP-08 | Jest + React Testing Library | Jest ^29, RTL ^16 | Unit and component testing | Low — stable, industry standard |
+| DEP-09 | GitHub Actions | ubuntu-latest runner | CI pipeline for automated test execution on push/PR | Low — managed service; no local infrastructure required |
+
+---
+
+## 3.1.1 User Interfaces
+
+This section defines the user interface requirements for MatchProof. The system provides a web-based UI accessible from modern desktop browsers. All screens are implemented as single-page application (SPA) views using React 19 and Vite 5.
+
+### 3.1.1.1 General UI Requirements
+
+| Requirement ID | Description |
+|---|---|
+| UI-01 | The interface must be usable on modern desktop browsers (Chrome, Firefox, Edge — latest two major versions) at common screen resolutions (1280 × 720 and above). |
+| UI-02 | All interactive form elements (inputs, buttons, dropdowns) must display validation feedback inline, adjacent to the relevant field, without requiring a page reload. |
+| UI-03 | Navigation must clearly indicate the current authenticated state (logged-in user name and logout option visible when authenticated; login/register prompt visible when unauthenticated). |
+| UI-04 | All pages must be reachable within a maximum of two user interactions from the main entry point (search/home page). |
+| UI-05 | Private item images must be visually blurred for non-owner and non-admin users in all views where the image appears (detail page and AI match cards). |
+| UI-06 | When the AI matching service is unavailable, the detail page must display an explicit fallback message distinguishable from the "no matches found" empty state. |
+
+### 3.1.1.2 Screen Inventory
+
+| Screen | Route | Primary Actor | Key UI Elements |
+|---|---|---|---|
+| **Auth Page** (Login / Register) | `/auth` | Guest | Email input, password input, name input (register only), Login / Register toggle, error message display |
+| **Search Page** (Home / Browse) | `/` | All authenticated users | Keyword search input, category filter, item-type filter (Lost / Found), status filter, date filter, paginated result cards |
+| **Post Form Page** (Create / Edit) | `/items/new`, `/items/:id/edit` | Authenticated user | Item type selector (Lost / Found), title, category, location, description inputs, optional image upload, submit / cancel buttons, inline validation errors |
+| **Item Detail Page** | `/items/:id` | Authenticated user | Item title and metadata, item image (blurred if private for non-owner/non-admin), owner contact card (name + email), status transition buttons (Claim / Resolve), AI Possible Matches panel (ranked cards with score and reason tags, or explicit fallback message), edit / delete controls (owner only), admin remove panel (admin only) |
+| **Admin Moderation Page** | `/admin` | Administrator | List of all posts, remove action button, mandatory reason input, access-denied message for non-admin users |
+
+### 3.1.1.3 Low-Fidelity Wireframe References
+
+Detailed ASCII-level low-fidelity wireframes for the Login/Register page, Create Post page, Search Results page, and Item Detail page are documented in `docs/assignment-2/01-design-document.md`, Section 3.6. Those wireframes represent the initial design baseline. The Assignment 3 delta phase added the following visual elements not present in the original wireframes:
+
+- **Private image blur indicator** on the item detail page and AI match cards
+- **AI unavailability fallback message** replacing the empty match panel when the matching service fails
+- **"ID Card auto-privacy" notice** shown to the post creator after submitting an ID Card category post
+
+---
+
 ## 3.1.2 Hardware Interfaces
 
 MatchProof does **not** depend on proprietary campus hardware, embedded controllers, scanners, or device-driver level integrations. The system is a standard web application and all hardware interaction is mediated through the user's operating system, browser, and the server runtime environment. This section therefore documents the required commodity hardware interfaces and their compatibility boundaries.
@@ -271,6 +399,108 @@ MatchProof does **not** depend on proprietary campus hardware, embedded controll
 - No camera, GPS, biometric reader, NFC/RFID reader, campus-card scanner, or other specialized hardware is required by the current scope.
 - The application does not access hardware directly; browser and operating system abstractions isolate the codebase from vendor-specific device drivers.
 - If the platform is demonstrated on a different machine, equivalent commodity desktop hardware is sufficient as long as the supported browser, Node.js runtime, and PostgreSQL environment are available.
+
+---
+
+## 3.1.3 Software Interfaces
+
+This section documents all software interfaces — internal APIs, third-party libraries, and runtime integrations — that MatchProof depends on or exposes. Each interface is described with its inputs, outputs, and dependency relationship.
+
+### 3.1.3.1 Internal REST API (Backend ↔ Frontend)
+
+MatchProof exposes a REST API over HTTP. All request and response bodies use the `application/json` content type unless the endpoint handles multipart file upload (`multipart/form-data`).
+
+| Interface ID | Method + Endpoint | Input | Output | Auth Required |
+|---|---|---|---|---|
+| SI-API-01 | `POST /api/auth/register` | JSON: `{ name, email, password }` | JSON: `{ id, name, email, isAdmin }` — sets session cookie | No |
+| SI-API-02 | `POST /api/auth/login` | JSON: `{ email, password }` | JSON: `{ id, name, email, isAdmin }` — sets session cookie | No |
+| SI-API-03 | `POST /api/auth/logout` | None | JSON: `{ message }` — clears session cookie | Yes |
+| SI-API-04 | `GET /api/auth/me` | Session cookie | JSON: `{ id, name, email, isAdmin }` | Yes |
+| SI-API-05 | `POST /api/items` | Multipart: `{ itemType, title, category, location, description, isPrivate }` + optional image file | JSON: created item object | Yes |
+| SI-API-06 | `GET /api/items/search` | Query params: `{ q, category, itemType, status, dateFrom, dateTo, page, limit }` | JSON: `{ items: [...], total, page, limit }` | Yes |
+| SI-API-07 | `GET /api/items/:itemId` | Path param: `itemId` | JSON: item detail including `ownerContact: { name, email }` | Yes |
+| SI-API-08 | `PATCH /api/items/:itemId` | JSON: partial item fields | JSON: updated item object | Yes (owner only) |
+| SI-API-09 | `DELETE /api/items/:itemId` | Path param: `itemId` | JSON: `{ message }` | Yes (owner only) |
+| SI-API-10 | `PATCH /api/items/:itemId/status` | JSON: `{ status }` | JSON: updated item object | Yes (owner only) |
+| SI-API-11 | `GET /api/items/:itemId/matches` | Path param: `itemId` | JSON: `[ { item, score, reasons } ]` | Yes |
+| SI-API-12 | `POST /api/moderation/items/:itemId/remove` | JSON: `{ reason }` | JSON: moderation action record | Yes (admin only) |
+| SI-API-13 | `GET /api/health` | None | JSON: `{ status: "ok" | "degraded", db: "up" | "down" }` | No |
+
+**Error contract:** All error responses follow the structure `{ error: { code: string, message: string } }`. HTTP status codes used: 400 (validation), 401 (unauthenticated), 403 (unauthorized), 404 (not found), 409 (conflict), 500 (server error).
+
+### 3.1.3.2 Third-Party Library Interfaces
+
+| Interface ID | Library | Version | Interface Type | Input | Output | Purpose |
+|---|---|---|---|---|---|---|
+| SI-LIB-01 | `@xenova/transformers` | ^2.x | In-process JS API | Text string | Float32Array (384-dim embedding vector) | Semantic text embedding for similarity scoring |
+| SI-LIB-02 | `sharp` | ^0.33 | In-process JS API | Image file buffer | Perceptual hash string; validated MIME type; resized buffer | Image validation, perceptual hashing, and processing |
+| SI-LIB-03 | `bcrypt` | ^5.x | In-process JS API | Plaintext password; hash string | Hash string; boolean comparison result | Password hashing and verification |
+| SI-LIB-04 | `express-session` + `connect-pg-simple` | ^1.x / ^9.x | Express middleware | HTTP request with cookie header | Populated `req.session` object; session persisted in PostgreSQL | Server-side session management |
+| SI-LIB-05 | `pg` (node-postgres) | ^8.x | In-process JS API | SQL query string + parameters | Query result rows | PostgreSQL database access |
+| SI-LIB-06 | `multer` | ^1.x | Express middleware | Multipart HTTP request | `req.file` object with validated file path and metadata | File upload handling and MIME / size validation |
+
+### 3.1.3.3 Development and Testing Tool Interfaces
+
+| Interface ID | Tool | Interface Type | Purpose |
+|---|---|---|---|
+| SI-TEST-01 | Jest ^29 | CLI / programmatic | Unit and integration test runner for backend and frontend |
+| SI-TEST-02 | React Testing Library ^16 | In-process JS API | Component-level rendering and interaction simulation |
+| SI-TEST-03 | Playwright ^1.x | CLI / API | End-to-end browser automation against running application |
+| SI-TEST-04 | Supertest | In-process JS API | HTTP-level integration testing of Express routes without starting a real server |
+| SI-CI-01 | GitHub Actions | YAML workflow / REST API | CI pipeline: installs dependencies, runs `test:unit`, reports pass/fail per commit and PR |
+
+---
+
+## 3.1.4 Communication Interfaces
+
+This section defines the communication protocols, data formats, and message flows used between the components of MatchProof.
+
+### 3.1.4.1 Protocol and Transport
+
+| Interface ID | Protocol | Direction | Description |
+|---|---|---|---|
+| CI-01 | HTTP/1.1 | Browser → Backend | All API requests from the React frontend to the Express backend use HTTP/1.1. During the local demo, the connection is over `localhost` without TLS. A production deployment should use HTTPS (TLS 1.2 or higher). |
+| CI-02 | WebSocket | Not used | Real-time communication (live notifications, chat) is explicitly out of scope. All client-server communication is request-response over HTTP. |
+| CI-03 | PostgreSQL Wire Protocol | Backend → Database | The `pg` library communicates with PostgreSQL using the PostgreSQL binary wire protocol over a local TCP socket or Unix domain socket. |
+| CI-04 | In-process function call | Backend → AI module | The AI matching service (`matchingService.js`) calls the `@xenova/transformers` and `sharp` libraries in-process. There is no inter-process or network communication for AI inference. |
+
+### 3.1.4.2 Data Format
+
+| Format | Used For |
+|---|---|
+| **JSON** (`application/json`) | All REST API request and response bodies except file upload endpoints. |
+| **Multipart/form-data** | Image upload during item creation (`POST /api/items`) and item update (`PATCH /api/items/:itemId`). |
+| **HTTP Cookie** (`Set-Cookie` / `Cookie` headers) | Session token transport. The session ID is stored in an `HttpOnly` cookie set by the backend after successful login or registration. |
+| **SQL** | All database read and write operations are expressed as parameterized SQL queries submitted via the `pg` client. |
+
+### 3.1.4.3 CORS Configuration
+
+Cross-origin requests are managed by the `cors` Express middleware. The allowed origin is read from the `CLIENT_ORIGIN` environment variable at server startup. Requests from origins not listed in `CLIENT_ORIGIN` are rejected with a CORS error before reaching any route handler. Credentials (cookies) are permitted for same-origin and explicitly whitelisted cross-origin requests.
+
+### 3.1.4.4 Session State Flow
+
+```
+Client (Browser)
+  │
+  │  POST /api/auth/login  { email, password }
+  │ ─────────────────────────────────────────────────────────► Express Server
+  │                                                               │
+  │                                          AuthService.login()  │
+  │                                            bcrypt.compare()   │
+  │                                          Session written to   │
+  │                                            PostgreSQL         │
+  │  ◄──────────────────────────────────────────────────────────  │
+  │  200 OK  Set-Cookie: connect.sid=<session-id>; HttpOnly
+  │
+  │  Subsequent requests carry Cookie: connect.sid=<session-id>
+  │ ─────────────────────────────────────────────────────────► Express Server
+  │                                          Session looked up in  │
+  │                                            PostgreSQL          │
+  │                                          req.session.userId    │
+  │                                            attached to request │
+  │  ◄──────────────────────────────────────────────────────────  │
+  │  Authenticated response
+```
 
 ---
 
@@ -355,6 +585,56 @@ The MatchProof platform addresses a practical problem common to dense campus env
 **Demonstration of responsible AI use.** The project demonstrates that AI-based similarity scoring can be applied to a civic benefit use case with explainable results (match reason tags), supporting user trust and transparency rather than opaque decision-making.
 
 **Educational and research value.** As an academic project, MatchProof serves as a concrete case study for applying software engineering practices — agile development, automated testing, design patterns, quality assurance — to a socially relevant problem domain.
+
+---
+
+## 9.2 Economic Constraints
+
+This section defines the budget, cost boundaries, and economic limitations that governed the design and tooling decisions for MatchProof.
+
+### 9.2.1 Project Budget
+
+MatchProof was designed and implemented with a target budget of **$0–15 USD** for the academic course period. All selected technologies are free and open-source or available under free-tier plans for educational use.
+
+| Cost Category | Estimate | Notes |
+|---|---|---|
+| Backend runtime (Node.js, Express) | $0 | Open-source, MIT license |
+| Frontend framework (React, Vite) | $0 | Open-source, MIT license |
+| Database (PostgreSQL) | $0 | Open-source; hosted locally during demo |
+| AI inference (@xenova/transformers, ONNX) | $0 | Open-source; in-process inference, no cloud API cost |
+| Image processing (sharp) | $0 | Open-source, Apache 2.0 license |
+| Version control (GitHub) | $0 | Free for student/educational accounts |
+| CI pipeline (GitHub Actions) | $0 | Free tier — 2,000 minutes/month on public repositories |
+| Testing frameworks (Jest, Playwright, RTL) | $0 | Open-source |
+| Hosting (local demo environment) | $0 | Demo runs on team hardware; no cloud hosting required |
+| Custom domain (optional) | $10–15 | Not required for course demo; included as an optional future cost |
+| **Total** | **$0–15** | Minimal to zero cost for course scope |
+
+### 9.2.2 Human Resource Cost
+
+The implementation effort is constrained to the team's allocated academic working time. The total estimated effort across all project phases is **160 person-hours**, distributed across five team members over the semester. No external contractors, paid consultants, or paid cloud services were used.
+
+| Phase | Estimated Effort (person-hours) |
+|---|---|
+| Requirements and Planning | 15 |
+| Design | 15 |
+| Development | 70 |
+| AI Matching and Explainability | 30 |
+| Testing and QA | 20 |
+| Deployment and Documentation | 10 |
+| **Total** | **160** |
+
+### 9.2.3 Economic Limitations and Trade-offs
+
+The zero-cost constraint shaped several key design and scope decisions:
+
+- **In-process AI inference** (`@xenova/transformers` ONNX) was selected over paid cloud ML APIs (OpenAI embeddings, AWS SageMaker) to avoid per-call inference costs.
+- **Local filesystem image storage** was used instead of cloud object storage (AWS S3, Cloudinary) to avoid storage and egress costs during the demo period.
+- **PostgreSQL on local hardware** was preferred over managed database services (RDS, Supabase paid tier) for the same reason.
+- **Password reset and email notifications** were deferred as out-of-scope partly because integrating a transactional email service (SendGrid, Mailgun) would introduce cost and external API dependency.
+- **Malware scanning for uploads** was deferred because cloud-based scanning services are not free at the required volume.
+
+For a hypothetical production deployment beyond the course scope, the primary cost drivers would be: cloud server hosting (~$20–50/month for a VPS), managed PostgreSQL (~$15–30/month), cloud image storage (usage-based), and a transactional email service (usage-based). These are acknowledged as future economic constraints outside the current project boundary.
 
 ---
 
