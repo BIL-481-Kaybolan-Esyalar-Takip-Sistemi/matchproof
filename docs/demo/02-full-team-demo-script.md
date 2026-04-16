@@ -42,28 +42,14 @@ Yani odak:
 
 ---
 
-## Ekranda Açılacak Ana Dosyalar
-
-Sunum sırasında şu sıra kullanılabilir:
-
-1. `README.md`
-2. `docs/assignment-1/01-project-definition.md`
-3. `docs/assignment-1/03-requirements.md`
-4. `docs/assignment-1/04-task-effort-estimation.md`
-5. `docs/assignment-1/05-product-backlog.md`
-6. `docs/assignment-2/01-design-document.md`
-7. `docs/assignment-2/04-uml-representation.md`
-8. `src/server/routes/` ve `src/server/services/`
-9. çalışan uygulama ekranı
-10. `docs/assignment-2/02-quality-assurance-plan.md`
-11. `docs/test/02-test-strategy.md`
-12. `docs/test/01-test-report.md`
-13. `docs/assignment-3/01-delta-design-implementation-report.md`
-14. GitHub commit geçmişi / PR listesi
+Bu konuşma akışında her bölümün başına `Ekranda aç:` notu eklendi.
+Sunum sırasında sadece ilgili bölüme geldiğinizde o dosyayı açmanız yeterlidir.
 
 ---
 
 # 1. Giriş ve Proje Özeti
+
+**Ekranda açık olacak:** `README.md` veya çalışan uygulamanın ana sayfası
 
 “Merhaba, biz MatchProof ekibiyiz.
 
@@ -183,6 +169,8 @@ Sistem sadece eşleşme skoru üretmiyor; mümkün olduğunda neden benzer bulun
 
 ## 3.4 Design Pattern / Sequence / Class kısmı
 
+**Ekranda aç:** `docs/assignment-2/04-uml-representation.md` veya `docs/assignment-2/01-design-document.md`
+
 “Sunumda burada kısa bir şekilde şunu vurgulamak yeterli:
 tasarım tarafında sınıflar, akışlar ve katmanlar rastgele değil, ayrık sorumluluklara göre organize edildi.
 Yani route, service ve model ayrımı hem geliştirmeyi hem de test etmeyi kolaylaştırdı.”
@@ -230,6 +218,8 @@ ilk kullanıcı arama yapıyor, detail sayfasına geçiyor, AI possible matches 
 # 5. Canlı Demo Senaryosu
 
 Bu bölümde belge değil, **çalışan sistem** gösterilmelidir.
+
+**Ekranda aç:** çalışan uygulama ekranı
 
 ## 5.1 Adım Adım Akış
 
@@ -305,6 +295,8 @@ Burada ayrıca test çıktılarının kayıt altına alındığını ve full ver
 
 ## 6.4 Recording of Test Results
 
+**Ekranda açık olacak:** terminal çıktıları, test screenshot’ları veya kayıt alınmış test videoları
+
 “Hocanın istediği recording of the test results kısmı için bu bölümde test ekran görüntüleri, terminal çıktıları veya kayıt altına alınmış sonuçlar gösterilebilir.
 Yani burada sadece ‘testler geçti’ demek değil, gerçekten test çıktılarının kayıtlarını göstermek gerekir.”
 
@@ -331,6 +323,8 @@ Bu seçimleri, effort estimation ile birlikte gerekçelendirdik.”
 
 ## 7.2 Seçilen İyileştirmeler
 
+**Ekranda aç:** `docs/assignment-3/01-delta-design-implementation-report.md` içindeki selected improvements ve effort table bölümü
+
 “Seçilen iyileştirmeler şunlardı:
 
 - contact visibility konusunun sadeleştirilmesi,
@@ -340,6 +334,8 @@ Bu seçimleri, effort estimation ile birlikte gerekçelendirdik.”
 - availability hedefinin gerçekçi hale getirilmesi.”
 
 ## 7.3 Mimariye ve Testlere Etkisi
+
+**Ekranda aç:** `docs/assignment-3/01-delta-design-implementation-report.md` impact bölümleri ve gerekirse `docs/test/01-test-report.md`
 
 “Delta report’ta ayrıca şu sorulara cevap verdik:
 
@@ -372,6 +368,8 @@ Yani task matrix ile commit geçmişi birbirini doğruluyor.”
 
 # 9. Kapanış
 
+**Ekranda aç:** tekrar çalışan uygulama ana ekranı veya `README.md`
+
 “Özetle MatchProof projesinde:
 
 - planlama yaptık,
@@ -401,4 +399,3 @@ Yani task matrix ile commit geçmişi birbirini doğruluyor.”
   - deployment diagram
   mutlaka gösterilsin.
 - Quality factors table ve fixed bugs table ekranda mutlaka açılmalı.
-
