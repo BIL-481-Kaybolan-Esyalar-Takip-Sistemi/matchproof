@@ -116,3 +116,105 @@ Gerek oluşturulan otomatik bot testlerinden (Jest) alınan dökümler, gerekse 
 1. **Raporlama Bölümü (Reporting):** Tüm hatalar ve buglar, projenin merkezi hata veri kayıt sistemine (**GitHub Issues** veya proje yönetimine bağlı olarak Trello/Jira kartlarına) kaydedilir. Hata raporunda; nasıl tekrar edebileceği, beklenen test sonucu ve çıkan hatalı sonuç yer alır.
 2. **Kategorizasyon ve Önceliklendirme:** Başmühendis, tespit edilen hatanın zorluk ve riski (Kritik, Yüksek, Orta, Düşük) tabanında öncelik tanır. İlgili alandan yetkili bir ekibe/etikeye (`AI-backend`, `UI-frontend`, `auth`) görevlendirilir.
 3. **Çözüm Yönetimi (Resolution Workflow):** Issue işleme alınır. Süreç boyunca bilet durumu güncellenir: `Açık -> Üzerinde Çalışılıyor -> Kod İncelemesinde -> QA Kontrolü (Orijinal testlerin Passed vermesi) -> Kapalı`. Hata giderildikten sonra ancak ve ancak QA tarafından tekrar doğrulandığında kaynak koduna başarıyla geçirilir ve dosya kapatılır.
+
+---
+
+## 5. Configuration and Change Management (6.3)
+
+### 5.1 Version Control Strategy
+
+MatchProof uses **Git** with a GitHub-hosted repository as the single source of truth for all source code and documentation.
+
+**Branching Model:**
+
+| Branch | Purpose |
+|---|---|
+| `main` | Stable, demo-ready code. Direct commits are forbidden. |
+| `develop` | Integration branch. All feature branches are merged here first. |
+| `feature/<name>` | Short-lived branches for individual features or fixes. |
+| `hotfix/<name>` | Emergency fixes applied directly on top of `main`. |
+
+**Commit Convention:**  
+All commits follow the Conventional Commits format: `<type>(<scope>): <description>`  
+Examples: `feat(auth): add session expiry`, `fix(search): correct pagination offset`, `docs(qa): add 6.3 section`
+
+### 5.2 Configuration Item (CI) List
+
+The following items are tracked as configuration items:
+
+| CI ID | Item | Location |
+|---|---|---|
+| CI-01 | Application source code | `src/` |
+| CI-02 | Test suite | `tests/` |
+| CI-03 | Assignment documentation | `docs/` |
+| CI-04 | Database schema and migration scripts | `src/server/db/` |
+| CI-05 | Dependency manifests | `package.json`, `package-lock.json` |
+| CI-06 | Environment configuration template | `.env.example` |
+
+### 5.3 Change Request Process
+
+1. **Propose:** Any team member opens a GitHub Issue describing the change, affected components, and justification.
+2. **Review:** At least one other team member reviews and approves the issue before work begins.
+3. **Implement:** The developer creates a `feature/` branch from `develop`, implements the change, and writes/updates tests.
+4. **Pull Request:** A Pull Request (PR) is opened against `develop`. The PR must pass all automated tests (`npm run test:all`) and receive at least one approving review.
+5. **Merge:** After approval and green CI, the PR is squash-merged into `develop`.
+6. **Release:** When a milestone is complete, `develop` is merged into `main` via a PR with updated version tag.
+
+### 5.4 Versioning
+
+Document and software versions follow **Semantic Versioning** (`MAJOR.MINOR.PATCH`):
+- `MAJOR`: Breaking changes to API contracts or database schema
+- `MINOR`: New features added in a backward-compatible manner
+- `PATCH`: Bug fixes and documentation corrections
+
+Current version: `1.0.0` (Assignment 2 submission baseline)
+
+---
+
+## 6. Product Evaluation and Acceptance (6.5)
+
+### 6.1 Acceptance Criteria Overview
+
+A product increment is considered **accepted** when all of the following conditions are met. Criteria are directly traceable to functional and non-functional requirements.
+
+### 6.2 Functional Acceptance Criteria
+
+| AC ID | Acceptance Criterion | Linked FR | Verification Method |
+|---|---|---|---|
+| AC-01 | A new user can register with name, email, and password; the account persists and can be used to login | FR1 | Automated (Jest + Playwright TC-01) |
+| AC-02 | An authenticated user can create a lost or found post with all required fields; the post appears in search results | FR2, FR3, FR4 | Automated (Jest + Playwright TC-02) |
+| AC-03 | Keyword search returns relevant results; category and status filters correctly narrow the result set | FR5, FR6 | Automated (Jest + Playwright TC-03) |
+| AC-04 | An item detail page displays the owner's contact information to authenticated viewers | FR8 | Automated (Jest) |
+| AC-05 | The item owner can transition status: `open → claimed → resolved`; invalid transitions are rejected | FR7 | Automated (Jest + Playwright TC-05) |
+| AC-06 | An admin user can remove a post with a reason; the post disappears from search and a moderation record is created | FR9 | Automated (Jest + Playwright TC-06) |
+| AC-07 | An authenticated user can edit or delete their own post; editing another user's post is forbidden | FR10 | Automated (Jest) |
+| AC-08 | The AI matching module returns a ranked list of candidate items with similarity scores for a given item | FR11, FR12, FR13 | Automated TC-04 (stub mode) + Manual |
+| AC-09 | Each AI match includes a short natural-language explanation (e.g., "similar category, matching color description") | FR14 | Automated TC-04 + Manual review |
+
+### 6.3 Non-Functional Acceptance Criteria
+
+| AC ID | Acceptance Criterion | Linked NFR | Threshold | Verification Method |
+|---|---|---|---|---|
+| AC-10 | Core API operations (auth, create, search) respond within 2000 ms under normal load | NFR1 | ≤ 2000 ms | Automated timing assertions |
+| AC-11 | Critical user flows complete successfully on Chrome, Firefox, and Edge | NFR3 | 100% pass rate | Browser smoke tests |
+| AC-12 | Unauthenticated requests to protected endpoints receive HTTP 401; unauthorized role actions receive HTTP 403 | NFR4 | 100% correct rejection | Jest authorization tests |
+| AC-13 | Core module test coverage is at or above 80% | NFR5 | ≥ 80% | `npm run test:coverage` report |
+| AC-14 | The system is accessible and responsive during all scheduled demo and test windows | NFR6 | ≥ 95% uptime | Manual verification during demo |
+
+### 6.4 Demo Acceptance Checklist
+
+Before the final demo, the following checklist must be completed:
+
+- [ ] All Jest backend tests pass (`npm run test:server`)
+- [ ] All Jest frontend component tests pass (`npm run test:client`)
+- [ ] Playwright E2E tests pass on the local or staging environment
+- [ ] Test coverage report shows ≥ 80% on core modules
+- [ ] UC1 (Register/Login) demonstrated end-to-end
+- [ ] UC2 (Create Post with Photo) demonstrated end-to-end
+- [ ] UC3 (Search + AI Matches) demonstrated end-to-end
+- [ ] UC4 (Claim/Resolve + Admin Moderation) demonstrated end-to-end
+- [ ] No known Critical or High severity open bugs
+
+### 6.5 Acceptance Sign-Off
+
+The product increment is formally accepted when the demo checklist is fully completed and the project supervisor or designated evaluator confirms that the demonstrated behavior matches the requirements documented in this plan.

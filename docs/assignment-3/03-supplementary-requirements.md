@@ -23,6 +23,9 @@
 
 | Task | Responsible | Status |
 |---|---|---|
+| Project purpose definition (1.1) | Alp Eren Köksal | Completed |
+| Project scope definition (1.2) | Alp Eren Köksal | Completed |
+| Document overview table (1.5) | Alp Eren Köksal | Completed |
 | Definitions, Acronyms, and Abbreviations tables | Elif Beyza Turan | Completed |
 | References section | Elif Beyza Turan | Completed |
 | Detailed performance requirements | Elif Beyza Turan | Completed |
@@ -35,29 +38,65 @@
 ---
 
 ## Table of Contents
-- [Purpose](#purpose)
-- [1. Definitions, Acronyms, and Abbreviations](#1-definitions-acronyms-and-abbreviations)
-  - [1.1 Definitions](#11-definitions)
-  - [1.2 Acronyms](#12-acronyms)
-  - [1.3 Abbreviations](#13-abbreviations)
-- [2. References](#2-references)
-- [3. Detailed Performance Requirements](#3-detailed-performance-requirements)
-- [4. Security Requirements](#4-security-requirements)
-- [5. Data Collection Specification](#5-data-collection-specification)
-- [6. Societal Benefits](#6-societal-benefits)
-- [7. Legal and Ethical Compliance](#7-legal-and-ethical-compliance)
+- [1.1 Project Purpose](#11-project-purpose)
+- [1.2 Project Scope](#12-project-scope)
+- [1.3 Definitions, Acronyms, and Abbreviations](#13-definitions-acronyms-and-abbreviations)
+- [1.4 References](#14-references)
+- [1.5 Overview](#15-overview)
+- [2.1 Product Perspective](#21-product-perspective)
+- [2.2 Product Functions](#22-product-functions)
+- [3.3 Detailed Performance Requirements](#33-detailed-performance-requirements)
+- [3.5.3 Security Requirements](#353-security-requirements)
+- [4.2 Data Collection Specification](#42-data-collection-specification)
+- [9.1 Societal Benefits](#91-societal-benefits)
+- [9.3 Legal and Ethical Compliance](#93-legal-and-ethical-compliance)
 
 ---
 
-## Purpose
+## 1.1 Project Purpose
 
-This document supplements `docs/assignment-1/03-requirements.md` by providing sections that were not included in the original requirements baseline. It adds the definitions, acronyms, and abbreviations glossary; a numbered references list; expanded performance and security requirements; data collection specification; and the societal and legal context for the MatchProof system.
+MatchProof is a campus-focused digital lost and found platform that enables students and staff to post, search, and recover lost belongings through a structured web interface. The platform applies AI-assisted similarity matching to increase item recovery probability and provides an auditable content moderation capability for campus administrators.
+
+The **Assignment 3 delta phase** builds on the Assignment 2 design baseline by implementing a targeted set of improvements identified during the peer review process:
+
+- **Privacy hardening:** Sensitive item categories (ID Card) are automatically marked private; their images are blurred for non-owner and non-admin viewers across all views.
+- **AI fallback UX:** When the AI matching service is unavailable, an explicit fallback message is shown instead of a misleading empty state.
+- **Contact information scope:** Owner contact data is restricted to name and email only; no additional contact channels are added.
+- **CI pipeline:** A GitHub Actions workflow runs the automated unit and component test suite on every push and pull request.
+- **Availability requirement correction:** NFR6 updated from an unrealistic 99% target to a defensible 95% target for planned test and demo periods.
+
+The purpose of this document set is to record these improvements, their design rationale, quality impact, and verification approach in a form suitable for academic review and demonstration.
 
 ---
 
-## 1. Definitions, Acronyms, and Abbreviations
+## 1.2 Project Scope
 
-### 1.1 Definitions
+### In Scope for Assignment 3 (Delta)
+
+| # | Improvement | Justification |
+|---|---|---|
+| 1 | Automatic privacy enforcement for "ID Card" category posts (server-side) | Addresses review privacy concern; low effort, high demo value |
+| 2 | Photo blurring for private items in detail and AI match card views | Directly improves demo scenario for sensitive item handling |
+| 3 | Explicit AI unavailability fallback message on item detail page | Removes misleading UX; small frontend change |
+| 4 | Contact information restricted to name + email only | Balances usability and privacy without removing handoff capability |
+| 5 | GitHub Actions CI workflow for automated test execution | Low effort; directly answers review's CI absence concern |
+| 6 | NFR6 availability target corrected to ≥ 95% during test/demo period | Documentation correction; improves requirement defensibility |
+
+### Out of Scope for Assignment 3
+
+- Password reset and account recovery flow
+- Malware or virus scanning for uploaded files
+- Full production AI inference deployment plan (cloud hosting, model versioning)
+- Automated database backup and data deletion policy
+- In-app messaging, push notifications, or SMS alerts
+- Mobile application or progressive web app (PWA)
+- Formal WCAG accessibility audit
+
+---
+
+## 1.3 Definitions, Acronyms, and Abbreviations
+
+### Definitions
 
 | Term | Definition |
 |---|---|
@@ -74,7 +113,7 @@ This document supplements `docs/assignment-1/03-requirements.md` by providing se
 | Perceptual hash | A compact fingerprint of an image computed by the sharp library, used to measure visual similarity between item photos independent of resolution or minor edits. |
 | Stub mode | A deterministic operating mode for the AI matching pipeline activated by setting the MATCHING_MODE environment variable to "stub", used during automated testing to produce predictable results without running the real embedding model. |
 
-### 1.2 Acronyms
+### Acronyms
 
 | Acronym | Expansion |
 |---|---|
@@ -101,7 +140,7 @@ This document supplements `docs/assignment-1/03-requirements.md` by providing se
 | URL | Uniform Resource Locator |
 | UX | User Experience |
 
-### 1.3 Abbreviations
+### Abbreviations
 
 | Abbreviation | Meaning |
 |---|---|
@@ -125,7 +164,7 @@ This document supplements `docs/assignment-1/03-requirements.md` by providing se
 
 ---
 
-## 2. References
+## 1.4 References
 
 1. IEEE Std 830-1998, *IEEE Recommended Practice for Software Requirements Specifications*. IEEE, 1998.
 2. ISO/IEC 25010:2011, *Systems and software engineering — Systems and software Quality Requirements and Evaluation (SQuaRE) — System and software quality models*. ISO, 2011.
@@ -142,7 +181,79 @@ This document supplements `docs/assignment-1/03-requirements.md` by providing se
 
 ---
 
-## 3. Detailed Performance Requirements
+## 1.5 Overview
+
+This section summarizes the structure and content of the complete Assignment 3 documentation set. Each document covers a distinct concern; reading them together provides a full picture of the delta design, quality approach, and project context.
+
+| Document | Title | Coverage |
+|---|---|---|
+| **01-delta-design-implementation-report.md** | Delta Design & Implementation Report | Review context and feedback summary, selected improvements, effort estimation, architecture impact, implemented changes, quality factor impact, testing and bugfixing summary |
+| **02-quality-factors.md** | Quality Factors | ISO/IEC 25010 quality factors with measurable metrics, target values, related tests, and test-to-requirement traceability table |
+| **03-supplementary-requirements.md** | Supplementary Requirements | Project purpose (1.1), project scope (1.2), definitions (1.3), references (1.4), overview (1.5), performance requirements (3.3), security requirements (3.5.3), data collection (4.2), societal benefits (9.1), legal and ethical compliance (9.3) |
+| **04-risk-management.md** | Risk Management | Risk classification matrix, risk analysis and mitigation strategies (7.3) with 14 risks, risk monitoring plan |
+| **05-user-stories.md** | User Stories | Target audience (8.1), 11 user stories including delta stories (8.2), acceptance criteria, FR traceability matrix |
+| **06-product-acceptance-and-config-management.md** | Product Acceptance & Config Management | Configuration and change management (6.3), verification and validation approach (6.2), risk and defect management (6.4), product acceptance criteria (6.5) |
+
+**Recommended reading order:**  
+`03` (requirements context) → `01` (delta design) → `04` (risks) → `05` (user stories) → `02` (quality factors) → `06` (acceptance and config management)
+
+---
+
+## 2.1 Product Perspective
+
+MatchProof is a **standalone web application** serving a single university campus community. It is not a module of a larger enterprise system and does not integrate with external institutional platforms (e.g., student information systems, campus card systems, or identity providers). All data remains within the locally operated server during the academic demonstration period.
+
+**System context:**
+
+```
+[Campus User: Browser]
+        |
+        | HTTPS (localhost during demo)
+        v
+[MatchProof Web Server: Express.js / Node.js]
+        |              |
+        v              v
+[PostgreSQL DB]   [Local Filesystem (image uploads)]
+        |
+        v
+[AI Matching Module: Xenova/all-MiniLM-L6-v2 (ONNX) + sharp]
+```
+
+**Problem addressed:** Campus members currently have no centralised digital channel for reporting or searching lost and found items. Physical lost-and-found desks are underused, slow, and cannot perform similarity-based matching. MatchProof replaces this gap with a self-service, searchable, AI-assisted platform accessible from any modern desktop browser.
+
+**Relationship to prior assignments:**
+- **Assignment 1** established the project definition, requirements (FR1–FR14, NFR1–NFR6), and initial architecture.
+- **Assignment 2** produced the detailed design, UML diagrams, QA plan, and product backlog.
+- **Assignment 3 (this document set)** implements and documents a targeted set of delta improvements based on peer review feedback.
+
+---
+
+## 2.2 Product Functions
+
+The following table summarises all product functions implemented in the current system. Functions marked **[Δ]** were added or significantly modified during the Assignment 3 delta phase.
+
+| Function ID | Function | Description | Linked FR |
+|---|---|---|---|
+| PF-01 | User registration | Create an account with name, email, and bcrypt-hashed password | FR1 |
+| PF-02 | User authentication | Login with email/password; maintain session; logout | FR1 |
+| PF-03 | Create lost item post | Submit a lost item listing with title, category, location, description, and optional photo | FR2, FR4 |
+| PF-04 | Create found item post | Submit a found item listing with the same structure | FR3, FR4 |
+| PF-05 | Auto-privacy enforcement **[Δ]** | Automatically mark "ID Card" category posts as private; enforce server-side | FR4, NFR4 |
+| PF-06 | Keyword search | Full-text search across item titles and descriptions | FR5 |
+| PF-07 | Filter listings | Filter by category, item type (lost/found), status, and date range | FR6 |
+| PF-08 | View item detail | View full item information including owner contact (name + email only) **[Δ]** | FR8 |
+| PF-09 | Private image blur **[Δ]** | Blur item photos in detail and match card views for non-owner, non-admin users | FR4, NFR4 |
+| PF-10 | Status lifecycle | Transition item status: Open → Claimed → Resolved | FR7 |
+| PF-11 | Edit / delete own post | Post owner can update or remove their listing | FR10 |
+| PF-12 | AI similarity matching | Rank candidate matches using text embedding + image perceptual hash scoring | FR11, FR12, FR13, FR14 |
+| PF-13 | Match explanation | Each AI match includes human-readable reason tags | FR14 |
+| PF-14 | AI fallback UX **[Δ]** | Show explicit message when AI matching service is unavailable | FR13 |
+| PF-15 | Admin moderation | Admin can remove any post with a mandatory reason; moderation record created | FR9 |
+| PF-16 | CI-backed test execution **[Δ]** | GitHub Actions runs `npm run test:unit` on every push and pull request | NFR5 |
+
+---
+
+## 3.3 Detailed Performance Requirements
 
 NFR1 in `03-requirements.md` states that the system must respond within 2 seconds under normal operating conditions. This section defines measurable sub-requirements derived from that baseline.
 
@@ -161,7 +272,7 @@ NFR1 in `03-requirements.md` states that the system must respond within 2 second
 
 ---
 
-## 4. Security Requirements
+## 3.5.3 Security Requirements
 
 NFR4 in `03-requirements.md` defines a single-sentence privacy requirement. This section expands it into specific, testable security controls aligned with OWASP Top Ten.
 
@@ -180,7 +291,7 @@ NFR4 in `03-requirements.md` defines a single-sentence privacy requirement. This
 
 ---
 
-## 5. Data Collection Specification
+## 4.2 Data Collection Specification
 
 This section defines what personal and item data the MatchProof system collects, how it is used, and for how long it is retained during the planned testing and demonstration period.
 
@@ -208,7 +319,7 @@ Item data is visible only to authenticated users. Owner contact information (nam
 
 ---
 
-## 6. Societal Benefits
+## 9.1 Societal Benefits
 
 The MatchProof platform addresses a practical problem common to dense campus environments: the inefficiency of recovering lost belongings. The following benefits are identified for the campus community.
 
@@ -226,7 +337,7 @@ The MatchProof platform addresses a practical problem common to dense campus env
 
 ---
 
-## 7. Legal and Ethical Compliance
+## 9.3 Legal and Ethical Compliance
 
 ### 7.1 Personal Data and Privacy
 

@@ -60,6 +60,80 @@ Browser UI -> API Controller -> Service Layer -> Model Layer -> Database
 | Media | Image upload + validation + storage pipeline | Item photo handling |
 | Version Control | GitHub | Source control and contribution tracking |
 
+### 1.4 Definitions, Acronyms, and Abbreviations
+
+| Term / Acronym | Definition |
+|---|---|
+| **AI** | Artificial Intelligence — machine-based intelligence used in the matching module |
+| **API** | Application Programming Interface — set of HTTP endpoints exposed by the backend |
+| **CRUD** | Create, Read, Update, Delete — standard data-management operations |
+| **E2E** | End-to-End — testing approach that validates full user flows through the running system |
+| **FR** | Functional Requirement — a numbered system behavior requirement (FR1–FR14) |
+| **NFR** | Non-Functional Requirement — a quality/constraint requirement (NFR1–NFR6) |
+| **HTTP** | Hypertext Transfer Protocol — communication protocol used by the REST API |
+| **JSON** | JavaScript Object Notation — data format used in all API request/response bodies |
+| **JWT** | JSON Web Token — stateless token format considered for session representation |
+| **KVKK** | Kişisel Verilerin Korunması Kanunu — Turkish personal data protection law |
+| **MatchProof** | The name of this campus lost-and-found platform project |
+| **MTTR** | Mean Time To Repair — average time to restore service after a failure |
+| **MVP** | Minimum Viable Product — the smallest set of features that delivers core value |
+| **NLP** | Natural Language Processing — AI techniques used for text similarity scoring |
+| **QA** | Quality Assurance — systematic process of ensuring product quality |
+| **REST** | Representational State Transfer — architectural style for the HTTP API layer |
+| **SRS** | Software Requirements Specification — document defining system requirements |
+| **SQAP** | Software Quality Assurance Plan — document defining quality activities and standards |
+| **UC** | Use Case — a numbered scenario describing user-system interaction (UC1–UC4) |
+| **UI** | User Interface — the web front-end rendered in the browser |
+| **UUID** | Universally Unique Identifier — format used for all primary keys in the database |
+| **V&V** | Verification and Validation — process of confirming the system is built correctly and meets needs |
+| **Cosine Similarity** | A mathematical measure of the angle between two embedding vectors; used to compare text and image features |
+| **Embedding** | A dense numeric vector representation of text or image content produced by a pre-trained model |
+| **Open / Claimed / Resolved / Removed** | The four possible lifecycle states of a lost/found item post |
+| **Stub mode** | A deterministic test-only mode where the matching service returns fixed results instead of running inference |
+
+### 1.5 References
+
+[1] IEEE. (1998). *IEEE Std 830-1998: IEEE Recommended Practice for Software Requirements Specifications*. IEEE Standards Association.
+
+[2] ISO/IEC. (2011). *ISO/IEC 25010:2011 Systems and software engineering — Systems and software Quality Requirements and Evaluation (SQuaRE)*. International Organization for Standardization.
+
+[3] OpenJS Foundation. (2024). *Express.js Documentation (v4)*. Retrieved from https://expressjs.com/en/4x/api.html
+
+[4] Meta Platforms, Inc. (2024). *React Documentation*. Retrieved from https://react.dev
+
+[5] PostgreSQL Global Development Group. (2024). *PostgreSQL 16 Documentation*. Retrieved from https://www.postgresql.org/docs/16/
+
+[6] Hugging Face. (2024). *Sentence Transformers Documentation*. Retrieved from https://www.sbert.net
+
+[7] Microsoft. (2024). *Playwright Documentation*. Retrieved from https://playwright.dev/docs/intro
+
+[8] Jest. (2024). *Jest Documentation*. Retrieved from https://jestjs.io/docs/getting-started
+
+[9] Kişisel Verileri Koruma Kurumu. (2016). *6698 Sayılı Kişisel Verilerin Korunması Kanunu*. Retrieved from https://www.kvkk.gov.tr
+
+[10] European Parliament. (2016). *Regulation (EU) 2016/679 — General Data Protection Regulation (GDPR)*. Official Journal of the European Union.
+
+### 1.6 Overview
+
+This section summarizes the structure of the complete Assignment 2 documentation set for MatchProof. Each document covers a distinct concern; together they provide a full picture of the system design, quality plan, and project context.
+
+| Document | Title | Contents |
+|---|---|---|
+| **01-design-document.md** | Design Document | System overview, architecture, technology stack, codebase structure, API endpoints, UI wireframes, use case design, design decisions, and AI matching design patterns (Strategy + Chain of Responsibility) |
+| **02-quality-assurance-plan.md** | Quality Assurance Plan | QA strategy, testing methodologies (Jest, Playwright), quality factors and metrics table, detailed test scenarios (TC-01–TC-06), bug tracking workflow, configuration and change management, and product acceptance criteria |
+| **03-architecture-selection.md** | Architecture Selection | Rationale for selecting a Layered Monolithic Architecture, comparison with alternatives, layer definitions, and evolution path |
+| **04-uml-representation.md** | UML Representation | Component diagram, class diagram, sequence diagram (search + AI matching flow), and deployment diagram |
+| **05-design-document-initial-phase.md** | Design Document – Initial Phase | High-level component structure, interface definitions between layers, and input/output parameter specifications for all API endpoints |
+| **06-requirements-to-product-backlog-transition.md** | Requirements to Product Backlog | Mapping of FR/NFR requirements to Product Backlog items, Agile refinement approach, traceability examples, and sprint-based planning strategy |
+| **07-risk-management.md** | Risk Management | Risk classification (Likelihood × Impact), 13 identified risks across technical/process/external categories with mitigation and contingency strategies, and a risk monitoring plan |
+| **08-user-stories.md** | User Stories | Target audience definition and 10 user stories (US-01–US-10) with mapped functional requirements and acceptance criteria |
+| **09-societal-economic-legal.md** | Societal, Economic, and Legal-Ethical Considerations | Societal benefits and social impact analysis, economic constraints and budget summary, KVKK/GDPR legal compliance measures, and ethical considerations |
+
+**Reading order recommendation:**  
+For a first read, follow the order: `01` (system design) → `03` (architecture rationale) → `04` (UML) → `06` (backlog) → `07` (risk management) → `08` (user stories) → `02` (QA plan) → `09` (societal/legal context).
+
+---
+
 ## 2. Document-Specific Task Matrix
 
 | Task | Responsible | Support | Status |
