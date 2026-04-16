@@ -159,7 +159,7 @@ The following planning and baseline documents were completed before Sprint 1 beg
 |---|---|---|
 | Upload initial frontend file structure to repository | -- | Add files via upload (multiple commits) |
 | Update project definition document | -- | Update 01-project-definition.md |
-| Add all missing frontend infrastructure: fetch-based API client (Auth, Items, Moderation modules), AuthContext with session persistence on mount, ToastContext with auto-dismiss notifications, index.html entry point, vite.config.js with /api and /uploads proxy to backend port | PB1 | add missing frontend infrastructure to make app runnable |
+| Add all missing frontend infrastructure: fetch-based API client (Auth, Items, Moderation modules), AuthContext with session persistence on mount, ToastContext with auto-dismiss notifications, index.html entry point, vite.config.mjs with /api and /uploads proxy to backend port | PB1 | add missing frontend infrastructure to make app runnable |
 | Build AuthPage: login and register forms with tab switching and inline error display | PB1 | add missing frontend infrastructure to make app runnable |
 | Build SearchPage: keyword search input, category/type/status/date range filters, ItemCard grid with hover effects, and Pagination component | PB5, PB6 | add missing frontend infrastructure to make app runnable |
 | Build DetailPage: item metadata display, image rendering with blur for private items, owner contact card, status action buttons (Mark as Claimed, Mark as Resolved), Edit Post and Delete Post actions, admin Remove Post with reason modal | PB7, PB8, PB9 | add missing frontend infrastructure to make app runnable |

@@ -4,11 +4,15 @@ const { env } = require('./services/env');
 
 function startServer() {
   const server = app.listen(env.port, () => {
-    console.log(`MatchProof backend listening on port ${env.port}`);
+    if (env.nodeEnv !== 'test') {
+      console.log(`MatchProof backend listening on port ${env.port}`);
+    }
   });
 
   async function shutdown(signal) {
-    console.log(`Received ${signal}. Shutting down gracefully...`);
+    if (env.nodeEnv !== 'test') {
+      console.log(`Received ${signal}. Shutting down gracefully...`);
+    }
 
     server.close(async () => {
       try {

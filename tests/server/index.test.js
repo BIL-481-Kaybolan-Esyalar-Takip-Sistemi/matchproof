@@ -22,6 +22,7 @@ describe('Server Index', () => {
   beforeEach(() => {
     exitMock = jest.spyOn(process, 'exit').mockImplementation(() => {});
     processOnSpy = jest.spyOn(process, 'on');
+    jest.spyOn(console, 'log').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -43,12 +44,9 @@ describe('Server Index', () => {
     expect(call).toBeDefined();
     const sigintHandler = call[1];
     
-    // Disable console logging for this specific test
-    const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
     await sigintHandler();
     
     expect(pool.end).toHaveBeenCalled();
     expect(exitMock).toHaveBeenCalledWith(0);
-    consoleSpy.mockRestore();
   });
 });

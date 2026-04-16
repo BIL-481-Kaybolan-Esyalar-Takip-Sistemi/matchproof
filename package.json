@@ -15,6 +15,7 @@
     "test": "npm run test:unit",
     "test:unit": "jest --runInBand",
     "test:e2e": "playwright test",
+    "test:html": "node scripts/generate-test-html-reports.js",
     "test:all": "npm run test:unit && npm run test:e2e",
     "test:coverage": "jest --runInBand --coverage",
     "test:watch": "jest --watch"

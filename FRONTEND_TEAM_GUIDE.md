@@ -13,7 +13,7 @@ Frontend tarafında kritik eksik olan ortak katmanlar artık eklenmiş durumda:
 - `src/client/api/index.js`
 - `src/client/context/AuthContext.jsx`
 - `src/client/context/ToastContext.jsx`
-- `vite.config.js`
+- `vite.config.mjs`
 - `index.html`
 
 Bu yüzden frontend artık sadece sayfa iskeletlerinden ibaret değil; backend’e bağlı çalışan gerçek bir akış kurulmuş durumda.
@@ -125,7 +125,7 @@ Durum:
 
 Mevcut dosyalar:
 
-- `vite.config.js`
+- `vite.config.mjs`
 - `index.html`
 
 Mevcut scriptler:

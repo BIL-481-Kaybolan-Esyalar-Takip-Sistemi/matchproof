@@ -1,7 +1,5 @@
 const fs = require('fs/promises');
 const path = require('path');
-const sharp = require('sharp');
-const { pipeline } = require('@xenova/transformers');
 
 const { env } = require('./env');
 const { uploadRoot } = require('./upload.service');
@@ -10,9 +8,28 @@ const imageSignatureCache = new Map();
 const textEmbeddingCache = new Map();
 
 let embeddingPipelinePromise = null;
+let sharpModule = null;
+let transformersModule = null;
+
+function getSharp() {
+  if (!sharpModule) {
+    sharpModule = require('sharp');
+  }
+
+  return sharpModule;
+}
+
+function getTransformers() {
+  if (!transformersModule) {
+    transformersModule = require('@xenova/transformers');
+  }
+
+  return transformersModule;
+}
 
 async function getEmbeddingPipeline() {
   if (!embeddingPipelinePromise) {
+    const { pipeline } = getTransformers();
     embeddingPipelinePromise = pipeline(
       'feature-extraction',
       'Xenova/all-MiniLM-L6-v2'
@@ -391,6 +408,8 @@ async function getImageSignature(imagePath) {
   }
 
   try {
+    const sharp = getSharp();
+
     const averageHashBuffer = await sharp(absolutePath)
       .autoOrient()
       .resize(16, 16, { fit: 'cover', position: 'centre' })
