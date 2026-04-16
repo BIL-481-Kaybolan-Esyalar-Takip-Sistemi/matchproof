@@ -183,18 +183,22 @@ The purpose of this document set is to record these improvements, their design r
 
 ## 1.4 References
 
-1. IEEE Std 830-1998, *IEEE Recommended Practice for Software Requirements Specifications*. IEEE, 1998.
-2. ISO/IEC 25010:2011, *Systems and software engineering — Systems and software Quality Requirements and Evaluation (SQuaRE) — System and software quality models*. ISO, 2011.
-3. Scrum Alliance, *The Scrum Guide*, K. Schwaber and J. Sutherland, November 2020. Available at: https://scrumguides.org
-4. Xenova/all-MiniLM-L6-v2, sentence-transformers model ported to ONNX format for in-process JavaScript inference via @xenova/transformers. Available at: https://huggingface.co/Xenova/all-MiniLM-L6-v2
-5. sharp, *High performance Node.js image processing library*. Available at: https://sharp.pixelplumbing.com
-6. Express.js, *Fast, unopinionated, minimalist web framework for Node.js*. Available at: https://expressjs.com
-7. PostgreSQL, *Open source object-relational database system*, version 14+. Available at: https://www.postgresql.org
-8. Playwright, *Reliable end-to-end testing for modern web apps*, Microsoft. Available at: https://playwright.dev
-9. Jest, *JavaScript testing framework*, Meta Open Source. Available at: https://jestjs.io
-10. React, *A JavaScript library for building user interfaces*, version 19, Meta Open Source. Available at: https://react.dev
-11. Vite, *Next generation frontend tooling*, version 5. Available at: https://vitejs.dev
-12. OWASP, *OWASP Top Ten Web Application Security Risks*, 2021. Available at: https://owasp.org/www-project-top-ten/
+In-text references in this document use numbered citations such as `[1]`, `[2]`, and `[12]`.
+
+1. IEEE. (1998). *IEEE Std 830-1998: IEEE recommended practice for software requirements specifications*. IEEE Standards Association.
+2. ISO/IEC. (2011). *ISO/IEC 25010:2011 systems and software quality requirements and evaluation (SQuaRE) — system and software quality models*. International Organization for Standardization.
+3. Schwaber, K., & Sutherland, J. (2020). *The Scrum Guide*. Scrum Guides. https://scrumguides.org
+4. Xenova. (2024). *all-MiniLM-L6-v2 model card*. Hugging Face. https://huggingface.co/Xenova/all-MiniLM-L6-v2
+5. Lovell, L. (2024). *sharp: High performance Node.js image processing*. https://sharp.pixelplumbing.com
+6. OpenJS Foundation. (2024). *Express.js documentation*. https://expressjs.com
+7. PostgreSQL Global Development Group. (2024). *PostgreSQL documentation*. https://www.postgresql.org
+8. Microsoft. (2024). *Playwright documentation*. https://playwright.dev
+9. Meta Open Source. (2024). *Jest documentation*. https://jestjs.io
+10. Meta Open Source. (2024). *React documentation*. https://react.dev
+11. VoidZero. (2024). *Vite documentation*. https://vite.dev
+12. OWASP Foundation. (2021). *OWASP Top 10: The ten most critical web application security risks*. https://owasp.org/www-project-top-ten/
+13. Kişisel Verileri Koruma Kurumu. (2016). *6698 sayılı kişisel verilerin korunması kanunu*. https://www.kvkk.gov.tr
+14. European Parliament and Council. (2016). *Regulation (EU) 2016/679 (General Data Protection Regulation)*. Official Journal of the European Union.
 
 ---
 
@@ -236,7 +240,7 @@ MatchProof is a **standalone web application** serving a single university campu
 [AI Matching Module: Xenova/all-MiniLM-L6-v2 (ONNX) + sharp]
 ```
 
-**Problem addressed:** Campus members currently have no centralised digital channel for reporting or searching lost and found items. Physical lost-and-found desks are underused, slow, and cannot perform similarity-based matching. MatchProof replaces this gap with a self-service, searchable, AI-assisted platform accessible from any modern desktop browser.
+**Problem addressed:** Campus members currently have no centralised digital channel for reporting or searching lost and found items. Physical lost-and-found desks are underused, slow, and cannot perform similarity-based matching. MatchProof replaces this gap with a self-service, searchable, AI-assisted platform accessible from any modern desktop browser [4][5][6][7].
 
 **Relationship to prior assignments:**
 - **Assignment 1** established the project definition, requirements (FR1–FR14, NFR1–NFR6), and initial architecture.
@@ -280,12 +284,21 @@ MatchProof targets three distinct user groups within a university campus environ
 | **Administrator** | A designated campus staff member or power user responsible for content moderation and maintaining platform integrity. Has elevated privileges (`isAdmin = true` in the database). | Moderate — familiar with basic admin workflows; does not require programming knowledge. | Periodic — reviews flagged or reported posts and performs removal actions as needed. | Simple moderation interface; mandatory reason field for removal actions; audit trail of moderation decisions. |
 | **Guest (Unauthenticated Visitor)** | A visitor who accesses the platform without logging in. Can browse public listings but cannot post, contact owners, or claim/resolve items. | Low — read-only browser interaction only. | Very infrequent — typically a one-time or first-visit experience before deciding to register. | Ability to see that the platform exists and what items are listed; clear prompt to register or log in to take action. |
 
+### Demographic and Context Profile
+
+| User Type | Typical Age Range | Country / Context | Occupation / Role | Gender Distribution Assumption | Interest / Motivation |
+|---|---|---|---|---|---|
+| **Student / Regular User** | 18–30 | Türkiye-based university campus users | Undergraduate / graduate student | No gender restriction; mixed campus population assumed | Recovering a lost belonging quickly |
+| **Administrator** | 22–50 | Türkiye-based university campus staff or trusted student moderator | Student assistant, lab assistant, or administrative staff | No gender restriction; role-based selection only | Keeping listings clean, safe, and trustworthy |
+| **Guest (Unauthenticated Visitor)** | 18+ | Campus visitors or users checking the board without logging in | Visitor / prospective claimant | No gender restriction | Browsing whether a relevant listing exists before signing in |
+
 **Common characteristics across all user types:**
 - Access the platform via modern desktop browsers (Chrome, Firefox, Edge) on campus networks or home connections.
 - Have limited time and expect quick, validated workflows with immediate error feedback.
 - Are not expected to have knowledge of the underlying AI matching implementation.
 - Expect personal data (email, name) to be handled responsibly and visible only to authenticated users in the appropriate context.
 - May handle sensitive items (ID cards, wallets) and expect the system to enforce privacy controls automatically rather than relying on manual configuration.
+- Demographic fields are documented only to clarify the expected campus usage context; the system does not personalize behavior based on age, gender, or nationality.
 
 ---
 
@@ -358,7 +371,7 @@ The following assumptions were made during requirements definition and design. I
 
 ## 3.1.1 User Interfaces
 
-This section defines the user interface requirements for MatchProof. The system provides a web-based UI accessible from modern desktop browsers. All screens are implemented as single-page application (SPA) views using React 19 and Vite 5.
+This section defines the user interface requirements for MatchProof. The system provides a web-based UI accessible from modern desktop browsers. All screens are implemented as single-page application (SPA) views using React 19 and Vite 5 [10][11].
 
 ### 3.1.1.1 General UI Requirements
 
@@ -556,7 +569,7 @@ NFR1 in `03-requirements.md` states that the system must respond within 2 second
 
 ## 3.4 Design Constraints
 
-This section consolidates the standards, platform choices, and hardware/runtime decisions that directly constrain the MatchProof design. It summarizes the practical decisions previously scattered across the Assignment 2 design document and the technical constraints in Section 2.4 of this document.
+This section consolidates the standards, platform choices, and hardware/runtime decisions that directly constrain the MatchProof design. It summarizes the practical decisions previously scattered across the Assignment 2 design document and the technical constraints in Section 2.4 of this document [1][2].
 
 | Constraint ID | Constraint Type | Design Constraint | Impact on the Solution |
 |---|---|---|---|
@@ -602,7 +615,7 @@ Availability is defined for the planned academic test and demo windows, not for 
 
 ## 3.5.3 Security Requirements
 
-NFR4 in `03-requirements.md` defines a single-sentence privacy requirement. This section expands it into specific, testable security controls aligned with OWASP Top Ten.
+NFR4 in `03-requirements.md` defines a single-sentence privacy requirement. This section expands it into specific, testable security controls aligned with OWASP Top Ten [12].
 
 | Requirement ID | Description | Related NFR/FR |
 |---|---|---|
@@ -773,28 +786,28 @@ For a hypothetical production deployment beyond the course scope, the primary co
 
 ## 9.3 Legal and Ethical Compliance
 
-### 7.1 Personal Data and Privacy
+### 9.3.1 Personal Data and Privacy
 
 The system collects the minimum personal data necessary for platform operation (name, email, password hash). No sensitive personal data categories are collected. During the academic demonstration period, all data is stored on a locally operated server and is not transferred to external parties.
 
-Users are implicitly informed that their name and email will be visible to other authenticated users on item detail pages, as this is the mechanism for item recovery coordination. A future production deployment should provide an explicit privacy notice and consent mechanism in accordance with applicable data protection regulations (such as the Turkish Personal Data Protection Law, KVKK, or the EU General Data Protection Regulation, GDPR, depending on deployment jurisdiction).
+Users are informed that their name and email will be visible to other authenticated users on item detail pages, as this is the mechanism for item recovery coordination. A future production deployment should provide an explicit privacy notice and consent mechanism in accordance with applicable data protection regulations such as KVKK and GDPR [13][14].
 
-### 7.2 Content Moderation
+### 9.3.2 Content Moderation
 
 The platform includes an administrator moderation capability (FR9) allowing inappropriate or duplicate posts to be removed with a recorded reason. This provides a baseline mechanism for enforcing acceptable use. Content policy definitions and appeals processes are outside the scope of the current academic implementation.
 
-### 7.3 Intellectual Property
+### 9.3.3 Intellectual Property
 
 All source code produced for MatchProof is original work by the project team. Third-party libraries used (Express, React, PostgreSQL, sharp, Xenova/transformers, Playwright, Jest, and others) are open-source packages used under their respective licenses (MIT, Apache 2.0, and BSD variants). The Xenova/all-MiniLM-L6-v2 model weights are distributed under the Apache 2.0 license.
 
-### 7.4 Algorithmic Fairness
+### 9.3.4 Algorithmic Fairness
 
 The AI matching pipeline computes similarity based on text description, category, location, recency, and image visual features. It does not use demographic data and does not make decisions that affect users' rights or welfare. Match suggestions are advisory only; final recovery coordination is left to the users involved. No fairness audit has been conducted on the model's behavior across item categories, as the system is scoped to a campus demonstration environment.
 
-### 7.5 Accessibility
+### 9.3.5 Accessibility
 
 The current implementation targets modern desktop browsers and does not include a formal accessibility audit (WCAG compliance). This is an acknowledged limitation identified in the non-functional requirements. A production deployment should address keyboard navigation, screen reader compatibility, and color contrast requirements.
 
-### 7.6 Academic Integrity
+### 9.3.6 Academic Integrity
 
 This project was developed as coursework for BIL 481 at the relevant institution. All work is attributed to the contributing team members identified in each document's contributor list and in the git commit history. Use of AI-assisted code generation tools is subject to the course's academic integrity policies.

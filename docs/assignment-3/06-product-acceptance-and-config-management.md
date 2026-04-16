@@ -54,9 +54,10 @@ MatchProof uses **Git** with a GitHub-hosted repository as the single source of 
 
 | Branch | Purpose |
 |---|---|
-| `main` | Stable, demo-ready code. Direct commits are not permitted. |
-| `develop` | Integration branch. All feature branches merge here before `main`. |
-| `feature/<name>` | Short-lived branches for individual features or fixes. |
+| `main` | Stable, demo-ready code. Changes are merged through pull requests. |
+| `feat/<name>` | Short-lived branches for new features or scoped improvements. |
+| `fix/<name>` | Bug-fix branches for defects found during testing or review. |
+| `docs/<name>` | Documentation-only update branches. |
 | `hotfix/<name>` | Emergency fixes applied directly on top of `main`. |
 
 **Commit Convention:**  
@@ -70,7 +71,7 @@ Examples: `feat(privacy): add server-side ID card enforcement`, `fix(matching): 
 | CI-01 | Application source code | `src/` |
 | CI-02 | Test suite | `tests/` |
 | CI-03 | Assignment documentation | `docs/` |
-| CI-04 | Database schema and migration scripts | `src/server/db/` |
+| CI-04 | Database schema and migration scripts | `src/server/models/migrations/` |
 | CI-05 | Dependency manifests | `package.json`, `package-lock.json` |
 | CI-06 | Environment configuration template | `.env.example` |
 | CI-07 | CI/CD pipeline definition | `.github/workflows/ci.yml` |
@@ -80,10 +81,10 @@ Examples: `feat(privacy): add server-side ID card enforcement`, `fix(matching): 
 
 1. **Propose:** A team member opens a GitHub Issue describing the change, affected components, and justification.
 2. **Review:** At least one other team member approves the issue before work begins.
-3. **Implement:** Developer creates a `feature/` branch from `develop`, implements the change, and writes or updates tests.
-4. **Pull Request:** PR opened against `develop`. Must pass `npm run test:all` and receive one approving review.
-5. **Merge:** After green CI and approval, the PR is squash-merged into `develop`.
-6. **Release:** When a milestone is complete, `develop` is merged into `main` with an updated version tag.
+3. **Implement:** Developer creates a `feat/`, `fix/`, or `docs/` branch from `main`, implements the change, and writes or updates tests.
+4. **Pull Request:** PR is opened against `main`. It must pass CI (`npm run test:unit`) and receive one approving review.
+5. **Validation:** Before release/demo, the team also runs `npm run test:e2e` locally and records the results.
+6. **Merge:** After green checks and approval, the PR is squash-merged into `main` with an updated version tag when needed.
 
 ### 2.4 Versioning
 
@@ -125,7 +126,7 @@ All automated tests run with `MATCHING_MODE=stub` for deterministic AI results.
 | **Unit test** | Single function/module in isolation with mocked dependencies | Per commit, CI pipeline |
 | **Integration test** | Full request-response cycle through Express routes with real DB | Per PR, CI pipeline |
 | **Component test** | React component rendered output and user interactions with mocked API | Per commit, CI pipeline |
-| **Code review** | Peer review required before merging any PR to `develop` | Every PR |
+| **Code review** | Peer review required before merging any PR to `main` | Every PR |
 | **Manual smoke test** | Visual confirmation of key flows on the demo machine | Before every demo |
 
 ### 3.4 Success Criteria
@@ -228,8 +229,7 @@ A product increment is considered **accepted** when all conditions below are met
 Before the final demo, the following checklist must be completed:
 
 - [ ] GitHub Actions CI passes on the latest `main` commit (`npm ci` + `test:unit`)
-- [ ] All Jest backend unit tests pass (`npm run test:server`)
-- [ ] All Jest frontend component tests pass (`npm run test:client`)
+- [ ] All Jest unit/component tests pass (`npm run test:unit`)
 - [ ] Playwright E2E tests pass on the demo machine
 - [ ] Test coverage report shows ≥ 80% on core modules
 - [ ] UC1 (Register/Login) demonstrated end-to-end

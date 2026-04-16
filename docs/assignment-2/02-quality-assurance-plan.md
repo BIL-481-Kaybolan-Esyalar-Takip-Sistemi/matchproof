@@ -129,9 +129,10 @@ MatchProof uses **Git** with a GitHub-hosted repository as the single source of 
 
 | Branch | Purpose |
 |---|---|
-| `main` | Stable, demo-ready code. Direct commits are forbidden. |
-| `develop` | Integration branch. All feature branches are merged here first. |
-| `feature/<name>` | Short-lived branches for individual features or fixes. |
+| `main` | Stable, demo-ready code. Changes are merged through pull requests. |
+| `feat/<name>` | Short-lived branches for new features or scoped improvements. |
+| `fix/<name>` | Bug-fix branches for defects found during testing or review. |
+| `docs/<name>` | Documentation-only update branches. |
 | `hotfix/<name>` | Emergency fixes applied directly on top of `main`. |
 
 **Commit Convention:**  
@@ -147,7 +148,7 @@ The following items are tracked as configuration items:
 | CI-01 | Application source code | `src/` |
 | CI-02 | Test suite | `tests/` |
 | CI-03 | Assignment documentation | `docs/` |
-| CI-04 | Database schema and migration scripts | `src/server/db/` |
+| CI-04 | Database schema and migration scripts | `src/server/models/migrations/` |
 | CI-05 | Dependency manifests | `package.json`, `package-lock.json` |
 | CI-06 | Environment configuration template | `.env.example` |
 
@@ -155,10 +156,10 @@ The following items are tracked as configuration items:
 
 1. **Propose:** Any team member opens a GitHub Issue describing the change, affected components, and justification.
 2. **Review:** At least one other team member reviews and approves the issue before work begins.
-3. **Implement:** The developer creates a `feature/` branch from `develop`, implements the change, and writes/updates tests.
-4. **Pull Request:** A Pull Request (PR) is opened against `develop`. The PR must pass all automated tests (`npm run test:all`) and receive at least one approving review.
-5. **Merge:** After approval and green CI, the PR is squash-merged into `develop`.
-6. **Release:** When a milestone is complete, `develop` is merged into `main` via a PR with updated version tag.
+3. **Implement:** The developer creates a `feat/`, `fix/`, or `docs/` branch from `main`, implements the change, and writes/updates tests.
+4. **Pull Request:** A Pull Request (PR) is opened against `main`. The PR must pass CI (`npm run test:unit`) and receive at least one approving review.
+5. **Validation:** Before release/demo, the team also runs `npm run test:e2e` locally and records the results in the test report.
+6. **Merge:** After approval and successful checks, the PR is squash-merged into `main` and becomes the new demo baseline.
 
 ### 5.4 Versioning
 
@@ -205,8 +206,7 @@ A product increment is considered **accepted** when all of the following conditi
 
 Before the final demo, the following checklist must be completed:
 
-- [ ] All Jest backend tests pass (`npm run test:server`)
-- [ ] All Jest frontend component tests pass (`npm run test:client`)
+- [ ] All Jest unit/component tests pass (`npm run test:unit`)
 - [ ] Playwright E2E tests pass on the local or staging environment
 - [ ] Test coverage report shows ≥ 80% on core modules
 - [ ] UC1 (Register/Login) demonstrated end-to-end
